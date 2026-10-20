@@ -30,6 +30,7 @@ public sealed class HarassRestore
     public void RegisterWith(IWalkerDirector director)
     {
         director.RegisterRestoreHandler(Doors.RestoreKind, Doors.Undo);
+        director.RegisterRestoreHandler(TornDoor.RestoreKind, TornDoor.Rehang);
     }
 
     public void Add(HarassContext ctx, RestoreEntry entry)
@@ -94,6 +95,7 @@ public sealed class HarassRestore
             return entry.Kind switch
             {
                 Doors.RestoreKind => Doors.Undo(world, entry),
+                TornDoor.RestoreKind => TornDoor.Rehang(world, entry),
                 RestoreEntry.KindBlock => UndoBlockSwap(world, entry),
                 _ => RestoreResult.Dropped,
             };

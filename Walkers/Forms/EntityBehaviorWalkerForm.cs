@@ -12,7 +12,7 @@ using Walkers.Director;
 namespace Walkers.Forms;
 
 /// <summary>
-/// Server side of both walker forms ("walkers-form", added by patches/forms-behaviors.json): the guise's
+/// Server side of both walker forms ("walkers-form", added in <see cref="FormsModSystem.AssetsFinalize"/>): the guise's
 /// damage clamp, the shift triggers both ways, fire on our own terms, and the death check with the body's
 /// burn window afterwards (creature bible, sections 4 and 7).
 /// </summary>
@@ -48,7 +48,7 @@ public class EntityBehaviorWalkerForm : EntityBehavior
     private float burnAccum;
     private long burnUntilMs;
     private long lastRefreshMs;
-    private bool pendingStandUp;
+    private long standUpAtMs;
     private long lastPlayerHitMs;
     private long lastHitMs;
     private IPlayer? lastTorchBy;
@@ -120,7 +120,11 @@ public class EntityBehaviorWalkerForm : EntityBehavior
                 // A fall, drowning or another creature can kill the guise; the true body then lies in its place.
                 return damage;
             }
-            pendingStandUp = true;
+            ScheduleStandUp();
+            if (!forms.Config.Forms.GuiseShrugsDamage)
+            {
+                return damage;
+            }
             var health = entity.GetBehavior<EntityBehaviorHealth>();
             float allowed = health == null ? damage : Math.Max(0, health.Health - 1);
             if (damage <= allowed)
@@ -147,6 +151,31 @@ public class EntityBehaviorWalkerForm : EntityBehavior
         source is not WalkersBurnDamageSource &&
         source.Type == EnumDamageType.Fire && source.Source == EnumDamageSource.Internal &&
         source.SourceEntity == null && source.CauseEntity == null && source.SourceBlock == null && source.SourcePos == null;
+
+    /// <summary>
+    /// A player's blow or fire got through anyway (a death the walker class refused, see
+    /// <see cref="FormsModSystem"/>): the doe keeps a sliver of health, flinches and stands up.
+    /// </summary>
+    internal void OnDeathRefused()
+    {
+        var health = entity.GetBehavior<EntityBehaviorHealth>();
+        if (health != null && health.Health < 1)
+        {
+            health.Health = Math.Min(1, health.MaxHealth);
+        }
+        lastHitMs = lastPlayerHitMs = entity.World.ElapsedMilliseconds;
+        PlayHurt();
+        ScheduleStandUp();
+    }
+
+    /// <summary>The guise stands up forms.hurtShiftDelayMs after a player hurts it or sets it alight (creature bible, section 4).</summary>
+    private void ScheduleStandUp()
+    {
+        if (standUpAtMs == 0)
+        {
+            standUpAtMs = entity.World.ElapsedMilliseconds + forms.Config.Forms.HurtShiftDelayMs;
+        }
+    }
 
     private void PlayHurt()
     {
@@ -239,6 +268,17 @@ public class EntityBehaviorWalkerForm : EntityBehavior
         }
 
         TickFire(deltaTime);
+        if (standUpAtMs > 0 && entity.World.ElapsedMilliseconds >= standUpAtMs)
+        {
+            standUpAtMs = 0;
+            // Stages 1 and 2 never stand up for a blow; stage 0 is a body nobody is haunting with (a command spawn).
+            int stage = FormMemory.Stage(entity);
+            if (!isTrue && entity.Alive && (stage == 0 || stage >= 3) && !InWater())
+            {
+                TryShift("a player hurt it");
+                return;
+            }
+        }
         checkAccum += deltaTime;
         if (checkAccum < 1)
         {
@@ -288,6 +328,11 @@ public class EntityBehaviorWalkerForm : EntityBehavior
             if (igniter != null)
             {
                 form.SetString(FormMemory.IgniterUid, igniter.PlayerUID);
+                if (!isTrue && entity.Alive)
+                {
+                    // Our burn ticks name the igniter, vanilla's do not; a guise a player set alight stands up at once.
+                    ScheduleStandUp();
+                }
             }
             else if (!form.HasAttribute(FormMemory.IgniterUid) || now - lastPlayerHitMs > IgniterMemoryMs * 5)
             {
@@ -344,19 +389,9 @@ public class EntityBehaviorWalkerForm : EntityBehavior
         if (!isTrue)
         {
             var health = entity.GetBehavior<EntityBehaviorHealth>();
-            if (health != null && health.Health < health.MaxHealth && now - lastHitMs > GuiseMendMs)
+            if (config.GuiseShrugsDamage && health != null && health.Health < health.MaxHealth && now - lastHitMs > GuiseMendMs)
             {
                 health.Health = health.MaxHealth;
-            }
-            // Stages 1 and 2 never stand up for a blow; stage 0 is a body nobody is haunting with (a command spawn).
-            if (pendingStandUp)
-            {
-                pendingStandUp = false;
-                if ((stage == 0 || stage >= 3) && !InWater())
-                {
-                    TryShift("a player hurt it");
-                    return;
-                }
             }
         }
 

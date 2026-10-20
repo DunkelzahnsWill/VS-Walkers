@@ -21,6 +21,11 @@ public static class FormMemory
     public const string GuiseType = "guiseType";
     public const string LastShiftMs = "lastShiftMs";
     public const string IgniterUid = "igniterUid";
+    public const string NightRollDay = "nightRollDay";
+    public const string NightRollShifts = "nightRollShifts";
+
+    /// <summary>Top level, written by the director: the escalation level, 1 (Interloping) to 5 (Wrath).</summary>
+    public const string EscalationKey = "escalation";
 
     // walkers/ai, written by the stalker AI.
     public const string AiWatched = "watched";
@@ -55,6 +60,9 @@ public static class FormMemory
     public static ITreeAttribute? Ai(Entity entity) => Tree(entity).GetTreeAttribute(WalkerMemory.Ai);
 
     public static int Stage(Entity entity) => Tree(entity).GetInt(WalkerMemory.Stage);
+
+    /// <summary>The escalation level, 1 to 5; 1 while the director has written none.</summary>
+    public static int Escalation(Entity entity) => Math.Max(1, Tree(entity).GetInt(EscalationKey, 1));
 
     /// <summary>
     /// The deer type the guise wears: the director's choice, else the one this walker last wore, else

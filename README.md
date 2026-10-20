@@ -3,8 +3,10 @@
 A code mod for Vintage Story 1.22.7. Its first creature is the Skinwalker: something that looks like
 an ordinary animal until it doesn't. *Something's moving out there.*
 
-Status: skeleton, version `0.1.0-dev.1`. The mod builds, packs and loads cleanly on a dedicated
-server. There is no creature yet.
+Status: prototype, version `0.1.0-dev.1`. The mod builds, packs and loads cleanly on a dedicated
+server. The Skinwalker exists as pure JSON: a deer guise and a placeholder true form that spawn alone
+at night in forests (or with `/walkers spawn`). The stalker AI, director, form shifts, kill ritual and
+harassment are still to come.
 
 | Field | Value |
 | --- | --- |

@@ -89,6 +89,11 @@ public class AiTaskWalkerLunge : WalkerTaskBase
             return false;
         }
         lastCheckMs = now;
+        if (brain.Entry.Door != null && !brain.Entry.Open)
+        {
+            // On its way out of the house after an entry: no more strikes.
+            return false;
+        }
         var candidate = PickTarget(brain);
         if (candidate == null)
         {

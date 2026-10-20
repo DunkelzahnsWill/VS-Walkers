@@ -77,6 +77,9 @@ public sealed class WalkerBrain
     /// <summary>The latest gaze check.</summary>
     public GazeResult Gaze;
 
+    /// <summary>The enraged walk-in through a door the harassment kit opened (true form, hunt).</summary>
+    public readonly WalkerEntry Entry = new();
+
     /// <summary>The victim at the latest check: a player's entity or a stand-in; null when none is near or online.</summary>
     public Entity? Victim { get; private set; }
 
@@ -181,6 +184,10 @@ public sealed class WalkerBrain
             nextGazeMs = nowMs + (long)(1000 / Math.Max(0.5f, Config.Gaze.ChecksPerSecond));
             RunGazeCheck();
             UpdateMode();
+            if (Entry.Update(this, nowMs))
+            {
+                return;
+            }
             MarkSlipAway();
             if (TrySlipAway())
             {
@@ -293,6 +300,7 @@ public sealed class WalkerBrain
     /// <summary>The lunge landed on the victim.</summary>
     public void OnStruckVictim()
     {
+        Entry.OnStruckVictim(this);
         StalkerLadder.OnHit(Memory);
         Ai.SetDouble(StalkerMemory.LastHitHours, api.World.Calendar.TotalHours);
     }

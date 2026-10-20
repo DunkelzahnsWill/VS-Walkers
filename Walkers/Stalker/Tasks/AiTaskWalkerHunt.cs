@@ -54,6 +54,17 @@ public class AiTaskWalkerHunt : WalkerTaskBase
             return false;
         }
         var victim = brain.Victim;
+        var entry = brain.Entry;
+        int maxIndoor = Config.Enraged.MaxIndoorBlocks;
+        if (entry.Door != null && !entry.Open && entry.IsInside(entity, maxIndoor) && !brain.Frozen)
+        {
+            // Leaving the house, whatever the victim does: out through the door before anything else.
+            if (!Moving || NavigationEnded)
+            {
+                GoTo(entry.Outside!, Speed(true), 0.8f, true);
+            }
+            return true;
+        }
         if (brain.Frozen || StalkerModSystem.IsAsleep(victim) || victim.Swimming ||
             WalkerSpots.TooDeep(world.BlockAccessor, victim.Pos.XYZ, Config.Director.MaxDepthBelowSurface))
         {
@@ -62,6 +73,12 @@ public class AiTaskWalkerHunt : WalkerTaskBase
         }
 
         long now = world.ElapsedMilliseconds;
+        if (entry.Open && entry.DoorCenter!.HorizontalSquareDistanceTo(victim.Pos.X, victim.Pos.Z) > maxIndoor * maxIndoor)
+        {
+            // The victim is deeper in than it may go: it waits.
+            Halt();
+            return true;
+        }
         if (now - brain.DoorAheadMs < DoorHoldMs)
         {
             // A door stands between it and the victim: walkers-doorway decides; it never walks in.

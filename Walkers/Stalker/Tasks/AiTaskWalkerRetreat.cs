@@ -70,6 +70,17 @@ public class AiTaskWalkerRetreat : WalkerTaskBase
         bool run = brain.IsTrueForm && (burning || brain.Ai.GetString(StalkerMemory.BreakOff, "") == "health");
         bool defend = brain.Mode == StalkerMode.Defend;
 
+        var entry = brain.Entry;
+        if (entry.Door != null && !entry.Open && entry.IsInside(entity, Config.Enraged.MaxIndoorBlocks))
+        {
+            // Out of the house through the door it came in by, then into cover.
+            if (!Moving || NavigationEnded)
+            {
+                GoTo(entry.Outside!, Speed(true), 0.8f, true);
+            }
+            return true;
+        }
+
         if (Moving && !NavigationEnded)
         {
             return true;

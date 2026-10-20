@@ -31,19 +31,22 @@ The build takes about 10 seconds, the smoke test about 40.
 - **Pinned versions.** The game version, download URL and both checksums live in
   `scripts/versions.env`. The setup refuses to unpack a download whose checksums differ.
 - **Build steps** (`CakeBuild/Program.cs`, run with `./build.sh --target=<step>`):
-  `ValidateJson` parses every asset JSON and fails on syntax errors, duplicate keys in one file and
-  a lang key defined in two lang files. `ValidateModInfo` checks the modid, version format, type,
+  `ValidateJson` parses every asset JSON and fails on syntax errors, a key repeated in a lang file,
+  and a lang key defined in two lang files (compared the way the game merges them, domain prefix and
+  `worldconfig-<lang>.json` included). A key repeated in any other asset is only a warning, because
+  vanilla files copied as a starting point do it; the game uses the last value. `ValidateModInfo` checks the modid, version format, type,
   side, game dependency, and that the only asset folders are `walkers` and `game`. `Build` publishes
   the DLL and `Package` writes the zip. Add `--configuration=Debug` for a debug build.
 - **Smoke test.** It copies the zip into a fresh server data folder, boots the server with a fixed
   world seed, types any console commands from `tests/smoke/*.commands`, then sends `/stop`. It fails
   unless the server stops cleanly, `walkers` is in the loaded mod list, every pattern in
   `tests/smoke/*.expect` matches a line of `server-main.log`, and the logs hold no `[Error]` or
-  `[Fatal]` line and no `[Warning]` line that mentions the mod. The world and logs stay in
-  `.cache/smoke/` afterwards.
+  `[Fatal]` line, no `[Warning]` line that mentions the mod, and no crash log. The world and logs stay
+  in `.cache/smoke/` afterwards.
 - **CI.** `.github/workflows/build.yml` runs the same three scripts on every pull request and every
-  push to `main`. Each run keeps the mod zip (artifact `walkers-mod`) and the server logs (artifact
-  `smoke-test-logs`).
+  commit on `main` (a new push to a pull request cancels its older run). Every run that gets as far
+  as a zip keeps it as an artifact named `walkers_<version>.zip`, also when the smoke test fails, and
+  every run keeps the server logs (artifact `smoke-test-logs`).
 
 ## Play-testing on your PC
 
@@ -55,8 +58,9 @@ the model, animations, eye glow, sounds, client-side effects, and multiplayer te
 2. Point `VINTAGE_STORY` at your game folder. With the Windows installer's default location, run this
    in PowerShell once, then restart your terminal and editor:
    `[Environment]::SetEnvironmentVariable("VINTAGE_STORY", "$env:APPDATA\Vintagestory", "User")`
-3. Get a mod zip: download the `walkers-mod` artifact from the pull request's GitHub Actions run
-   (Checks, then the run, then Artifacts), or build it with `.\build.ps1`.
+3. Get a mod zip: download the `walkers_<version>.zip` artifact from the pull request's GitHub Actions
+   run (Checks, then the run, then Artifacts), or build it with `.\build.ps1`. If PowerShell refuses
+   to run scripts, use `dotnet run --project CakeBuild/CakeBuild.csproj` from the repository folder.
 4. Copy `walkers_<version>.zip`, still zipped, into `%APPDATA%\VintagestoryData\Mods`, start the game
    and check that the Mod Manager lists Walkers. For a multiplayer test, the server and every client
    need the same zip.
@@ -87,9 +91,16 @@ The shared surfaces, and who changes them:
 
 - **The config accessor** (`Walkers/Config/WalkersConfig.cs` and `WalkersConfigSystem.cs`) is the one
   piece of code every feature uses. It loads `ModConfig/walkers.json` on the server before any other
-  Walkers system starts. Read it once in your system's `Start` with `api.GetWalkersConfig()`. The
-  config and commands work owns these two files (client sync, world-config options, commands); other
-  branches only add their own `WalkersConfig.<Feature>.cs`.
+  Walkers system starts, so server code can read it from `Start` on with `api.GetWalkersConfig()`. On
+  a client it holds the defaults until the config work adds syncing, and the object may be replaced
+  on sync or reload, so read values when you need them rather than keeping the object. The config and
+  commands work owns these two files (client sync, world-config options, commands); other branches
+  only add their own `WalkersConfig.<Feature>.cs`.
+- **The `/walkers` chat command** is one root shared by every feature. Get it with
+  `api.ChatCommands.GetOrCreate(WalkersModSystem.ModId)` and add only your own
+  `.BeginSubCommand("<feature>")`; never `Create` the root, or the second feature to start fails once
+  both are on `main`. The config and commands work sets the root's description and privilege.
+  Network channels are named `walkers-<feature>`.
 - **The creature's entity JSON** (`assets/walkers/entities/`) belongs to the JSON prototype work. A
   code branch that needs a change there keeps it small and says so in its pull request.
 - **`modinfo.json` and `Walkers/Walkers.csproj`** rarely change. The project already references every
@@ -120,7 +131,9 @@ Walkers/                      the mod project
 
 Empty asset folders hold a `.gitkeep`, which the package step leaves out of the zip. A zip mod reads
 world-config options only from `worldconfig.json` at the zip root, so that file goes in `Walkers/`
-next to `modinfo.json`; the package step picks it up.
+next to `modinfo.json`; the build copies it to the dev output and the package step to the zip root.
+A mod with a `worldconfig.json` also needs `assets/game/lang/worldconfig-en.json`: without that
+folder the server logs an error and the smoke test fails.
 
 ## Moving to a new game version
 

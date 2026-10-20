@@ -1,0 +1,209 @@
+// Weapon heads cast from silver in walkers:silvermold-fired-<type>. Shapes and transforms are the
+// nearest vanilla heads (spearhead-copper, bladehead-falx-copper, arrowhead-silver, knifeblade-silver),
+// retextured with silver. Each head melts back to silver in a crucible (100 units per mold pour).
+{
+	code: "casthead",
+	variantgroups: [
+		{ code: "type", states: ["spear", "falx", "arrow", "knife"] },
+		{ code: "metal", states: ["silver"] }
+	],
+	behaviorsByType: {
+		"*-falx-*": [
+			{ name: "GroundStorable", properties: { layout: 'SingleCenter', collisionBox: { x1: 0, y1: 0, z1: 0, x2: 1, y2: 0.125, z2: 1 } } }
+		],
+		"*": [
+			{ name: "GroundStorable", properties: { layout: 'Quadrants', collisionBox: { x1: 0, y1: 0, z1: 0, x2: 1, y2: 0.125, z2: 1 } } }
+		]
+	},
+	heldTpUseAnimation: "interactstatic",
+	maxstacksizeByType: {
+		"*-arrow-*": 64,
+		"*": 4
+	},
+	shapeByType: {
+		"*-spear-*": { base: "game:item/tool/spear/metal-copper" },
+		"*-falx-*": { base: "game:item/tool/blade/falx/copper" },
+		"*-arrow-*": { base: "game:item/tool/arrowhead-copper" },
+		"*-knife-*": { base: "game:item/tool/knife/copper" }
+	},
+	particlesTextureCodeByType: {
+		"*-spear-*": "ingot",
+		"*-falx-*": "copper",
+		"*": "material"
+	},
+	texturesByType: {
+		"*-spear-*": {
+			"ingot": { base: "game:block/metal/ingot/{metal}" },
+			"string": { base: "game:block/transparent" },
+			"handle": { base: "game:block/transparent" }
+		},
+		"*-falx-*": {
+			"copper": { base: "game:block/metal/ingot/{metal}" },
+			"handguard": { base: "game:block/transparent" },
+			"handle": { base: "game:block/transparent" },
+			"string": { base: "game:block/transparent" },
+			"longstiches": { base: "game:block/transparent" }
+		},
+		"*-arrow-*": {
+			"material": { base: "game:block/metal/ingot/{metal}" }
+		},
+		"*-knife-*": {
+			"material": { base: "game:block/metal/ingot/{metal}" },
+			"handle": { base: "game:block/transparent" }
+		}
+	},
+	materialDensity: 10500,
+	attributes: {
+		handbook: {
+			groupBy: ["casthead-{type}-*"]
+		},
+		onTongTransformByType: {
+			"*-spear-*": {
+				translation: { x: -1.06, y: -0.26, z: -1.3 },
+				rotation: { x: 23, y: 94, z: 22 }
+			},
+			"*-falx-*": {
+				translation: { x: -0.91, y: -0.9, z: -0.1 },
+				rotation: { x: 114, y: 111, z: -4 }
+			},
+			"*-arrow-*": {
+				translation: { x: -0.6, y: -0.625, z: -0.59 },
+				rotation: { x: 93, y: 15, z: 99 }
+			},
+			"*-knife-*": {
+				translation: { x: -0.6, y: -0.75, z: -0.57 },
+				rotation: { x: 8, y: 6, z: 90 }
+			}
+		},
+		onMetalTongTransformByType: {
+			"*-spear-*": {
+				translation: { x: -1.84, y: -0.12, z: -0.7 },
+				rotation: { x: 90, y: 4, z: 90 },
+				origin: { x: 1.3, y: -0, z: 0.5 }
+			},
+			"*-falx-*": {
+				translation: { x: -1.01, y: -0.18, z: -0.5 },
+				rotation: { x: 0, y: -90, z: 0 },
+				origin: { x: 0.5, y: -0, z: 0.5 }
+			},
+			"*-arrow-*": {
+				translation: { x: -0.49, y: -0.51, z: -0.62 },
+				rotation: { x: 80, y: 15, z: 89 }
+			},
+			"*-knife-*": {
+				translation: { x: -1.08, y: -0.24, z: -0.5 },
+				rotation: { x: 86, y: 22, z: -88 },
+				origin: { x: 0.5, y: 0.1, z: 0.5 }
+			}
+		},
+		groundStorageTransformByType: {
+			"*-spear-*": {
+				translation: { x: -0.9, y: 0.01, z: 0 },
+				rotation: { x: 90, y: 0, z: -34 },
+				origin: { x: 1.4, y: -0, z: 0.5 }
+			},
+			"*-falx-*": {
+				translation: { x: -0.18, y: -0.05, z: 0.3 },
+				rotation: { x: 0, y: 28, z: 0 }
+			},
+			"*-arrow-*": {
+				rotation: { x: 0, y: 34, z: 0 }
+			},
+			"*-knife-*": {
+				translation: { x: -0, y: 0.005, z: 0.1 },
+				rotation: { x: -90, y: 0, z: 48 },
+				origin: { x: 0.5, y: 0, z: 0.5 }
+			}
+		}
+	},
+	combustiblePropsByType: {
+		"*-arrow-*": {
+			meltingPoint: 961,
+			meltingDuration: 30,
+			smeltedRatio: 4,
+			smeltedStack: { type: "item", code: "game:ingot-{metal}" }
+		},
+		"*": {
+			meltingPoint: 961,
+			meltingDuration: 30,
+			smeltedRatio: 1,
+			smeltedStack: { type: "item", code: "game:ingot-{metal}" }
+		}
+	},
+	creativeinventory: { "general": ["*"], "items": ["*"] },
+	guiTransformByType: {
+		"*-spear-*": {
+			rotation: { x: 2, y: 13, z: -134 },
+			origin: { x: 1.38, y: 0.04, z: 0.6 },
+			scale: 2.22
+		},
+		"*-falx-*": {
+			translation: { x: 0, y: 0, z: 0 },
+			rotation: { x: -89, y: 47, z: 34 },
+			origin: { x: 0.82, y: 0, z: 0.33 },
+			scale: 1.63
+		},
+		"*-arrow-*": {
+			translation: { x: 0, y: 0, z: 0 },
+			rotation: { x: -55, y: 27, z: 0 },
+			origin: { x: 0.54, y: 0.06, z: 0.48 },
+			scale: 4.2
+		},
+		"*-knife-*": {
+			translation: { x: 3, y: 0, z: 0 },
+			rotation: { x: -8, y: -152, z: 142 },
+			origin: { x: 0.53, y: 0.05, z: 0.4 },
+			scale: 3.53
+		}
+	},
+	tpHandTransformByType: {
+		"*-spear-*": {
+			translation: { x: 0, y: 0.04, z: -0.4 },
+			rotation: { x: -11, y: -17, z: -2 },
+			origin: { x: 0.5, y: 0, z: 0.5 },
+			scale: 0.82
+		},
+		"*-falx-*": {
+			translation: { x: -0.67, y: 0, z: -0.69 },
+			rotation: { x: 90, y: 0, z: 0 },
+			origin: { x: 0.5, y: 0, z: 0.5 },
+			scale: 0.8
+		},
+		"*-arrow-*": {
+			translation: { x: -0.67, y: -0.7, z: -0.15 },
+			rotation: { x: 90, y: 21, z: 0 },
+			scale: 0.77
+		},
+		"*-knife-*": {
+			translation: { x: -0.54, y: -0.08, z: -0.48 },
+			rotation: { x: 0, y: 0, z: -10 },
+			scale: 1
+		}
+	},
+	groundTransformByType: {
+		"*-spear-*": {
+			translation: { x: 0, y: 0, z: 0 },
+			rotation: { x: 90, y: -5, z: 0 },
+			origin: { x: 1.3, y: 0.05, z: 0.52 },
+			scale: 4.63
+		},
+		"*-falx-*": {
+			translation: { x: 0, y: 0.05, z: 0 },
+			rotation: { x: 0, y: 0, z: 0 },
+			origin: { x: 0.75, y: 0.1, z: 0.5 },
+			scale: 3.4
+		},
+		"*-arrow-*": {
+			translation: { x: 0, y: 0, z: 0 },
+			rotation: { x: 19, y: 0, z: 0 },
+			origin: { x: 0.5, y: 0, z: 0.5 },
+			scale: 4
+		},
+		"*-knife-*": {
+			translation: { x: 0, y: 0, z: 0 },
+			rotation: { x: 90, y: 0, z: 0 },
+			origin: { x: 0.5, y: 0, z: 0.55 },
+			scale: 3.5
+		}
+	}
+}

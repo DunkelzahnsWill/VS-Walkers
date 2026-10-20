@@ -1,0 +1,136 @@
+// Clay molds for silver weapon heads, after vanilla's raw and fired toolmold.json (survival blocktypes/clay).
+// Raw molds are clay formed and fire (pit kiln or beehive kiln) into fired molds. A fired mold only
+// accepts molten silver, because its drop code resolves for no other metal.
+// Shapes are vanilla placeholders until the mod's own art lands.
+{
+	code: "silvermold",
+	classByType: {
+		"*-fired-*": "BlockToolMold",
+		"*": "Block"
+	},
+	entityClassByType: {
+		"*-fired-*": "ToolMold"
+	},
+	behaviorsByType: {
+		"*-raw-*": [
+			{ name: "GroundStorable", properties: { layout: 'SingleCenter' } },
+			{ name: "Unplaceable" },
+			{ name: "RightClickPickup" }
+		],
+		"*-fired-*": [
+			{ name: "Lockable" },
+			{ name: "UnstableFalling" }
+		]
+	},
+	entityBehaviorsByType: {
+		"*-fired-*": [{ name: "TemperatureSensitive" }]
+	},
+	variantgroups: [
+		{ code: "materialtype", states: ["raw", "fired"] },
+		{ code: "weapon", states: ["spear", "falx", "arrow", "knife"] }
+	],
+	shapeByType: {
+		"*-spear": { base: "game:block/clay/mold/shovel", rotateY: 90 },
+		"*-falx": { base: "game:block/clay/mold/blade-falx", rotateY: 90 },
+		"*-arrow": { base: "game:block/clay/mold/bullets", rotateY: 90 },
+		"*-knife": { base: "game:block/clay/mold/blade-short", rotateY: 90 }
+	},
+	texturesByType: {
+		"*-raw-*": {
+			all: { base: "game:block/clay/blueclay" }
+		},
+		"*-fired-*": {
+			floor: { base: "game:block/clay/hardened/blue" },
+			other: { base: "game:block/clay/hardened/blue" }
+		}
+	},
+	attributes: {
+		reinforcable: true,
+		handbook: {
+			groupBy: ["silvermold-{materialtype}-*"]
+		},
+		onTongTransformByType: {
+			"*-raw-*": {
+				translation: { x: -0.9, y: -1.5, z: -0.6 },
+				rotation: { x: 117, y: 0, z: 0 },
+				scale: 0.74
+			},
+			"*": {
+				translation: { x: -1.7, y: -1.3, z: -0.57 },
+				rotation: { x: 98, y: 16, z: 3 },
+				scale: 0.55
+			}
+		},
+		onMetalTongTransform: {
+			translation: { x: -2.1, y: -0.19, z: -1 },
+			rotation: { x: 180, y: 7, z: 4 },
+			origin: { x: 0.5, y: 0, z: 0.5 },
+			scale: 0.55
+		}
+	},
+	attributesByType: {
+		"*-raw-*": {
+			shelvable: false
+		},
+		"*-fired-arrow": {
+			shatteredShape: { base: "game:block/clay/mold/shattered-ingot" },
+			requiredUnits: 100,
+			fillHeight: 1,
+			moldrackable: true,
+			onmoldrackTransform: { rotation: { z: 90 } },
+			drop: { type: "item", code: "walkers:casthead-arrow-{metal}", quantity: 4 }
+		},
+		"*-fired-*": {
+			shatteredShape: { base: "game:block/clay/mold/shattered-ingot" },
+			requiredUnits: 100,
+			fillHeight: 1,
+			moldrackable: true,
+			onmoldrackTransform: { rotation: { z: 90 } },
+			drop: { type: "item", code: "walkers:casthead-{weapon}-{metal}" }
+		}
+	},
+	combustiblePropsByType: {
+		"*-raw-*": {
+			meltingPoint: 650,
+			meltingDuration: 45,
+			smeltedRatio: 1,
+			smeltingType: "fire",
+			smeltedStack: { type: "block", code: "walkers:silvermold-fired-{weapon}" },
+			requiresContainer: false
+		}
+	},
+	blockmaterial: "Ceramic",
+	creativeinventory: { "general": ["*"], "construction": ["*"] },
+	replaceable: 700,
+	resistance: 1.5,
+	maxStackSize: 8,
+	lightAbsorption: 0,
+	sounds: {
+		walk: "game:walk/stone"
+	},
+	collisionbox: { x1: 0.0625, y1: 0, z1: 0.0625, x2: 0.9375, y2: 0.125, z2: 0.9375 },
+	selectionbox: { x1: 0.0625, y1: 0, z1: 0.0625, x2: 0.9375, y2: 0.125, z2: 0.9375 },
+	sideopaque: {
+		all: false
+	},
+	sidesolid: {
+		all: false
+	},
+	guiTransform: {
+		translation: { x: 0, y: 3, z: 0 },
+		origin: { x: 0.5, y: 0.0625, z: 0.5 },
+		scale: 1.33
+	},
+	tpHandTransform: {
+		translation: { x: -1, y: -0.6, z: -1.05 },
+		rotation: { x: -87, y: 9, z: 4 },
+		origin: { x: 0.5, y: 0.125, z: 0.5 },
+		scale: 0.5
+	},
+	groundTransform: {
+		translation: { x: 0, y: 0, z: 0 },
+		rotation: { x: 0, y: -45, z: 0 },
+		origin: { x: 0.5, y: 0, z: 0.5 },
+		scale: 2.2
+	}
+}

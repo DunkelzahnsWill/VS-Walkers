@@ -1,0 +1,76 @@
+// A silver spear for the kill ritual: vanilla's generic copper spear (survival itemtypes/tool/spear.json)
+// with a silver head. walkersBane marks it as silver for the walker's death check.
+// Thrown, it flies as vanilla's ornate silver spear entity (no walkers spear entity exists) and
+// drops this item again where it lands.
+{
+	code: "spear",
+	class: "ItemSpear",
+	variantgroups: [
+		{ code: "metal", states: ["silver"] }
+	],
+	tags: ["weapon", "weapon-melee", "weapon-spear"],
+	damagedby: ["attacking"],
+	tool: "spear",
+	behaviors: [
+		{ name: "GroundStorable", properties: { layout: 'WallHalves', wallOffY: 3, ctrlKey: true, selectionBox: { x1: 0, y1: 0, z1: 0, x2: 1, y2: 0.1, z2: 1 }, collisionBox: { x1: 0, y1: 0, z1: 0, x2: 0, y2: 0, z2: 0 } } },
+		{ name: "Buffable" },
+		{ name: "AnimationAuthoritative" }
+	],
+	shape: { base: "game:item/tool/spear/metal-copper" },
+	textures: {
+		"ingot": { base: "game:block/metal/ingot/{metal}" }
+	},
+	heldTpIdleAnimation: "spearidle",
+	heldRightReadyAnimation: "spearidle",
+	heldTpHitAnimation: "spearhit",
+	attackRange: 3.5,
+	attackpower: 2.75,
+	attributes: {
+		walkersBane: true,
+		heldItemPitchFollow: 1,
+		groundStorageTransform: {
+			translation: { x: -0.39, y: 0.78, z: 0.235 },
+			rotation: { x: 16, y: 1, z: 90 },
+			scale: 0.85
+		},
+		// Thrown damage and tier, as the copper spear
+		damage: 5,
+		damageTier: 0,
+		spearEntityCode: "game:spear-generic-ornatesilver",
+		handbook: {
+			groupBy: ["spear-*"]
+		},
+		toolrackTransform: {
+			rotation: { x: 90, y: 1, z: -1 },
+			translation: { x: 0.31, y: 0.04, z: 0.7 },
+			scale: 1.36
+		},
+		rangedWeaponsSpeedMul: 0.5,
+		antlerMountable: true,
+		onAntlerMountTransform: {
+			translation: { x: -0.406, y: 0.5, z: 0.15 },
+			rotation: { x: -90, y: -90, z: -90 },
+			origin: { x: 0.5, y: 0, z: 0.5 },
+			scale: 0.8
+		}
+	},
+	durability: 140,
+	creativeinventory: { "general": ["*"], "items": ["*"], "tools": ["*"] },
+	guiTransform: {
+		rotation: { x: 33, y: 0, z: -127 },
+		origin: { x: 1.39, y: 0.05, z: 0.52 },
+		scale: 2.26
+	},
+	groundTransform: {
+		translation: { x: 0, y: 0.05, z: 0 },
+		rotation: { x: 90, y: 0, z: 0 },
+		origin: { x: 0.5, y: 0, z: 0.5 },
+		scale: 3.4
+	},
+	tpHandTransform: {
+		translation: { x: -1.29, y: 0.03, z: -0.57 },
+		rotation: { x: -90, y: 0, z: 0 },
+		origin: { x: 0.6, y: 0, z: 0.5 },
+		scale: 0.8
+	}
+}

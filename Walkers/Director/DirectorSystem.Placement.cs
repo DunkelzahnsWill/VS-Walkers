@@ -162,7 +162,7 @@ public partial class DirectorSystem
 
     /// <summary>
     /// The height at which a creature stands with its feet in this block, or null: the block is open, or
-    /// holds thin cover, and the one below carries it; the two blocks above are open.
+    /// holds thin cover, and the one below carries it and is natural ground; the two blocks above are open.
     /// </summary>
     private static double? StandingHeight(IBlockAccessor accessor, BlockPos pos)
     {
@@ -176,15 +176,16 @@ public partial class DirectorSystem
         {
             return null;
         }
+        var belowPos = pos.DownCopy();
+        var below = accessor.GetBlock(belowPos);
+        if (below.IsLiquid() || !NaturalGround(below))
+        {
+            // Never on roofs, walls, tree canopies or logs: only on the land itself.
+            return null;
+        }
         if (top > 0)
         {
             return pos.Y + top;
-        }
-        var belowPos = pos.DownCopy();
-        var below = accessor.GetBlock(belowPos);
-        if (below.IsLiquid())
-        {
-            return null;
         }
         if (below.SideSolid[BlockFacing.UP.Index])
         {
@@ -193,6 +194,11 @@ public partial class DirectorSystem
         float belowTop = TopOf(accessor, below, belowPos);
         return belowTop >= ThinCover ? belowPos.Y + belowTop : null;
     }
+
+    /// <summary>Ground a creature walks on in the wild: soil, gravel, sand, stone, snow or ice, not anything built or grown.</summary>
+    private static bool NaturalGround(Block block) => block.BlockMaterial is
+        EnumBlockMaterial.Soil or EnumBlockMaterial.Gravel or EnumBlockMaterial.Sand or
+        EnumBlockMaterial.Stone or EnumBlockMaterial.Snow or EnumBlockMaterial.Ice;
 
     private static float TopOf(IBlockAccessor accessor, Block block, BlockPos pos)
     {
@@ -294,7 +300,7 @@ public partial class DirectorSystem
         return new Vec3d(Math.Sin(pos.Yaw), 0, Math.Cos(pos.Yaw));
     }
 
-    /// <summary>No block between the two points: collision boxes, plus whole leaf blocks, stop the line.</summary>
+    /// <summary>No block between the two points: collision boxes, plus whole leaf blocks, stop the line; glass and fences do not.</summary>
     private bool ClearLine(Vec3d from, Vec3d to)
     {
         sight ??= new AABBIntersectionTest(new SightSupplier(sapi.World.BlockAccessor));
@@ -317,11 +323,23 @@ public partial class DirectorSystem
 
         public Block GetBlock(BlockPos pos) => blockAccessor.GetBlock(pos);
 
-        public Cuboidf[] GetBlockIntersectionBoxes(BlockPos pos)
+        public Cuboidf[]? GetBlockIntersectionBoxes(BlockPos pos)
         {
             var block = blockAccessor.GetBlock(pos);
-            return block.BlockMaterial == EnumBlockMaterial.Leaves ? WholeBlock : block.GetCollisionBoxes(blockAccessor, pos);
+            if (block.BlockMaterial == EnumBlockMaterial.Leaves)
+            {
+                return WholeBlock;
+            }
+            return SeeThrough(block) ? null : block.GetCollisionBoxes(blockAccessor, pos);
         }
+
+        /// <summary>
+        /// Blocks a player looks through although they collide: glass and panes, and fences of every kind
+        /// (wood, roughhewn, bamboo, wattle, iron). Doors and palisades are not, though like these they
+        /// absorb no light, so the test goes by material and code rather than by light.
+        /// </summary>
+        private static bool SeeThrough(Block block) =>
+            block.BlockMaterial == EnumBlockMaterial.Glass || (block.Code?.Path.Contains("fence") ?? false);
 
         public Entity[] GetEntitiesAround(Vec3d position, float horRange, float vertRange, ActionConsumable<Entity>? matches = null) =>
             Array.Empty<Entity>();

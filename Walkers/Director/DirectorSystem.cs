@@ -85,12 +85,15 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
 
     private void OnRunGame()
     {
-        foreach (var standIn in standIns.Values)
+        if (config.Debug.StandInVictims)
         {
-            KeepLoadedAround(standIn);
+            foreach (var standIn in standIns.Values)
+            {
+                KeepLoadedAround(standIn);
+            }
         }
         ProcessRestore(startup: true);
-        sapi.Event.RegisterGameTickListener(OnSecond, 1000);
+        sapi.Event.RegisterGameTickListener(OnSecond, e => Mod.Logger.Error("Director update failed: {0}", e), 1000);
     }
 
     public override void Dispose()
@@ -395,7 +398,8 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
             return;
         }
         GoDown(walker, entity.Pos, DescribeDeath(damage), KillerName(damage));
-        if (damage?.Source == EnumDamageSource.Void)
+        // A HauntEnded handler may already have released it.
+        if (damage?.Source == EnumDamageSource.Void && walker.State == WalkerState.Down)
         {
             ReleaseCore(walker, WalkerRelease.Void, false);
         }
@@ -499,7 +503,7 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
     private void ReleaseCore(WalkerRecord walker, WalkerRelease reason, bool fursTaken)
     {
         var entry = LatestEntry(walker.Id);
-        if (entry == null)
+        if (entry == null || walker.State != WalkerState.Down)
         {
             return;
         }

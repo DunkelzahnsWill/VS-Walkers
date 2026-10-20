@@ -138,11 +138,20 @@ public partial class DirectorSystem
         {
             return;
         }
+        // The engine raises this before the column's chunks are in the map (ServerSystemSupplyChunks,
+        // mainThreadLoadChunkColumn), so the undo waits for the next main-thread pass.
+        int x = chunkCoord.X, z = chunkCoord.Y;
+        sapi.Event.EnqueueMainThreadTask(() => UndoInColumn(x, z), "walkers-restore");
+    }
+
+    private void UndoInColumn(int chunkX, int chunkZ)
+    {
         int size = Vintagestory.API.Config.GlobalConstants.ChunkSize;
         double now = sapi.World.Calendar.TotalHours;
         foreach (var record in data.Restore.ToList())
         {
-            if (record.X / size == chunkCoord.X && record.Z / size == chunkCoord.Y && (undoOnLoad.Contains(record) || IsDue(record, now)))
+            // TryUndo leaves an entry whose chunk unloaded again in the meantime.
+            if (record.X / size == chunkX && record.Z / size == chunkZ && (undoOnLoad.Contains(record) || IsDue(record, now)))
             {
                 TryUndo(record);
             }

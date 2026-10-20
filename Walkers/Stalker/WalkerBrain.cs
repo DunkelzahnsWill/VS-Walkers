@@ -52,6 +52,24 @@ public sealed class WalkerBrain
     /// <summary>The true form's still, stooped hold while the gaze stops it (its shape's animation code).</summary>
     public const string FreezeAnimation = "freeze";
 
+    /// <summary>From this escalation level a true form its victim stares at turns on them (grudge).</summary>
+    public const int StareAggroLevel = 2;
+
+    /// <summary>From this level a true form whose victim is alone at night turns on them (rage).</summary>
+    public const int IsolationAggroLevel = 3;
+
+    /// <summary>At this level it no longer avoids groups (wrath).</summary>
+    public const int WrathLevel = 5;
+
+    /// <summary>The victim's stare of this long turns a true form on them, from <see cref="StareAggroLevel"/>.</summary>
+    private const double StareAggroSeconds = 2;
+
+    /// <summary>A stare's aggro lasts this long after the stare.</summary>
+    private const long StareAggroMs = 20000;
+
+    /// <summary>The victim alone this long, at night, from <see cref="IsolationAggroLevel"/>.</summary>
+    private const double IsolationSeconds = 30;
+
     /// <summary>Blocks the creep band's target moves closer after each look.</summary>
     public const float CreepStepBlocks = 3;
 
@@ -73,6 +91,7 @@ public sealed class WalkerBrain
     private bool silhouetteCounted;
     private bool companyNow;
     private double aloneSeconds;
+    private long stareAggroUntilMs;
 
     /// <summary>The latest gaze check.</summary>
     public GazeResult Gaze;
@@ -149,6 +168,20 @@ public sealed class WalkerBrain
     public ITreeAttribute Ai => StalkerMemory.Ai(Memory);
 
     public int Stage => Memory.GetInt(WalkerMemory.Stage);
+
+    /// <summary>The walker's escalation level, 1 to 5 (<see cref="StalkerMemory.Level"/>).</summary>
+    public int Level => StalkerMemory.Level(Memory);
+
+    /// <summary>Its victim stared it down lately and it turned on them (true form, from escalation 2).</summary>
+    public bool StareAggro => api.World.ElapsedMilliseconds < stareAggroUntilMs;
+
+    /// <summary>
+    /// A true form hunts outside stage 5: stared down from escalation 2, or, from escalation 3, its
+    /// victim alone at night. Only in worlds where creatures are aggressive.
+    /// </summary>
+    public bool Aggro => IsTrueForm && system.Hostility == EnumCreatureHostilityLevel.Aggressive &&
+                         (StareAggro || (Level >= IsolationAggroLevel && Night && !companyNow && aloneSeconds >= IsolationSeconds &&
+                                         !StalkerModSystem.IsAsleep(Victim)));
 
     /// <summary>Real milliseconds since a player last hit it (kept in the memory, so it survives a shift); long.MaxValue if never.</summary>
     public long MsSincePlayerHit
@@ -240,6 +273,11 @@ public sealed class WalkerBrain
             {
                 sightingCounted = true;
                 StalkerLadder.OnSighting(Memory);
+            }
+            if (victimLookSeconds >= StareAggroSeconds && IsTrueForm && Stage > 0 && Level >= StareAggroLevel)
+            {
+                // Grudge: staring at the true form no longer holds it; it comes for the one who stares.
+                stareAggroUntilMs = now + StareAggroMs;
             }
         }
         else
@@ -372,27 +410,38 @@ public sealed class WalkerBrain
             }
             return StalkerMode.Retreat;
         }
-        if (stage >= StalkerLadder.HuntStage)
+        bool huntStage = stage >= StalkerLadder.HuntStage;
+        bool aggro = !huntStage && Aggro;
+        if (huntStage || aggro)
         {
             var health = Body.GetBehavior<EntityBehaviorHealth>();
             if (health != null && health.MaxHealth > 0 && health.Health / health.MaxHealth < Config.Forms.RetreatHealth)
             {
                 SetBreakOff(ai, ref breakOff, "health");
-                system.Ladder.OnDrivenOff(memory, now);
+                if (huntStage)
+                {
+                    system.Ladder.OnDrivenOff(memory, now);
+                }
                 return StalkerMode.Retreat;
             }
-            if (ai.GetBool(StalkerMemory.HuntOver))
+            if (huntStage && ai.GetBool(StalkerMemory.HuntOver))
             {
                 SetBreakOff(ai, ref breakOff, "huntover");
                 return StalkerMode.Retreat;
+            }
+            if (aggro && breakOff is "withdraw" or "stoodup")
+            {
+                // Turned on its victim: a plain withdrawal gives way to the hunt.
+                ai.SetString(StalkerMemory.BreakOff, breakOff = "");
             }
             // Break-offs that pass on their own: night comes back, the company leaves.
             if ((breakOff == "dawn" && Night) || (breakOff == "company" && aloneSeconds >= 10))
             {
                 ai.SetString(StalkerMemory.BreakOff, breakOff = "");
             }
-            if (breakOff.Length == 0 && companyNow)
+            if (breakOff.Length == 0 && companyNow && Level < WrathLevel)
             {
+                // Below wrath it still avoids groups.
                 SetBreakOff(ai, ref breakOff, "company");
             }
             if (breakOff.Length == 0 && !Night && !hurtLately)
@@ -484,7 +533,7 @@ public sealed class WalkerBrain
     private void UpdateFreeze(long nowMs)
     {
         // A burning body runs for water whoever watches, and a swimming one keeps swimming for the shore.
-        bool frozen = Config.Gaze.Freeze && Gaze.AnyWatched && MsSincePlayerHit >= HitBreaksFreezeMs && !Body.IsOnFire && !Body.Swimming;
+        bool frozen = Config.Gaze.Freeze && Gaze.AnyWatched && MsSincePlayerHit >= HitBreaksFreezeMs && !Body.IsOnFire && !Body.Swimming && !StareAggro;
         if (frozen && Mode == StalkerMode.Hunt && VictimDistance <= Config.Gaze.LungeRange)
         {
             frozen = false;

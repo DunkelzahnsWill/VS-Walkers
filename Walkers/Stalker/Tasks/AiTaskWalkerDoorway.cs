@@ -85,6 +85,11 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
         {
             return false;
         }
+        if (brain.Stage < StalkerLadder.HuntStage)
+        {
+            // An aggro hunt before stage 5 leaves doors to stage 5.
+            return false;
+        }
         var victim = brain.Victim;
         long now = world.ElapsedMilliseconds;
         if (door != null && holding && now < holdUntilMs && StillWorthIt(brain, victim))

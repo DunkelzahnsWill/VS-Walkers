@@ -484,7 +484,8 @@ public sealed class StalkerModSystem : ModSystem
                 now,
                 victim,
                 Exposed: victim != null && (IsCounting(victim) || asleep),
-                Alone: !brain.Company,
+                // Wrath (escalation 5) no longer minds company: the group cap stops holding it back.
+                Alone: !brain.Company || brain.Level >= WalkerBrain.WrathLevel,
                 Night: victim != null && IsNight(api.World, victim.Pos.XYZ),
                 Asleep: asleep);
             if (Ladder.Update(memory, input) == LadderOutcome.HuntEnded)

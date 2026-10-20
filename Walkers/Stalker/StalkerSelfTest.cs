@@ -66,6 +66,7 @@ public sealed class StalkerSelfTest
             LadderChecks(Check);
             ConeChecks(Check);
             EntryChecks(Check);
+            LevelChecks(Check);
             LiveChecks(Check);
         }
         catch (Exception e)
@@ -209,6 +210,18 @@ public sealed class StalkerSelfTest
         bool side = WalkerGaze.InCone(eye, view, new Vec3d(10, 0, 0), cosHalf);
         bool behind = WalkerGaze.InCone(eye, view, new Vec3d(0, 0, -10), cosHalf);
         check("view cone: ahead and 50 degrees in, 90 degrees and behind out", ahead && edge && !side && !behind, $"{ahead} {edge} {side} {behind}");
+    }
+
+    private static void LevelChecks(Action<string, bool, string> check)
+    {
+        var fresh = new TreeAttribute();
+        var returned = new TreeAttribute();
+        returned.SetInt(WalkerMemory.Returns, 2);
+        var written = new TreeAttribute();
+        written.SetInt(WalkerMemory.Returns, 1);
+        written.SetInt(StalkerMemory.Escalation, 9);
+        int a = StalkerMemory.Level(fresh), b = StalkerMemory.Level(returned), c = StalkerMemory.Level(written);
+        check("escalation level: 1 at first, returns plus 1, walkers/escalation wins, at most 5", a == 1 && b == 3 && c == 5, $"{a} {b} {c}");
     }
 
     private static void EntryChecks(Action<string, bool, string> check)

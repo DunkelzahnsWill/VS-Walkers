@@ -63,8 +63,14 @@ public sealed class PagesAct
     public const string PennLate = "walkers-pennlate";
     public const string Fallback = "fallback";
 
+    /// <summary>The escalation pages (the lore bible's Tallies of Loss); used only while its journal asset is there.</summary>
+    public const string Losses = "walkers-losses";
+
     /// <summary>Piece counts of the three door journals (config/lore/*.json).</summary>
-    private static readonly Dictionary<string, int> Pieces = new() { [Maud] = 6, [Wat] = 3, [PennLate] = 2 };
+    private static readonly Dictionary<string, int> Pieces = new() { [Maud] = 6, [Wat] = 3, [PennLate] = 2, [Losses] = 3 };
+
+    /// <summary>The losses chapters, by escalation act: the herd, the crops, the torn door.</summary>
+    public const int LossHerd = 0, LossCrops = 1, LossDoor = 2;
 
     /// <summary>A page drops only while its reader is this close to the spot.</summary>
     private const double DropRange = 16;
@@ -164,6 +170,26 @@ public sealed class PagesAct
         }
         system.Log(ctx, ActCode, $"{trigger}: {(maud == null ? "nothing unread" : $"Maud {maud + 1} queued for dusk")}");
     }
+
+    /// <summary>The first of each escalation act for this reader: its Tallies of Loss page, at their door at dusk.</summary>
+    public void OnLoss(HarassContext ctx, int chapter)
+    {
+        if (!ctx.Config.Pages.Enabled || !HasJournal(Losses))
+        {
+            return;
+        }
+        string key = system.VictimKey(ctx);
+        var reader = Reader(key);
+        if (!reader.Once.Add("loss" + chapter) || IsFoundOrOutstanding(key, Losses, chapter))
+        {
+            return;
+        }
+        string name = chapter == LossDoor ? "walkers:pagename-hearsay" : "walkers:pagename-leaf";
+        Queue(reader, new Page { Journal = Losses, Chapter = chapter, NameKey = name, AtDusk = true, SawDay = !ctx.Night });
+        system.Log(ctx, ActCode, $"loss {chapter + 1} queued for dusk");
+    }
+
+    private bool HasJournal(string journal) => Api.Assets.Exists(new AssetLocation("walkers", $"config/lore/{journal}.json"));
 
     /// <summary>A counted knock: K1, K2 or K3 by its raps. Leaves its page, or the fallback letter, with the knock.</summary>
     public void OnKnock(HarassContext ctx, PageTrigger trigger)
@@ -552,7 +578,7 @@ public sealed class PagesAct
             letter.Attributes.SetString("signedby", "");
             return letter;
         }
-        if (!Pieces.TryGetValue(page.Journal, out int count) || page.Chapter < 0 || page.Chapter >= count)
+        if (!Pieces.TryGetValue(page.Journal, out int count) || page.Chapter < 0 || page.Chapter >= count || !HasJournal(page.Journal))
         {
             if (!quiet)
             {

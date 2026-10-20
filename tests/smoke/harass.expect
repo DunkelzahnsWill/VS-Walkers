@@ -2,8 +2,10 @@
   a context for the walker and its stand-in: pass
   break-in: a block behind the door keeps it out: pass
   break-in: enraged, the unlocked door bursts open: pass
-  break-in: not without rage: pass
+  break-in: not within 10 seconds of a wake: pass
+  break-in: one entry a night: pass
   break-in: the restore list closes the door: pass
+  break-in: the way in opens for the stalker AI: pass
   broken sleep: nothing while the victim is awake: pass
   chest lids: not while the victim looks at it: pass
   chest lids: out of sight, the lid pops: pass
@@ -13,16 +15,29 @@
   drain: a gain from elsewhere is kept: pass
   drain: never below its target, never raises: pass
   drain: regeneration between writes is undone: pass
+  eaten crops: a line of four set back two stages: pass
+  eaten crops: no ripe crop left, nothing more: pass
+  eaten crops: not on unclaimed land by default \(dedicated server\): pass
   echoes: footsteps behind a stand-in: pass
+  enraged: a hit alone does not enrage it \(onProvoked off\): pass
+  enraged: a walker that came back is enraged: pass
+  enraged: never while creature hostility is off: pass
+  knocks: an enraged dusk ends in a long scrape: pass
   knocks: one knock a night: pass
   knocks: one rap on the door: pass
   knocks: the K1 page lies by the door: pass
   pages: Wat on lore paper, a chapter out of range refused: pass
   pages: a Maud letter carries what the journal needs: pass
   pages: the fallback letter is a signed parchment: pass
+  rotting herd: not while someone is within 32 blocks: pass
+  rotting herd: removed when its time is up: pass
+  rotting herd: two does where nobody is: pass
   test house built: pass
   torches: it stays out until a player relights it: pass
   torches: the torch out of sight goes out: pass
+  torn door: from the second return it comes off whole, as an item: pass
+  torn door: hung back at dawn while its item lies there: pass
+  torn door: not on the first return: pass
   whispers: W5 only with the name, W6 never, W2 not in stage 3: pass
   whispers: a line \(logged for a stand-in\): pass
   whispers: switched off, nothing happens: pass

@@ -8,6 +8,7 @@ using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 using Walkers.Config;
+using Walkers.Director;
 using Walkers.Harassment.Acts;
 using Walkers.Stalker;
 using Walkers.Stalker.Tasks;
@@ -225,25 +226,146 @@ public sealed class HarassSelfTest
         var sleep = system.RunNow(ctx, Act(SleepDisturbAct.ActCode));
         check("broken sleep: nothing while the victim is awake", !sleep.Done, sleep.Detail);
 
-        // Stage 5: the break-in, only when enraged; a block behind the door keeps it out.
+        // Stage 5: the break-in, only when enraged (creature bible, section 7, "Enraged").
         ctx = Ctx(5)!;
-        var calm = Act(BreakInAct.ActCode).Run(ctx);
-        check("break-in: not without rage", !calm.Done, calm.Detail);
+        var memory = ctx.Memory;
+        int returnsBefore = memory.GetInt(WalkerMemory.Returns);
         bool wasProvoked = brain.Ai.GetBool(StalkerMemory.Provoked);
-        brain.Ai.SetBool(StalkerMemory.Provoked, true);
-        var stone = world.GetBlock(new AssetLocation("game", "rock-granite"));
-        var behind = doorPos.AddCopy(-1, 0, 0);
-        accessor.SetBlock(stone!.Id, behind);
-        placed.Add(behind);
-        var barred = system.RunNow(ctx, Act(BreakInAct.ActCode));
-        check("break-in: a block behind the door keeps it out", barred.Done && barred.Detail.StartsWith("kept out", StringComparison.Ordinal) && Doors.At(world, doorPos)?.Opened == false, barred.Detail);
-        accessor.SetBlock(0, behind);
-        HarassMemory.NewNight(ctx.Harass, world.Calendar.TotalHours);
-        var breakIn = system.RunNow(ctx, Act(BreakInAct.ActCode));
-        check("break-in: enraged, the unlocked door bursts open", breakIn.Done && breakIn.Detail.Contains("forced open") && Doors.At(world, doorPos)?.Opened == true, breakIn.Detail);
-        brain.Ai.SetBool(StalkerMemory.Provoked, wasProvoked);
-        system.Restore.UndoAllLocal(world);
-        check("break-in: the restore list closes the door", Doors.At(world, doorPos)?.Opened == false, "");
+        var breakInAct = Act(BreakInAct.ActCode);
+        try
+        {
+            memory.SetInt(WalkerMemory.Returns, 0);
+            brain.Ai.SetBool(StalkerMemory.Provoked, true);
+            var calm = breakInAct.Run(ctx);
+            check("enraged: a hit alone does not enrage it (onProvoked off)", !calm.Done && calm.Detail == "not enraged", calm.Detail);
+            brain.Ai.SetBool(StalkerMemory.Provoked, wasProvoked);
+            memory.SetInt(WalkerMemory.Returns, 1);
+            check("enraged: a walker that came back is enraged", Enraged.Is(ctx), "");
+            string hostility = world.Config.GetString("creatureHostility", "aggressive");
+            world.Config.SetString("creatureHostility", "off");
+            bool offCalm = !Enraged.Is(ctx);
+            world.Config.SetString("creatureHostility", hostility);
+            check("enraged: never while creature hostility is off", offCalm, "");
+
+            var stone = world.GetBlock(new AssetLocation("game", "rock-granite"));
+            var behind = doorPos.AddCopy(-1, 0, 0);
+            accessor.SetBlock(stone!.Id, behind);
+            placed.Add(behind);
+            var barred = system.RunNow(ctx, breakInAct);
+            check("break-in: a block behind the door keeps it out", barred.Done && barred.Detail.StartsWith("kept out", StringComparison.Ordinal) && Doors.At(world, doorPos)?.Opened == false, barred.Detail);
+            accessor.SetBlock(0, behind);
+
+            HarassMemory.NewNight(ctx.Harass, world.Calendar.TotalHours);
+            ctx.State.LastWakeMs = world.ElapsedMilliseconds;
+            var woke = system.RunNow(ctx, breakInAct);
+            ctx.State.LastWakeMs = -100000;
+            check("break-in: not within 10 seconds of a wake", !woke.Done && woke.Detail.Contains("woke"), woke.Detail);
+
+            var breakIn = system.RunNow(ctx, breakInAct);
+            var harass = ctx.Harass;
+            bool entry = harass.GetLong(HarassMemory.EntryUntilMs) > world.ElapsedMilliseconds && harass.GetInt(HarassMemory.EntryX) == doorPos.X && !harass.GetBool(HarassMemory.EntryTorn);
+            check("break-in: enraged, the unlocked door bursts open", breakIn.Done && breakIn.Detail.Contains("forced open") && Doors.At(world, doorPos)?.Opened == true, breakIn.Detail);
+            check("break-in: the way in opens for the stalker AI", entry, $"until {harass.GetLong(HarassMemory.EntryUntilMs)}");
+            var again = system.RunNow(ctx, breakInAct);
+            check("break-in: one entry a night", !again.Done, again.Detail);
+            system.Restore.UndoAllLocal(world);
+            check("break-in: the restore list closes the door", Doors.At(world, doorPos)?.Opened == false, "");
+
+            HarassMemory.NewNight(ctx.Harass, world.Calendar.TotalHours);
+            var tell = system.Knocks.RunDusk(ctx);
+            check("knocks: an enraged dusk ends in a long scrape", tell.Done && tell.Detail.Contains("long scrape"), tell.Detail);
+
+            // The torn door: only from the second return, once a haunt; hung back by the restore list.
+            var doorBh = world.BlockAccessor.GetBlockEntity(doorPos)?.GetBehavior<BEBehaviorDoor>();
+            check("torn door: not on the first return", doorBh != null && !BreakInAct.MayTear(ctx, doorBh), "");
+            memory.SetInt(WalkerMemory.Returns, 2);
+            bool mayTear = doorBh != null && BreakInAct.MayTear(ctx, doorBh);
+            bool torn = mayTear && TornDoor.TearNow(ctx, doorPos);
+            var doorItem = world.GetEntitiesAround(doorPos.ToVec3d().Add(0.5, 0.5, 0.5), 3, 3, e => e is EntityItem i && i.Itemstack?.Block?.Code?.Path == "door-solid-oak").FirstOrDefault();
+            check("torn door: from the second return it comes off whole, as an item", torn && accessor.GetBlock(doorPos).Id == 0 && doorItem != null, $"may {mayTear}, torn {torn}");
+            placed.Add(doorPos.UpCopy());
+            system.Restore.UndoAllLocal(world);
+            bool rehung = world.BlockAccessor.GetBlockEntity(doorPos)?.GetBehavior<BEBehaviorDoor>() is { Opened: false } && doorItem is { Alive: false };
+            check("torn door: hung back at dawn while its item lies there", rehung, accessor.GetBlock(doorPos).Code?.ToShortString() ?? "air");
+            memory.SetInt(WalkerMemory.Returns, 1);
+
+            EscalationChecks(check, ctx, standIn, origin, ground);
+        }
+        finally
+        {
+            memory.SetInt(WalkerMemory.Returns, returnsBefore);
+            brain.Ai.SetBool(StalkerMemory.Provoked, wasProvoked);
+        }
+    }
+
+    /// <summary>The rotting herd and the eaten crops, on the first return.</summary>
+    private void EscalationChecks(Action<string, bool, string> check, HarassContext ctx, Entity standIn, BlockPos origin, int ground)
+    {
+        var world = api.World;
+        var accessor = world.BlockAccessor;
+        var escalation = system.Escalation;
+        var harass = ctx.Harass;
+
+        // The herd lies 16 to 24 blocks from the door, never while a player is within 32.
+        harass.SetDouble("herdHomeX", origin.X + 0.5);
+        harass.SetDouble("herdHomeY", ground + 1);
+        harass.SetDouble("herdHomeZ", origin.Z + 0.5);
+        var victimAt = standIn.Pos.XYZ;
+        standIn.Pos.SetPos(origin.X + 0.5, ground + 1, origin.Z + 0.5);
+        var watched = escalation.LayHerd(ctx);
+        check("rotting herd: not while someone is within 32 blocks", !watched.Done, watched.Detail);
+        standIn.Pos.SetPos(victimAt.X + 80, victimAt.Y, victimAt.Z);
+        // A home far enough from anyone else counting (the director's smoke stand-ins stand at the spawn).
+        foreach (var (hx, hz) in new[] { (64, 0), (-64, 0), (0, 64), (0, -64), (48, 48), (-48, -48) })
+        {
+            var home = new BlockPos(origin.X + hx, ground, origin.Z + hz, 0);
+            if (accessor.GetChunkAtBlockPos(home) != null && !system.Stalker.CountingNear(home.ToVec3d(), 0, 56).Any(e => e.EntityId != standIn.EntityId))
+            {
+                harass.SetDouble("herdHomeX", home.X + 0.5);
+                harass.SetDouble("herdHomeY", accessor.GetTerrainMapheightAt(home) + 1);
+                harass.SetDouble("herdHomeZ", home.Z + 0.5);
+                break;
+            }
+        }
+        var herd = escalation.LayHerd(ctx);
+        standIn.Pos.SetPos(victimAt);
+        var ids = (harass["herdIds"] as LongArrayAttribute)?.value ?? Array.Empty<long>();
+        check("rotting herd: two does where nobody is", herd.Done && ids.Length == system.Config.Escalation.Herd.WildCarcasses, herd.Detail);
+        escalation.RemoveHerdNow(ctx);
+        check("rotting herd: removed when its time is up", ids.All(id => world.GetEntityById(id) is not { Alive: true }) && !harass.HasAttribute("herdIds"), "");
+
+        // Eaten crops: a line of ripe crops set back two stages; on a dedicated server never on unclaimed land by default.
+        var carrot = world.GetBlock(new AssetLocation("game", "crop-carrot-7"));
+        if (carrot == null)
+        {
+            check("eaten crops: the carrot crop exists", false, "");
+            return;
+        }
+        var crops = Enumerable.Range(-2, 4).Select(dx => origin.AddCopy(dx, 0, -5)).ToList();
+        foreach (var pos in crops)
+        {
+            Place(carrot, pos);
+        }
+        var cropConfig = system.Config.Escalation.Crops;
+        var rule = cropConfig.ClaimRule;
+        float share = cropConfig.MaxShare;
+        try
+        {
+            var unclaimed = escalation.EatCrops(ctx);
+            check("eaten crops: not on unclaimed land by default (dedicated server)", !unclaimed.Done || !api.Server.IsDedicated, unclaimed.Detail);
+            cropConfig.ClaimRule = CropClaimRule.VictimAccess;
+            cropConfig.MaxShare = 1;
+            var eaten = escalation.EatCrops(ctx);
+            int younger = crops.Count(p => accessor.GetBlock(p) is BlockCrop c && c.CurrentStage() == 5);
+            check("eaten crops: a line of four set back two stages", eaten.Done && younger == 4, $"{eaten.Detail}; {younger} at stage 5");
+            var more = escalation.EatCrops(ctx);
+            check("eaten crops: no ripe crop left, nothing more", !more.Done, more.Detail);
+        }
+        finally
+        {
+            cropConfig.ClaimRule = rule;
+            cropConfig.MaxShare = share;
+        }
     }
 
     /// <summary>A 13 by 13 stone platform with a door (+X), a trapdoor (-Z), a lit torch (-X) and a chest (+Z) around the centre.</summary>

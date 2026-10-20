@@ -59,7 +59,16 @@ public sealed class WhisperAct : HarassAct
         {
             return ActResult.Skip("no line for this stage");
         }
-        int line = pool[ctx.Rand.Next(pool.Count)];
+        return Say(ctx, pool[ctx.Rand.Next(pool.Count)]);
+    }
+
+    /// <summary>The tell's whisper on an enraged dusk (creature bible, section 7): iron and stone in the door frame.</summary>
+    public const int IronLine = 15;
+
+    /// <summary>One line to the victim alone, with the breath under it; the breath alone for noTitles.</summary>
+    public static ActResult Say(HarassContext ctx, int line)
+    {
+        var prefs = ctx.Prefs;
         var player = ctx.Player;
         if (player == null)
         {

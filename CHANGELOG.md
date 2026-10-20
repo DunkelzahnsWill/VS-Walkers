@@ -56,7 +56,9 @@ blade and arrowhead.
   server a few days, in forest, in deer country, and places the walker out of sight. Haunts pause
   for offline, idle and underground players and during temporal storms.
 - Claims are respected: doors, chests, torches and crops are touched only in unclaimed land or a
-  claim the victim owns or shares. A padlock, a door bar, reinforcement or anything behind the door keeps the break-in out.
+  claim the victim owns or shares, and a player or group the owner granted access counts as sharing.
+  `harass.checkClaims` (on by default) turns every claim check off for servers that want it. A
+  padlock, a door bar, reinforcement or anything behind the door always keeps the break-in out.
 - Tested headless on a 1.22.7 dedicated server: three walkers haunting three victims cost about
   0.2 ms of the server's time per second, with no memory growth over restarts.
 - Admin commands under `/walkers` (status, spawn, despawn, config, director, stalker, forms, harass,

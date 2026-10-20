@@ -1,0 +1,11 @@
+# Typed into the server console after boot; tests/smoke/commands.expect checks the replies.
+/walkers status
+/walkers config
+/walkers config director.tickSeconds
+/walkers config director.tickSeconds 2
+/walkers config harass.doors.enabled false
+/walkers config harass.doors
+/walkers reload
+/walkers spawn true
+/walkers despawn
+/walkers me

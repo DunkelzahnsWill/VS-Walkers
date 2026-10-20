@@ -233,17 +233,51 @@ public sealed class StalkerModSystem : ModSystem
                 return standIn;
             }
             ai.RemoveAttribute(StalkerMemory.OwnVictimEntity);
+            if (memory.GetInt(WalkerMemory.Stage) > 0)
+            {
+                // A stand-in's haunt ends with it, as a player's does.
+                memory.SetInt(WalkerMemory.Stage, 0);
+                brain.MarkSlipAway("victim died");
+            }
+            return null;
         }
 
         var body = brain.Body;
+        bool haunting = memory.GetInt(WalkerMemory.Stage) > 0;
         string uid = ai.GetString(StalkerMemory.OwnVictim, "");
-        if (uid.Length > 0 && api.World.PlayerByUid(uid) is IServerPlayer chosen && chosen.Entity is { } chosenEntity &&
-            chosen.ConnectionState == EnumClientState.Playing && chosenEntity.Alive &&
-            chosenEntity.Pos.Dimension == body.Pos.Dimension && chosenEntity.Pos.DistanceTo(body.Pos) <= OwnVictimRange * 2)
+        if (uid.Length > 0)
         {
-            return chosenEntity;
+            var chosen = api.World.PlayerByUid(uid) as IServerPlayer;
+            if (chosen?.Entity is { } chosenEntity && chosen.ConnectionState == EnumClientState.Playing)
+            {
+                if (!chosenEntity.Alive)
+                {
+                    // The haunt ends on the victim's death (creature bible, owner's answers).
+                    if (haunting)
+                    {
+                        memory.SetInt(WalkerMemory.Stage, 0);
+                        brain.MarkSlipAway("victim died");
+                    }
+                    return null;
+                }
+                if (chosenEntity.Pos.Dimension == body.Pos.Dimension && chosenEntity.Pos.DistanceTo(body.Pos) <= OwnVictimRange * 2)
+                {
+                    return chosenEntity;
+                }
+            }
+            if (haunting)
+            {
+                // The stage belongs to this victim: it waits for them rather than carry it to someone else.
+                return null;
+            }
+            ai.RemoveAttribute(StalkerMemory.OwnVictim);
         }
 
+        if (brain.SlipAwayReason != null)
+        {
+            // A body on its way out begins no new haunt.
+            return null;
+        }
         if (nowMs - lastSearchMs < OwnVictimSearchMs && lastSearchMs != 0)
         {
             return null;

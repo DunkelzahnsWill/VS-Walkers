@@ -1,0 +1,570 @@
+// Skinwalker, guise (animal form): a lone female deer of whichever vanilla type lives in the region, in the more wooded part of its habitat.
+// Tells: eyes set a little too far forward with a red catch-light, it never flees, it stands still and turns to face you.
+// Per-type numbers are copied from vanilla deer-adult.json (1.22.7, female). Vanilla assets need the "game:" prefix here.
+// Test-only for the JSON play-test: the spawn rules and the despawn behavior. The release build has neither; the Director
+// takes them over. Spawn chance is per deer type, so a region where several types live gets more guises.
+// stayinrange and lookatentity stand in for the Stalker AI's own tasks. Known limit: stayinrange keeps its first target and
+// skips its cooldown while out of its band, so terrain that blocks its step freezes the creature until the player comes
+// back into the band.
+{
+    "code": "skinwalker-animal",
+    "class": "EntityAgent",
+    "tags": ["animal", "habitat-land"],
+    "variantgroups": [
+        {
+            "code": "type",
+            "states": [
+                "whitetail", "redbrocket", "marsh", "caribou", "water", "pudu", "elk", "taruca",
+                "chital", "guemal", "pampas", "fallow"
+            ]
+        }
+    ],
+    "weightByType": {
+        "*-redbrocket": 48,
+        "*-marsh": 105,
+        "*-caribou": 180,
+        "*-water": 17,
+        "*-pudu": 12,
+        "*-elk": 450,
+        "*-taruca": 60,
+        "*-guemal": 60,
+        "*-pampas": 38,
+        "*": 100
+    },
+    "hitBoxSizeByType": {
+        "*-whitetail": { "x": 1.1, "y": 1.1 },
+        "*-redbrocket": { "x": 0.7, "y": 0.8 },
+        "*-marsh": { "x": 1.1, "y": 1.3 },
+        "*-caribou": { "x": 1.1, "y": 1.2 },
+        "*-pudu": { "x": 0.7, "y": 0.7 },
+        "*-elk": { "x": 1.3, "y": 1.5 },
+        "*-chital": { "x": 1.1, "y": 1.0 },
+        "*-pampas": { "x": 0.6, "y": 0.7 },
+        "*-fallow": { "x": 1.0, "y": 1.0 },
+        "*": { "x": 0.9, "y": 0.9 }
+    },
+    "deadHitBoxSizeByType": {
+        "*-redbrocket": { "x": 0.7, "y": 0.3 },
+        "*-pudu": { "x": 0.7, "y": 0.3 },
+        "*-elk": { "x": 1.3, "y": 0.5 },
+        "*-taruca": { "x": 0.9, "y": 0.3 },
+        "*-chital": { "x": 1.0, "y": 0.4 },
+        "*-guemal": { "x": 1.0, "y": 0.3 },
+        "*-pampas": { "x": 0.7, "y": 0.3 },
+        "*-fallow": { "x": 1.0, "y": 0.4 },
+        "*": { "x": 1.1, "y": 0.4 }
+    },
+    "eyeHeightByType": {
+        "*-redbrocket": 0.7,
+        "*-pudu": 0.6,
+        "*-elk": 1.75,
+        "*-taruca": 1.2,
+        "*-chital": 1.2,
+        "*-pampas": 0.9,
+        "*-fallow": 1.2,
+        "*": 1.4
+    },
+    "fallDamageMultiplier": 0.5,
+    "drops": [],
+    "attributes": {
+        "disableElementsByType": {
+            "*-elk": ["R Eye", "SleepR", "pupilR", "L Eye", "SleepL", "pupilL"],
+            "*": ["R Eye", "R Eye2", "L Eye", "L Eye2"]
+        }
+    },
+    "behaviorConfigs": {
+        "controlledphysics": {
+            "stepHeightByType": { "*-redbrocket": 2.1251, "*-pudu": 2.1251, "*-pampas": 2.1251, "*": 3.1251 }
+        },
+        "floatupwhenstuck": { "onlyWhenDead": true }
+    },
+    "client": {
+        "renderer": "Shape",
+        "shapeByType": {
+            "*-elk": {
+                "base": "game:entity/animal/mammal/hooved/deer/elk/female",
+                "overlays": [
+                    { "base": "walkers:entity/skinwalker/guise/eyes-elk" }
+                ]
+            },
+            "*-fallow": {
+                "base": "game:entity/animal/mammal/hooved/deer/chital/adult",
+                "overlays": [
+                    { "base": "walkers:entity/skinwalker/guise/eyes-fallow" }
+                ]
+            },
+            "*": {
+                "base": "game:entity/animal/mammal/hooved/deer/{type}/adult",
+                "overlays": [
+                    { "base": "walkers:entity/skinwalker/guise/eyes-{type}" }
+                ]
+            }
+        },
+        "texture": { "base": "game:entity/animal/mammal/hooved/deer/{type}-adult" },
+        "textures": {
+            "walkers-eye": { "base": "walkers:entity/skinwalker/guise-eye" }
+        },
+        "size": 0.95,
+        "behaviors": [
+            { "code": "repulseagents" },
+            { "code": "controlledphysics" },
+            { "code": "interpolateposition" },
+            { "code": "floatupwhenstuck" }
+        ],
+        "animations": [
+            {
+                "code": "hurt",
+                "animation": "Hurt",
+                "animationSpeed": 2.2,
+                "weight": 10,
+                "blendMode": "AddAverage"
+            },
+            {
+                "code": "die",
+                "animation": "Die",
+                "easeInSpeed": 3,
+                "animationSpeed": 0.8,
+                "weight": 10,
+                "blendMode": "Average",
+                "triggeredBy": { "onControls": ["dead"] }
+            },
+            {
+                "code": "idle",
+                "animation": "Idle",
+                "blendMode": "AddAverage",
+                "easeOutSpeed": 4,
+                "triggeredBy": { "defaultAnim": true }
+            },
+            {
+                "code": "sit",
+                "animation": "Sit",
+                "easeInSpeed": 4,
+                "easeOutSpeed": 4,
+                "blendMode": "Average"
+            },
+            {
+                "code": "eat",
+                "animation": "Eat",
+                "easeInSpeed": 4,
+                "easeOutSpeed": 4,
+                "blendMode": "Average"
+            },
+            {
+                "code": "swim",
+                "animation": "Swim",
+                "supressDefaultAnimation": true,
+                "blendMode": "Average"
+            },
+            {
+                "code": "walk",
+                "animation": "Walk",
+                "supressDefaultAnimation": true,
+                "blendMode": "Average"
+            },
+            {
+                "code": "run",
+                "animation": "Run",
+                "supressDefaultAnimation": true,
+                "blendMode": "Average"
+            }
+        ]
+    },
+    "server": {
+        "attributes": {
+            "pathfinder": { "minTurnAnglePerSec": 90, "maxTurnAnglePerSec": 180 }
+        },
+        "behaviors": [
+            { "code": "repulseagents" },
+            { "code": "controlledphysics" },
+            { "code": "despawn", "minPlayerDistance": 64, "minSeconds": 600, "afterDays": 0.25 },
+            {
+                "code": "health",
+                "currenthealthByType": {
+                    "*-redbrocket": 10,
+                    "*-water": 11,
+                    "*-pudu": 6,
+                    "*-elk": 30,
+                    "*-pampas": 10,
+                    "*": 21
+                },
+                "maxhealthByType": {
+                    "*-redbrocket": 10,
+                    "*-water": 11,
+                    "*-pudu": 6,
+                    "*-elk": 30,
+                    "*-pampas": 10,
+                    "*": 21
+                }
+            },
+            { "code": "floatupwhenstuck" },
+            { "code": "breathe" },
+            {
+                "code": "taskai",
+                "aiCreatureType": "LandCreature",
+                "aitasks": [
+                    {
+                        "code": "getoutofwater",
+                        "animation": "Swim",
+                        "priority": 1.4,
+                        "movespeedByType": {
+                            "*-redbrocket": 0.04,
+                            "*-water": 0.04,
+                            "*-pudu": 0.04,
+                            "*-pampas": 0.04,
+                            "*": 0.045
+                        },
+                        "animationSpeed": 1
+                    },
+                    {
+                        "code": "stayinrange",
+                        "entityCodes": ["player"],
+                        "friendlyTarget": true,
+                        "priority": 1.35,
+                        "priorityForCancel": 1.38,
+                        "searchRange": 112,
+                        "targetRange": 20,
+                        "targetRangeTolerance": 4,
+                        "searchWaitMs": 4000,
+                        "movespeedByType": {
+                            "*-redbrocket": 0.005,
+                            "*-water": 0.005,
+                            "*-pudu": 0.0035,
+                            "*-elk": 0.0065,
+                            "*-pampas": 0.005,
+                            "*": 0.006
+                        },
+                        "animation": "Walk",
+                        "animationSpeedByType": {
+                            "*-whitetail": 1.24,
+                            "*-redbrocket": 1.39,
+                            "*-marsh": 1.22,
+                            "*-water": 1.39,
+                            "*-pudu": 1.4,
+                            "*-elk": 1.35,
+                            "*-chital": 1.4,
+                            "*-pampas": 1.39,
+                            "*": 1.38
+                        },
+                        "mincooldown": 2000,
+                        "maxcooldown": 6000
+                    },
+                    {
+                        "code": "lookatentity",
+                        "entityCodes": ["player"],
+                        "friendlyTarget": true,
+                        "priority": 1.3
+                    },
+                    {
+                        "code": "idle",
+                        "animation": "Eat",
+                        "priority": 1.2,
+                        "priorityForCancel": 1.25,
+                        "minduration": 2667,
+                        "maxduration": 2667,
+                        "mincooldown": 6000,
+                        "maxcooldown": 20000,
+                        "animationSpeed": 1
+                    },
+                    {
+                        "code": "wander",
+                        "animation": "Walk",
+                        "priority": 1.0,
+                        "priorityForCancel": 1.25,
+                        "movespeedByType": {
+                            "*-redbrocket": 0.005,
+                            "*-water": 0.005,
+                            "*-pudu": 0.0035,
+                            "*-elk": 0.0065,
+                            "*-pampas": 0.005,
+                            "*": 0.006
+                        },
+                        "animationSpeedByType": {
+                            "*-whitetail": 1.24,
+                            "*-redbrocket": 1.39,
+                            "*-marsh": 1.22,
+                            "*-water": 1.39,
+                            "*-pudu": 1.4,
+                            "*-elk": 1.35,
+                            "*-chital": 1.4,
+                            "*-pampas": 1.39,
+                            "*": 1.38
+                        }
+                    },
+                    {
+                        "code": "idle",
+                        "animation": "Idle",
+                        "priority": 0.9,
+                        "priorityForCancel": 1.25,
+                        "minduration": 18000,
+                        "maxduration": 135000,
+                        "mincooldown": 6000,
+                        "maxcooldown": 60000
+                    },
+                    { "code": "lookaround", "priority": 0.5 }
+                ]
+            }
+        ],
+        "spawnconditions": {
+            "runtime": {
+                "group": "neutral",
+                "chance": 0.0001,
+                "maxQuantity": 1,
+                "maxQuantityByGroup": { "code": "walkers:skinwalker-*", "maxQuantity": 1 },
+                "spawnCapPlayerScaling": 0,
+                "minDistanceToPlayer": 40,
+                "tryOnlySurface": true,
+                "lightLevelType": "MaxTimeOfDayLight",
+                "maxLightLevel": 11,
+                "groupSize": { "avg": 1, "var": 0 },
+                "insideBlockCodes": ["game:air", "game:tallgrass-*", "game:snowlayer-1", "game:flower-*"]
+            }
+        },
+        "spawnconditionsByType": {
+            "*-whitetail": {
+                "runtime": {
+                    "minTemp": -5,
+                    "maxTemp": 15,
+                    "minRain": 0.25,
+                    "minY": 0.9,
+                    "maxY": 1.4,
+                    "minForest": 0.5,
+                    "maxForest": 0.75,
+                    "maxShrubs": 0.75
+                }
+            },
+            "*-redbrocket": {
+                "runtime": {
+                    "minTemp": 20,
+                    "maxTemp": 40,
+                    "minRain": 0.5,
+                    "minY": 0.9,
+                    "maxY": 1.4,
+                    "minForest": 0.6
+                }
+            },
+            "*-marsh": {
+                "runtime": {
+                    "minTemp": 11,
+                    "maxTemp": 25,
+                    "minRain": 0.35,
+                    "minY": 0.9,
+                    "maxY": 1.3,
+                    "minForest": 0.5,
+                    "maxForest": 0.9,
+                    "maxShrubs": 0.9
+                }
+            },
+            "*-caribou": {
+                "runtime": {
+                    "minTemp": -19,
+                    "maxTemp": 1,
+                    "minRain": 0.35,
+                    "minY": 0.9,
+                    "maxY": 1.5,
+                    "minForest": 0.5,
+                    "maxForest": 0.6,
+                    "maxShrubs": 0.7
+                }
+            },
+            "*-water": {
+                "runtime": {
+                    "minTemp": 5,
+                    "maxTemp": 18,
+                    "minRain": 0.65,
+                    "minY": 0.9,
+                    "maxY": 1.1,
+                    "minForest": 0.25,
+                    "maxForest": 0.4,
+                    "maxShrubs": 0.4
+                }
+            },
+            "*-pudu": {
+                "runtime": {
+                    "minTemp": 0,
+                    "maxTemp": 8,
+                    "minRain": 0.5,
+                    "maxRain": 0.8,
+                    "minY": 0.9,
+                    "maxY": 1.2,
+                    "minForest": 0.5
+                }
+            },
+            "*-elk": {
+                "runtime": {
+                    "minTemp": -14,
+                    "maxTemp": -2,
+                    "minRain": 0.2,
+                    "minY": 1.2,
+                    "maxY": 1.8,
+                    "minForest": 0.5,
+                    "maxForest": 0.6,
+                    "maxShrubs": 0.6
+                }
+            },
+            "*-taruca": {
+                "runtime": {
+                    "minTemp": 12,
+                    "maxTemp": 24,
+                    "minRain": 0.1,
+                    "maxRain": 0.6,
+                    "minY": 1.2,
+                    "maxY": 1.6,
+                    "minForest": 0.3,
+                    "maxForest": 0.5,
+                    "maxShrubs": 0.5
+                }
+            },
+            "*-chital": {
+                "runtime": {
+                    "minTemp": 16,
+                    "maxTemp": 28,
+                    "minRain": 0.2,
+                    "maxRain": 0.9,
+                    "minY": 0.9,
+                    "maxY": 1.2,
+                    "minForest": 0.5,
+                    "maxForest": 0.8,
+                    "maxShrubs": 0.1
+                }
+            },
+            "*-guemal": {
+                "runtime": {
+                    "minTemp": -5,
+                    "maxTemp": 8,
+                    "minRain": 0.1,
+                    "maxRain": 0.6,
+                    "minY": 1.2,
+                    "maxY": 1.6,
+                    "minForest": 0.3,
+                    "maxForest": 0.5,
+                    "maxShrubs": 0.5
+                }
+            },
+            "*-pampas": {
+                "runtime": {
+                    "minTemp": 6,
+                    "maxTemp": 30,
+                    "minRain": 0.41,
+                    "maxRain": 1.0,
+                    "minY": 0.9,
+                    "maxY": 1.2,
+                    "minForest": 0.25,
+                    "maxForest": 0.4,
+                    "maxShrubs": 0.4
+                }
+            },
+            "*-fallow": {
+                "runtime": {
+                    "minTemp": -5,
+                    "maxTemp": 15,
+                    "minRain": 0.4,
+                    "maxRain": 1.0,
+                    "minY": 0.9,
+                    "maxY": 1.2,
+                    "minForest": 0.5
+                }
+            }
+        }
+    },
+    "soundsByType": {
+        "*-redbrocket": {
+            "hurt": {
+                "path": "game:creature/hooved/small/callsmall*",
+                "pitch": { "avg": 0.8, "var": 0.05 }
+            },
+            "death": {
+                "path": "game:creature/hooved/small/callsmall*",
+                "pitch": { "avg": 0.8, "var": 0.05 }
+            },
+            "idle": {
+                "path": "game:creature/hooved/small/smallscream*",
+                "pitch": { "avg": 0.75, "var": 0.05 }
+            }
+        },
+        "*-pudu": {
+            "hurt": {
+                "path": "game:creature/hooved/small/callsmall*",
+                "pitch": { "avg": 0.8, "var": 0.05 }
+            },
+            "death": {
+                "path": "game:creature/hooved/small/callsmall*",
+                "pitch": { "avg": 0.8, "var": 0.05 }
+            },
+            "idle": {
+                "path": "game:creature/hooved/small/smallscream*",
+                "pitch": { "avg": 0.75, "var": 0.05 }
+            }
+        },
+        "*-water": {
+            "hurt": {
+                "path": "game:creature/hooved/small/callsmall*",
+                "pitch": { "avg": 0.8, "var": 0.05 }
+            },
+            "death": {
+                "path": "game:creature/hooved/small/callsmall*",
+                "pitch": { "avg": 0.8, "var": 0.05 }
+            },
+            "idle": {
+                "path": "game:creature/hooved/small/smallscream*",
+                "pitch": { "avg": 0.75, "var": 0.05 }
+            }
+        },
+        "*-caribou": {
+            "hurt": {
+                "path": "game:creature/hooved/large/redstag/roar*",
+                "pitch": { "avg": 0.8, "var": 0.05 }
+            },
+            "death": {
+                "path": "game:creature/hooved/large/redstag/roar*",
+                "pitch": { "avg": 0.8, "var": 0.05 }
+            },
+            "idle": {
+                "path": "game:creature/animal/mammal/hooved/deer/elk-bellow*",
+                "pitch": { "avg": 0.75, "var": 0.05 }
+            }
+        },
+        "*-elk": {
+            "hurt": {
+                "path": "game:creature/animal/mammal/hooved/deer/elk-hurt*",
+                "pitch": { "avg": 0.8, "var": 0.05 }
+            },
+            "death": {
+                "path": "game:creature/animal/mammal/hooved/deer/elk-death*",
+                "pitch": { "avg": 0.8, "var": 0.05 }
+            },
+            "idle": {
+                "path": "game:creature/animal/mammal/hooved/deer/elk-bellow*",
+                "pitch": { "avg": 0.75, "var": 0.05 }
+            }
+        },
+        "*-pampas": {
+            "hurt": {
+                "path": "game:creature/hooved/small/callsmall*",
+                "pitch": { "avg": 0.8, "var": 0.05 }
+            },
+            "death": {
+                "path": "game:creature/hooved/small/callsmall*",
+                "pitch": { "avg": 0.8, "var": 0.05 }
+            },
+            "idle": {
+                "path": "game:creature/hooved/small/smallscream*",
+                "pitch": { "avg": 0.75, "var": 0.05 }
+            }
+        },
+        "*": {
+            "hurt": {
+                "path": "game:creature/hooved/medium/buck-bellow*",
+                "pitch": { "avg": 0.8, "var": 0.05 }
+            },
+            "death": {
+                "path": "game:creature/hooved/medium/buck-bellow*",
+                "pitch": { "avg": 0.8, "var": 0.05 }
+            },
+            "idle": {
+                "path": "game:creature/hooved/medium/deer-call*",
+                "pitch": { "avg": 0.75, "var": 0.05 }
+            }
+        }
+    },
+    "idleSoundChance": 0.03
+}

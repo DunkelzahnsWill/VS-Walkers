@@ -1,0 +1,228 @@
+// Skinwalker, true form. Placeholder body: the vanilla bowtorn shape without its rib crossbow, a dark bark texture and glowing eyes.
+// It keeps 5 to 13 blocks from a player and stares, strikes only within reach, and below 30% health flees for 20 seconds.
+// Test-only for the JSON play-test: the spawn rules and the despawn behavior. The release build has neither; the Director
+// takes them over.
+{
+    "code": "skinwalker-true",
+    "class": "EntityAgent",
+    "tags": ["habitat-land"],
+    "weight": 110,
+    "canClimb": true,
+    "hitboxSize": { "x": 0.6, "y": 1.95 },
+    "deadHitboxSize": { "x": 1.3, "y": 0.9 },
+    "eyeHeight": 1.7,
+    "drops": [],
+    "attributes": {
+        "disableElements": [
+            "Crossbow", "L Rib B1", "L Rib B2", "L Rib B3", "L Sinew B1", "L Sinew B2", "L Knuckle",
+            "L Rib A1", "L Rib A2", "L Rib A3", "L Sinew A1", "L Sinew A2", "L Rib C1", "L Rib C2",
+            "L Rib C3", "L Sinew C1", "L Sinew C2", "R Rib A1", "R Rib A2", "R Rib A3", "R Sinew A1",
+            "R Sinew A2", "R Rib B1", "R Rib B2", "R Rib B3", "R Sinew B1", "R Sinew B2", "Sinew4",
+            "R Knuckle", "R Rib C1", "R Rib C2", "R Rib C3", "R Sinew C1", "R Sinew C2", "Pouch",
+            "Sheet1", "Sheet2", "Sheet2EX", "Sheet3", "Sheet6", "Sheet11", "Sheet12"
+        ],
+        "glitchFlicker": true,
+        "reckless": true
+    },
+    "client": {
+        "renderer": "Shape",
+        "pitchStep": false,
+        "shape": {
+            "base": "game:entity/lore/bowtorn/surface",
+            "overlays": [
+                { "base": "walkers:entity/skinwalker/true-eyes" }
+            ]
+        },
+        "textures": {
+            "skin": { "base": "walkers:entity/skinwalker/true-skin" },
+            "walkers-eye": { "base": "walkers:entity/skinwalker/true-eye" }
+        },
+        "size": 0.85,
+        "glowLevel": 0,
+        "behaviors": [
+            { "code": "repulseagents" },
+            { "code": "controlledphysics", "stepHeight": 1.1251 },
+            { "code": "floatupwhenstuck", "onlyWhenDead": true },
+            { "code": "interpolateposition" }
+        ],
+        "animations": [
+            {
+                "code": "hurt",
+                "animation": "hurt",
+                "animationSpeed": 2,
+                "weight": 10,
+                "blendMode": "AddAverage"
+            },
+            {
+                "code": "die",
+                "animation": "die",
+                "animationSpeed": 1,
+                "weight": 10,
+                "blendMode": "Average",
+                "triggeredBy": { "onControls": ["dead"] }
+            },
+            {
+                "code": "idle",
+                "animation": "idle",
+                "blendMode": "Average",
+                "triggeredBy": { "defaultAnim": true }
+            },
+            { "code": "walk", "animation": "walk", "blendMode": "Average" },
+            { "code": "run", "animation": "run", "blendMode": "Average" },
+            { "code": "swim", "animation": "swim", "blendMode": "Average" },
+            { "code": "stab", "animation": "stab", "blendMode": "Average" },
+            { "code": "contort", "animation": "contort", "blendMode": "Average" }
+        ]
+    },
+    "server": {
+        "behaviors": [
+            { "code": "repulseagents" },
+            { "code": "controlledphysics", "stepHeight": 1.1251 },
+            { "code": "health", "currenthealth": 50, "maxhealth": 50 },
+            { "code": "deaddecay", "hoursToDecay": 1 },
+            { "code": "floatupwhenstuck", "onlyWhenDead": true },
+            { "code": "despawn", "minPlayerDistance": 64, "minSeconds": 600, "afterDays": 0.25 },
+            {
+                "code": "emotionstates",
+                "states": [
+                    {
+                        "code": "fleeondamage",
+                        "duration": 20,
+                        "whenHealthRelBelow": 0.3,
+                        "chance": 1,
+                        "slot": 0,
+                        "priority": 1,
+                        "accumType": "max"
+                    },
+                    {
+                        "code": "aggressiveondamage",
+                        "duration": 30,
+                        "chance": 1,
+                        "slot": 0,
+                        "priority": 0.5,
+                        "accumType": "noaccum"
+                    }
+                ]
+            },
+            {
+                "code": "taskai",
+                "aiCreatureType": "LandCreature",
+                "aitasks": [
+                    {
+                        "code": "meleeattack",
+                        "entityCodes": ["player"],
+                        "priority": 3,
+                        "damage": 6,
+                        "damageTier": 3,
+                        "damageType": "SlashingAttack",
+                        "mincooldown": 1500,
+                        "maxcooldown": 2500,
+                        "attackDurationMs": 1000,
+                        "damagePlayerAtMs": 400,
+                        "animation": "stab",
+                        "animationSpeed": 1.5,
+                        "sound": "game:creature/drifter-hit",
+                        "soundStartMs": 400
+                    },
+                    {
+                        "code": "fleeentity",
+                        "entityCodes": ["player"],
+                        "priority": 2.8,
+                        "movespeed": 0.04,
+                        "seekingRange": 40,
+                        "fleeingDistance": 50,
+                        "cancelOnHurt": false,
+                        "intelligentFlee": true,
+                        "animation": "run",
+                        "animationSpeed": 1,
+                        "whenInEmotionState": "fleeondamage"
+                    },
+                    {
+                        "code": "getoutofwater",
+                        "priority": 2.5,
+                        "movespeed": 0.015,
+                        "animation": "swim",
+                        "animationSpeed": 1.55
+                    },
+                    {
+                        "code": "stayinrange",
+                        "entityCodes": ["player"],
+                        "friendlyTarget": true,
+                        "priority": 2,
+                        "searchRange": 112,
+                        "targetRange": 9,
+                        "targetRangeTolerance": 4,
+                        "searchWaitMs": 2000,
+                        "movespeed": 0.03,
+                        "animation": "walk",
+                        "animationSpeed": 2.4,
+                        "mincooldown": 1000,
+                        "maxcooldown": 3000,
+                        "whenNotInEmotionState": "fleeondamage"
+                    },
+                    {
+                        "code": "idle",
+                        "priority": 1.6,
+                        "priorityForCancel": 1.9,
+                        "minduration": 8000,
+                        "maxduration": 8000,
+                        "mincooldown": 60000,
+                        "maxcooldown": 180000,
+                        "animation": "contort",
+                        "animationSpeed": 1,
+                        "whenNotInEmotionState": "fleeondamage"
+                    },
+                    {
+                        "code": "lookatentity",
+                        "entityCodes": ["player"],
+                        "friendlyTarget": true,
+                        "priority": 1.5,
+                        "whenNotInEmotionState": "fleeondamage"
+                    },
+                    {
+                        "code": "wander",
+                        "priority": 1.0,
+                        "movespeed": 0.012,
+                        "animation": "walk",
+                        "animationSpeed": 1.5
+                    },
+                    { "code": "lookaround", "priority": 0.5 }
+                ]
+            }
+        ],
+        "spawnconditions": {
+            "runtime": {
+                "group": "hostile",
+                "chance": 5e-05,
+                "maxQuantity": 1,
+                "maxQuantityByGroup": { "code": "walkers:skinwalker-*", "maxQuantity": 1 },
+                "spawnCapPlayerScaling": 0,
+                "minDistanceToPlayer": 48,
+                "tryOnlySurface": true,
+                "lightLevelType": "MaxTimeOfDayLight",
+                "maxLightLevel": 9,
+                "minForest": 0.6,
+                "minTemp": -18,
+                "minRain": 0.15,
+                "groupSize": { "avg": 1, "var": 0 },
+                "insideBlockCodes": ["game:air", "game:tallgrass-*", "game:snowlayer-1", "game:flower-*"]
+            }
+        }
+    },
+    "sounds": {
+        "hurt": {
+            "path": "game:creature/bowtorn/hurt",
+            "pitch": { "avg": 0.8, "var": 0.05 }
+        },
+        "death": {
+            "path": "game:creature/bowtorn/death",
+            "pitch": { "avg": 0.8, "var": 0.05 }
+        },
+        "idle": {
+            "path": "game:creature/bowtorn/idle",
+            "range": 16,
+            "pitch": { "avg": 0.7, "var": 0.1 }
+        }
+    },
+    "idleSoundChance": 0.03
+}

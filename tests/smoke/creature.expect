@@ -1,0 +1,45 @@
+# Skinwalker prototype: every form spawns by command, carries its name and is counted.
+# The counts assume no earlier .commands file leaves walkers loaded; commands.commands removes its own.
+1xwalkers:skinwalker-true spawned\.
+1xwalkers:skinwalker-animal-whitetail spawned\.
+1xwalkers:skinwalker-animal-redbrocket spawned\.
+1xwalkers:skinwalker-animal-marsh spawned\.
+1xwalkers:skinwalker-animal-caribou spawned\.
+1xwalkers:skinwalker-animal-water spawned\.
+1xwalkers:skinwalker-animal-pudu spawned\.
+1xwalkers:skinwalker-animal-elk spawned\.
+1xwalkers:skinwalker-animal-taruca spawned\.
+1xwalkers:skinwalker-animal-chital spawned\.
+1xwalkers:skinwalker-animal-guemal spawned\.
+1xwalkers:skinwalker-animal-pampas spawned\.
+1xwalkers:skinwalker-animal-fallow spawned\.
+\[Notification\] 13 total entities, of which [0-9]+ active\.$
+^skinwalker-true: 1$
+^skinwalker-animal-whitetail: 1$
+^skinwalker-animal-redbrocket: 1$
+^skinwalker-animal-marsh: 1$
+^skinwalker-animal-caribou: 1$
+^skinwalker-animal-water: 1$
+^skinwalker-animal-pudu: 1$
+^skinwalker-animal-elk: 1$
+^skinwalker-animal-taruca: 1$
+^skinwalker-animal-chital: 1$
+^skinwalker-animal-guemal: 1$
+^skinwalker-animal-pampas: 1$
+^skinwalker-animal-fallow: 1$
+^Skinwalker  at 0, 140, 0$
+^Whitetail deer \(female\)  at 3, 140, 0$
+^Red brocket deer \(female\)  at 6, 140, 0$
+^Marsh deer \(female\)  at 9, 140, 0$
+^Caribou \(female\)  at 12, 140, 0$
+^Water deer \(female\)  at 15, 140, 0$
+^Pudu deer \(female\)  at 18, 140, 0$
+^Elk \(female\)  at 21, 140, 0$
+^Taruca deer \(female\)  at 24, 140, 0$
+^Chital deer \(female\)  at 27, 140, 0$
+^Guemal deer \(female\)  at 30, 140, 0$
+^Pampas deer \(female\)  at 33, 140, 0$
+^Fallow deer \(female\)  at 36, 140, 0$
+^\(13 matches found\)$
+# and they are removed again
+Executed commands on 13/13 entities

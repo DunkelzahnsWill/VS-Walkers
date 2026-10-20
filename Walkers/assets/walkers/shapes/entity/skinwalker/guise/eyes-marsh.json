@@ -1,0 +1,33 @@
+{
+    "textureWidth": 4,
+    "textureHeight": 4,
+    "textures": { "walkers-eye": "walkers:entity/skinwalker/guise-eye" },
+    "elements": [
+        {
+            "name": "WalkersEyeR",
+            "stepParentName": "Head",
+            "from": [-0.25, 2.1, -0.04],
+            "to": [0.55, 2.9, 0.71],
+            "faces": {
+                "north": { "texture": "#walkers-eye", "uv": [0, 0, 4, 4], "glow": 40 },
+                "east": { "texture": "#walkers-eye", "uv": [0, 0, 1, 1], "glow": 40 },
+                "west": { "texture": "#walkers-eye", "uv": [0, 0, 4, 4], "glow": 40 },
+                "up": { "texture": "#walkers-eye", "uv": [0, 0, 1, 1], "glow": 40 },
+                "down": { "texture": "#walkers-eye", "uv": [0, 0, 1, 1], "glow": 40 }
+            }
+        },
+        {
+            "name": "WalkersEyeL",
+            "stepParentName": "Head",
+            "from": [-0.25, 2.1, 2.89],
+            "to": [0.55, 2.9, 3.64],
+            "faces": {
+                "east": { "texture": "#walkers-eye", "uv": [0, 0, 1, 1], "glow": 40 },
+                "south": { "texture": "#walkers-eye", "uv": [0, 0, 4, 4], "glow": 40 },
+                "west": { "texture": "#walkers-eye", "uv": [0, 0, 4, 4], "glow": 40 },
+                "up": { "texture": "#walkers-eye", "uv": [0, 0, 1, 1], "glow": 40 },
+                "down": { "texture": "#walkers-eye", "uv": [0, 0, 1, 1], "glow": 40 }
+            }
+        }
+    ]
+}

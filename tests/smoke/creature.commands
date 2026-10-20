@@ -1,0 +1,19 @@
+# Skinwalker prototype: spawn both forms (the guise in every deer type) and list them.
+# The console has no player, so it uses spawnat (x and z from the world spawn, y absolute, radius 0); /entity spawn needs a player.
+# Counts and lists only walkers, then removes them, so later .commands files start without any.
+/entity spawnat walkers:skinwalker-true 1 0 140 0 0
+/entity spawnat walkers:skinwalker-animal-whitetail 1 3 140 0 0
+/entity spawnat walkers:skinwalker-animal-redbrocket 1 6 140 0 0
+/entity spawnat walkers:skinwalker-animal-marsh 1 9 140 0 0
+/entity spawnat walkers:skinwalker-animal-caribou 1 12 140 0 0
+/entity spawnat walkers:skinwalker-animal-water 1 15 140 0 0
+/entity spawnat walkers:skinwalker-animal-pudu 1 18 140 0 0
+/entity spawnat walkers:skinwalker-animal-elk 1 21 140 0 0
+/entity spawnat walkers:skinwalker-animal-taruca 1 24 140 0 0
+/entity spawnat walkers:skinwalker-animal-chital 1 27 140 0 0
+/entity spawnat walkers:skinwalker-animal-guemal 1 30 140 0 0
+/entity spawnat walkers:skinwalker-animal-pampas 1 33 140 0 0
+/entity spawnat walkers:skinwalker-animal-fallow 1 36 140 0 0
+/entity count e[type=walkers:skinwalker*]
+/entity find e[type=walkers:skinwalker*]
+/entity remove e[type=walkers:skinwalker*]

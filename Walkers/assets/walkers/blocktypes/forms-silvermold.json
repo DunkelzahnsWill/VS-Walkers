@@ -27,11 +27,10 @@
 	},
 	variantgroups: [
 		{ code: "materialtype", states: ["raw", "fired"] },
-		{ code: "weapon", states: ["spear", "falx", "arrow", "knife"] }
+		{ code: "weapon", states: ["spear", "arrow", "knife"] }
 	],
 	shapeByType: {
 		"*-spear": { base: "game:block/clay/mold/shovel", rotateY: 90 },
-		"*-falx": { base: "game:block/clay/mold/blade-falx", rotateY: 90 },
 		"*-arrow": { base: "game:block/clay/mold/bullets", rotateY: 90 },
 		"*-knife": { base: "game:block/clay/mold/blade-short", rotateY: 90 }
 	},

@@ -1,0 +1,32 @@
+# Replies to tests/smoke/harass.commands.
+  a context for the walker and its stand-in: pass
+  break-in: a block behind the door keeps it out: pass
+  break-in: enraged, the unlocked door bursts open: pass
+  break-in: not without rage: pass
+  break-in: the restore list closes the door: pass
+  broken sleep: nothing while the victim is awake: pass
+  chest lids: not while the victim looks at it: pass
+  chest lids: out of sight, the lid pops: pass
+  claims: nothing on someone else's claim: pass
+  doors: a door or trapdoor out of sight swings open: pass
+  doors: the restore list closes it: pass
+  drain: a gain from elsewhere is kept: pass
+  drain: never below its target, never raises: pass
+  drain: regeneration between writes is undone: pass
+  echoes: footsteps behind a stand-in: pass
+  knocks: one knock a night: pass
+  knocks: one rap on the door: pass
+  knocks: the K1 page lies by the door: pass
+  pages: Wat on lore paper, a chapter out of range refused: pass
+  pages: a Maud letter carries what the journal needs: pass
+  pages: the fallback letter is a signed parchment: pass
+  test house built: pass
+  torches: the restore list relights it: pass
+  torches: the torch out of sight goes out: pass
+  whispers: W5 only with the name, W6 never, W2 not in stage 3: pass
+  whispers: a line \(logged for a stand-in\): pass
+  whispers: switched off, nothing happens: pass
+  whispers: tonight's cap holds: pass
+  wrong calls: a call from where it is not: pass
+Harassment self-test: all checks passed
+Harassment kit, haunting walkers loaded: [0-9]+

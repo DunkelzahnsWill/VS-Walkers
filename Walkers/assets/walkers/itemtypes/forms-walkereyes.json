@@ -1,12 +1,9 @@
 // Skinwalker eyes: the trophy of a banishing, dropped where the body burned or fell to silver (creature bible, section 7).
-// One to a stack, no glow. Placeholder shape until the art lands: the vanilla resin lump in the true form's bark.
+// One to a stack, no glow. Shape and texture from Art and sound.
 {
     "code": "walkereyes",
     "maxstacksize": 1,
-    "shape": { "base": "game:item/resin" },
-    "textures": {
-        "resin": { "base": "walkers:entity/skinwalker/true-skin" }
-    },
+    "shape": { "base": "walkers:item/walkereyes" },
     "behaviors": [
         { "name": "GroundStorable", "properties": { "layout": "Quadrants", "collisionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.125, "z2": 1 } } }
     ],

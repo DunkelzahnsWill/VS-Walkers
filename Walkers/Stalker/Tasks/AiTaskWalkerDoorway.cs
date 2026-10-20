@@ -8,6 +8,7 @@ using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 using Walkers.Config;
 using Walkers.Director;
+using Walkers.Harassment;
 
 namespace Walkers.Stalker.Tasks;
 
@@ -368,38 +369,8 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
         return animals.Length == 0;
     }
 
-    /// <summary>
-    /// harass.respectClaims, the same rule as the harassment kit's BlockRules.ClaimsAllow. victimAccess:
-    /// unclaimed land, or a claim the victim owns or shares through the claim's owning group; never a
-    /// claim where the victim is only a permitted player, nor one open to everyone. A stand-in owns
-    /// nothing, so only unclaimed land. anyClaim: unclaimed land only. off: anywhere.
-    /// </summary>
-    private bool ClaimsAllow(ClaimRespect rule, BlockPos pos, Entity victim)
-    {
-        if (rule == ClaimRespect.Off)
-        {
-            return true;
-        }
-        var claims = world.Claims.Get(pos);
-        if (claims == null || claims.Length == 0)
-        {
-            return true;
-        }
-        if (rule == ClaimRespect.AnyClaim || victim is not EntityPlayer { Player: IPlayer player })
-        {
-            return false;
-        }
-        foreach (var claim in claims)
-        {
-            bool owns = claim.OwnedByPlayerUid == player.PlayerUID;
-            bool sharesGroup = claim.OwnedByPlayerGroupUid != 0 && player.GetGroup((int)claim.OwnedByPlayerGroupUid) != null;
-            if (!owns && !sharesGroup)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
+    /// <summary>harass.respectClaims, by the harassment kit's rule (<see cref="BlockRules.ClaimsAllow"/>), so both agree on whose doors it may touch.</summary>
+    private bool ClaimsAllow(ClaimRespect rule, BlockPos pos, Entity victim) => BlockRules.ClaimsAllow(world, rule, pos, victim);
 
     private void Open(WalkerBrain brain, BEBehaviorDoor d)
     {

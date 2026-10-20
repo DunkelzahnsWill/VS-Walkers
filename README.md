@@ -227,6 +227,53 @@ For feature code:
 - **Strikes.** `walkers-lunge` checks its reach with a physical line, so glass blocks a strike even
   though the gaze sees through it.
 
+## Harassment kit
+
+The harassment kit (`Walkers/Harassment/`) runs on the server. For every walker the stalker AI tracks
+with a victim, it draws non-combat acts from a nightly budget (`harass.actsPerNight`, by stage), at
+least `harass.minGapSeconds` apart plus up to two minutes, with one quiet stretch a night and never the
+same act twice in a row. It holds back for 10 seconds after the victim is hurt, during a temporal
+storm, while the walker withdraws, and from stage 4 while another player is within 24 blocks.
+
+| Act | Stages | What it does |
+| --- | --- | --- |
+| `echoes` | 3-5 | Plays back one of the victim's own recent block sounds behind them, or footsteps on their ground |
+| `knocks` | 3-5 | Raps on the outer face of the nearest door (one rap, two in stage 4, three at dusk in stage 5) and leaves a page |
+| `wrongCalls` | 2-5 | A deer, small-deer or elk call from 20-40 blocks off, at a lowered pitch; sometimes another answers |
+| `whispers` | 3-5 | A line from the lore bible's whisper table; W5 uses the player's name only when their prefs allow it |
+| `douseTorches` | 3-5 | A lit torch out of the victim's sight goes out; relit at dawn |
+| `doors` | 4-5 | Shuts an open door or gate, or swings a closed one open out of sight; closed again after `harass.doors.maxOpenHours` |
+| `chestLids` | 4-5 | A chest lid out of sight lifts and drops; never one a player has open |
+| `sleepDisturb` | 4-5 | A scrape at the wall wakes the victim and leaves them too tired to sleep again at once |
+| `breakIn` | 5, enraged | Only after the walker was provoked or has returned: forces an unlocked door near the victim, pops lids and douses torches within `harass.breakIn.reach`. A bar, padlock, story lock or solid block behind the door keeps it out; then it scrapes and strains at the boards |
+
+Beside the drawn acts: the stability drain (toward `harass.stabilityDrain.targets` per stage, never
+below `floor`, faster while watched, handed back while paused, the warp of `harass.mundaneWarp` in
+mundane mode), livestock panic near the walker, the dawn offering at the victim's door once a haunt,
+the two titles ("Something's moving out there.", "The Forest Saw That." for whoever hits the guise),
+screen shake, and the Pages act, which hands out the lore journals' pages on the lore bible's triggers.
+Every act has its own `harass.<act>.enabled` switch and a nightly cap. Doors, trapdoors, gates, chests
+and torches are touched only within 16 blocks of the victim, never under a padlock, and only where
+`harass.respectClaims` allows (`victimAccess`: unclaimed land or a claim the victim owns or shares).
+
+| Command | What it does |
+| --- | --- |
+| `/walkers harass status [radius]` | Each haunting walker's budget, tonight's counts, what holds it back, and the last five acts |
+| `/walkers harass act <code> [radius]` | Runs one act now, under its own rules (switch, stage, time of day, cap) |
+| `/walkers harass selftest` | Every act against a playerbot stand-in in a small test house above the world spawn (the smoke test runs it) |
+
+For feature code:
+
+- **The walker's memory.** The kit writes only `walkers/harass` (`HarassMemory.cs` lists the keys);
+  `drainTaken` is the total it drained, which the ladder reads. It reads `walkers/ai` (provoked,
+  sightings, lastPlayerHitMs, hauntBegan) and `walkers/form/revealed`.
+- **Restore list.** Doors it opens go on the director's list as kind `walkers-harass-door` with their
+  own undo handler; torches as plain `block` swaps undone at dawn. Without a director it keeps its own
+  list and undoes it the same way.
+- **Pages.** Driven by the director's `WalkerReleased` and `WalkerBanished` events and its ledger, so
+  no other feature calls the kit. Every page is checked against its journal's chapter count before it
+  is handed out; the painting journals are never handed out as pages.
+
 ## Folder map
 
 ```
@@ -243,6 +290,7 @@ Walkers/                      the mod project
   Commands/                   the /walkers command
   Stalker/                    the stalker AI: ladder, gaze, brain, AI tasks, /walkers stalker
   Director/                   the director's interface (IWalkerDirector.cs)
+  Harassment/                 the harassment kit: acts, scheduler, pages, /walkers harass
   assets/walkers/             entities, shapes, textures, sounds, itemtypes, patches, lang, config/lore
 ```
 

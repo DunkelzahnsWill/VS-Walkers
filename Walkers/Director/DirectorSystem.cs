@@ -95,6 +95,10 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
         }
         ProcessRestore(startup: true);
         WarnIfDeerCountryRare();
+        if (sapi.ModLoader.GetModSystem<Walkers.Forms.FormsModSystem>() is { } forms)
+        {
+            forms.FursBurned += OnFursBurned;
+        }
         sapi.Event.RegisterGameTickListener(OnSecond, e => Mod.Logger.Error("Director update failed: {0}", e), 1000);
     }
 

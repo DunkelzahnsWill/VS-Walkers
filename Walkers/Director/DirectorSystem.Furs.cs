@@ -167,6 +167,15 @@ public partial class DirectorSystem
         }
     }
 
+    /// <summary>Forms saw furs burn: the player who dropped them loses their mark (furs.burnClearsMark).</summary>
+    private void OnFursBurned(IPlayer? byPlayer, int count)
+    {
+        if (byPlayer != null && config.Furs.BurnClearsMark)
+        {
+            ClearFurMarks(byPlayer.PlayerUID);
+        }
+    }
+
     private void ClearAllFurMarks()
     {
         foreach (var record in playerRecords.Values)

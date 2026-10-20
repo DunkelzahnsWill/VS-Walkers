@@ -6,6 +6,18 @@ release, because a joining client must have exactly the server's version of the 
 This file is shown to players (it is pasted into the ModDB file notes), so it says what a player
 meets, not how every rule works. Server owners find the details in the README.
 
+## 1.0.1 (for Vintage Story 1.22.7)
+
+### Items
+
+- Removed the mod's clay molds and cast heads. Weapons are made the vanilla way, and a new spear head
+  is smithed on the vanilla anvil from one ingot; a stick makes it a spear.
+
+### For server owners
+
+- A world that ran 1.0.0 and holds the old molds or cast heads shows them as unknown blocks and items
+  (the game's usual missing-mapping prompt). Nothing else in a 1.0.0 world changes.
+
 ## 1.0.0 (for Vintage Story 1.22.7)
 
 The first release, and the first Walker: the Skinwalker.

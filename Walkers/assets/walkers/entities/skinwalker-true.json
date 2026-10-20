@@ -1,4 +1,4 @@
-// Skinwalker, true form. Placeholder body: the vanilla bowtorn shape without its rib crossbow, a dark bark texture and glowing eyes.
+// Skinwalker, true form, on its own model (shapes/entity/skinwalker/true.json, 2.24 blocks tall at idle, eyes built in at glow 255).
 // AI: the Stalker AI's tasks (Walkers/Stalker): walkers-retreat, -lunge, -doorway, -hunt, -creep and -stare. It stands far off
 // as a silhouette in stage 4, hunts its victim at night in stage 5, and walks into cover when it breaks off. getoutofwater
 // stays above them all: it never swims. The emotion states are left for the other features; no task here reads them.
@@ -15,14 +15,6 @@
     "eyeHeight": 1.7,
     "drops": [],
     "attributes": {
-        "disableElements": [
-            "Crossbow", "L Rib B1", "L Rib B2", "L Rib B3", "L Sinew B1", "L Sinew B2", "L Knuckle",
-            "L Rib A1", "L Rib A2", "L Rib A3", "L Sinew A1", "L Sinew A2", "L Rib C1", "L Rib C2",
-            "L Rib C3", "L Sinew C1", "L Sinew C2", "R Rib A1", "R Rib A2", "R Rib A3", "R Sinew A1",
-            "R Sinew A2", "R Rib B1", "R Rib B2", "R Rib B3", "R Sinew B1", "R Sinew B2", "Sinew4",
-            "R Knuckle", "R Rib C1", "R Rib C2", "R Rib C3", "R Sinew C1", "R Sinew C2", "Pouch",
-            "Sheet1", "Sheet2", "Sheet2EX", "Sheet3", "Sheet6", "Sheet11", "Sheet12"
-        ],
         "glitchFlicker": true,
         "reckless": true
     },
@@ -30,16 +22,17 @@
         "renderer": "Shape",
         "pitchStep": false,
         "shape": {
-            "base": "game:entity/lore/bowtorn/surface",
-            "overlays": [
-                { "base": "walkers:entity/skinwalker/true-eyes" }
-            ]
+            "base": "walkers:entity/skinwalker/true"
         },
         "textures": {
-            "skin": { "base": "walkers:entity/skinwalker/true-skin" },
+            "bark": { "base": "walkers:entity/skinwalker/true-bark" },
+            "burl": { "base": "walkers:entity/skinwalker/true-burl" },
+            "doe": { "base": "walkers:entity/skinwalker/true-doe" },
+            "fox": { "base": "walkers:entity/skinwalker/true-fox" },
+            "ruff": { "base": "walkers:entity/skinwalker/true-ruff" },
             "walkers-eye": { "base": "walkers:entity/skinwalker/true-eye" }
         },
-        "size": 0.85,
+        "size": 1.0,
         "glowLevel": 0,
         "behaviors": [
             { "code": "repulseagents" },
@@ -73,7 +66,8 @@
             { "code": "run", "animation": "run", "blendMode": "Average" },
             { "code": "swim", "animation": "swim", "blendMode": "Average" },
             { "code": "stab", "animation": "stab", "blendMode": "Average" },
-            { "code": "contort", "animation": "contort", "blendMode": "Average" }
+            { "code": "contort", "animation": "contort", "blendMode": "Average" },
+            { "code": "freeze", "animation": "freeze", "blendMode": "Average" }
         ]
     },
     "server": {

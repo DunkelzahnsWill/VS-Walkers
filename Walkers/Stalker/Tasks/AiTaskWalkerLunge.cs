@@ -83,8 +83,9 @@ public class AiTaskWalkerLunge : WalkerTaskBase
             return false;
         }
         long now = world.ElapsedMilliseconds;
-        if (now < nextStrikeMs || now - lastCheckMs < CheckEveryMs)
+        if (now < nextStrikeMs || now - lastCheckMs < CheckEveryMs || brain.Frozen)
         {
+            // Frozen only outside the hunt's lunge range: a watched defender holds still too.
             return false;
         }
         lastCheckMs = now;

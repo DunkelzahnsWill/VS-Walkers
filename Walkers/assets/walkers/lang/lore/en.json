@@ -118,5 +118,8 @@
 	"game:walkersdrawing-walkers-ourdoor": "Our Door",
 	"game:walkersdrawing-walkers-papassong": "Papa's Song",
 	"game:walkersdrawing-walkers-outoftrees": "Out of the Trees",
-	"walkers:block-watchingmark": "Chalked watching mark"
+	"walkers:block-watchingmark-chalk-single*": "Chalked watching mark",
+	"walkers:block-watchingmark-chalk-triple*": "Chalked watching marks",
+	"walkers:block-watchingmark-limonite-single*": "Chalked watching mark",
+	"walkers:block-watchingmark-limonite-triple*": "Chalked watching marks"
 }

@@ -5,9 +5,8 @@ using Newtonsoft.Json;
 
 namespace Walkers.Config;
 
-// Settings of the director (population, pacing) and the return. Drafted from the creature bible's
-// "Config knobs" table; from here on this file belongs to the director thread, which renames, adds
-// and removes settings as its code needs.
+// Settings of the director (population, pacing), the return, and the debug aids for headless tests.
+// From the creature bible's "Config knobs" table; owned by the director (Walkers/Director).
 public partial class WalkersConfig
 {
     [Description("Who gets haunted, when, and how many walkers at once.")]
@@ -17,6 +16,10 @@ public partial class WalkersConfig
     [Description("How a walker killed without silver or fire comes back.")]
     [JsonProperty(Order = 40)]
     public ReturnConfig Return { get; set; } = new();
+
+    [Description("Aids for testing on a server with no player online. Leave them off on a real server.")]
+    [JsonProperty(Order = 90)]
+    public DebugConfig Debug { get; set; } = new();
 }
 
 public class DirectorConfig : IWalkersConfigCheck
@@ -77,9 +80,17 @@ public class DirectorConfig : IWalkersConfigCheck
     [Range(1, 32)]
     public int SpawnTriesPerTick { get; set; } = 8;
 
-    [Description("In-game days after which a haunt that never reached the hunt ends.")]
+    [Description("Every haunt ends this many in-game days of unpaused time after it began, the hunt included.")]
     [Range(3, 60)]
     public float HauntMaxDays { get; set; } = 12;
+
+    [Description("A haunt whose victim stays away (offline, underground, out of the forest) this many in-game days ends.")]
+    [Range(1, 60)]
+    public float PausedHauntMaxDays { get; set; } = 10;
+
+    [Description("Two players closer than this many blocks cannot both be victims at once: a group is a group.")]
+    [Range(24, 256)]
+    public int VictimSeparation { get; set; } = 64;
 
     [Description("No new appearances during a temporal storm, and active walkers withdraw.")]
     public bool PauseDuringStorms { get; set; } = true;
@@ -111,11 +122,21 @@ public class ReturnConfig
     [Range(1, 4)]
     public float PaceMultiplier { get; set; } = 1.5f;
 
-    [Description("Extra true-form health per return, as a share of its base health; the total bonus stops at 0.3.")]
+    [Description("Extra true-form health per return, as a share of its base health, up to return.healthBonusCap.")]
     [Range(0, 0.5)]
     public float HealthBonusPerReturn { get; set; } = 0.1f;
 
-    [Description("If its last victim stays away this many seasons past the return date, it picks the nearest eligible player to where it died.")]
+    [Description("Most extra true-form health a walker can gain from returns, as a share of its base health.")]
+    [Range(0, 1)]
+    public float HealthBonusCap { get; set; } = 0.3f;
+
+    [Description("If its last victim stays away this many seasons past the return date, it goes back to the roster for whoever the next normal roll picks.")]
     [Range(0, 8)]
     public float VictimAbsentSeasons { get; set; } = 1;
+}
+
+public class DebugConfig
+{
+    [Description("Allows /walkers director standin, which places a vanilla player bot the director treats as an eligible player who is alone and on the surface. For headless soak tests only.")]
+    public bool StandInVictims { get; set; } = false;
 }

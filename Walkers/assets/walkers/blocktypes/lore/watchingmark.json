@@ -1,0 +1,42 @@
+{
+	"code": "watchingmark",
+	"behaviors": [ { "name": "HorizontalAttachable" } ],
+	"variantgroups": [
+		{ "code": "pigment", "states": [ "chalk", "limonite" ] },
+		{ "code": "marks", "states": [ "single", "triple" ] },
+		{ "code": "side", "loadFromProperties": "game:abstract/horizontalorientation" }
+	],
+	"attributes": {
+		"handbook": { "exclude": true }
+	},
+	"creativeinventory": { "general": [ "*-north" ], "decorative": [ "*-north" ] },
+	"blockmaterial": "Stone",
+	"drawtype": "json",
+	"renderpass": "OpaqueNoCull",
+	"shapebytype": {
+		"*-north": { "base": "block/decor/watchingmark", "rotateY": 0 },
+		"*-east": { "base": "block/decor/watchingmark", "rotateY": 270 },
+		"*-south": { "base": "block/decor/watchingmark", "rotateY": 180 },
+		"*-west": { "base": "block/decor/watchingmark", "rotateY": 90 }
+	},
+	"textures": {
+		"mark": { "base": "block/decor/watchingmark-{pigment}-{marks}" }
+	},
+	"sidesolid": { "all": false },
+	"sideopaque": { "all": false },
+	"sideao": { "all": false },
+	"emitsideao": { "all": false },
+	"replaceable": 5000,
+	"lightAbsorption": 0,
+	"resistance": 0.1,
+	"collisionbox": null,
+	"selectionbox": {
+		"x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 0.0625,
+		"rotateYByType": { "*-east": 270, "*-south": 180, "*-west": 90, "*-north": 0 }
+	},
+	"drops": [],
+	"sounds": { "place": "game:block/sand", "break": "game:block/sand", "hit": "game:block/sand" },
+	"guiTransform": { "rotation": { "x": 0, "y": 0, "z": 0 }, "origin": { "x": 0.5, "y": 0.5, "z": 0.5 }, "scale": 1.4 },
+	"rainPermeable": true,
+	"materialDensity": 200
+}

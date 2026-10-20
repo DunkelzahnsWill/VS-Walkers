@@ -6,7 +6,7 @@
 // takes them over.
 {
     "code": "skinwalker-true",
-    "class": "EntityAgent",
+    "class": "walkers-walker",
     "tags": ["habitat-land"],
     "weight": 110,
     "canClimb": true,
@@ -83,7 +83,6 @@
             { "code": "health", "currenthealth": 50, "maxhealth": 50 },
             { "code": "deaddecay", "hoursToDecay": 1 },
             { "code": "floatupwhenstuck", "onlyWhenDead": true },
-            { "code": "despawn", "minPlayerDistance": 64, "minSeconds": 600, "afterDays": 0.25 },
             {
                 "code": "emotionstates",
                 "states": [
@@ -124,7 +123,7 @@
                         "animation": "stab",
                         "animationSpeed": 1.5,
                         "runAnimation": "run",
-                        "sound": "game:creature/drifter-hit",
+                        "sound": "game:player/strike*",
                         "soundStartMs": 400
                     },
                     {
@@ -172,38 +171,20 @@
                     { "code": "lookaround", "priority": 0.5 }
                 ]
             }
-        ],
-        "spawnconditions": {
-            "runtime": {
-                "group": "hostile",
-                "chance": 5e-05,
-                "maxQuantity": 1,
-                "maxQuantityByGroup": { "code": "walkers:skinwalker-*", "maxQuantity": 1 },
-                "spawnCapPlayerScaling": 0,
-                "minDistanceToPlayer": 48,
-                "tryOnlySurface": true,
-                "lightLevelType": "MaxTimeOfDayLight",
-                "maxLightLevel": 9,
-                "minForest": 0.6,
-                "minTemp": -18,
-                "minRain": 0.15,
-                "groupSize": { "avg": 1, "var": 0 },
-                "insideBlockCodes": ["game:air", "game:tallgrass-*", "game:snowlayer-1", "game:flower-*"]
-            }
-        }
+        ]
     },
     "sounds": {
         "hurt": {
-            "path": "game:creature/bowtorn/hurt",
-            "pitch": { "avg": 0.8, "var": 0.05 }
+            "path": "game:block/stickbreak",
+            "pitch": { "avg": 0.8, "var": 0.1 }
         },
         "death": {
-            "path": "game:creature/bowtorn/death",
-            "pitch": { "avg": 0.8, "var": 0.05 }
+            "path": "game:block/creak/woodcreak_long3",
+            "pitch": { "avg": 0.85, "var": 0.05 }
         },
         "idle": {
-            "path": "game:creature/bowtorn/idle",
-            "range": 16,
+            "path": "game:block/creak/woodcreak*",
+            "range": 12,
             "pitch": { "avg": 0.7, "var": 0.1 }
         }
     },

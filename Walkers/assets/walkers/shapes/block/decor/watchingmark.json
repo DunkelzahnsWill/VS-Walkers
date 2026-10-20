@@ -1,0 +1,17 @@
+{
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textures": {
+		"mark": "block/decor/watchingmark-chalk-single"
+	},
+	"elements": [
+		{
+			"name": "Mark",
+			"from": [ 0.0, 0.0, 0.0 ],
+			"to": [ 16.0, 16.0, 0.05 ],
+			"faces": {
+				"south": { "texture": "#mark", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+			}
+		}
+	]
+}

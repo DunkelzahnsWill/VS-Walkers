@@ -25,7 +25,7 @@ scripts/smoke-test.sh   # boot a headless server with that zip; fails on any err
 ```
 
 Setup takes about a minute the first time (a 54 MB download) and skips finished steps afterwards.
-The build takes about 10 seconds, the smoke test about 40.
+The build takes about 10 seconds, the smoke test about two minutes (it boots the server twice).
 
 - **Game DLLs.** The mod compiles against the DLLs of the game folder named by the `VINTAGE_STORY`
   environment variable. When it is not set, `Directory.Build.props` points it at the server that
@@ -44,12 +44,15 @@ The build takes about 10 seconds, the smoke test about 40.
   world seed, types any console commands from `tests/smoke/*.commands`, then sends `/stop`. It fails
   unless the server stops cleanly, `walkers` is in the loaded mod list, every pattern in
   `tests/smoke/*.expect` matches a line of `server-main.log`, and the logs hold no `[Error]` or
-  `[Fatal]` line, no `[Warning]` line that mentions the mod, and no crash log. The world and logs stay
-  in `.cache/smoke/` afterwards.
+  `[Fatal]` line, no `[Warning]` line that mentions the mod, and no crash log. When there are
+  `tests/smoke/*.restart.commands`, it then boots the server a second time on the same world, types
+  those in and stops it again, and every `tests/smoke/*.restart.expect` must match that boot's log
+  (`data/Logs-restart/`), so a feature can check what it saved. The world and logs stay in
+  `.cache/smoke/` afterwards.
 - **CI.** `.github/workflows/build.yml` runs the same three scripts on every pull request and every
   commit on `main` (a new push to a pull request cancels its older run). Every run that gets as far
   as a zip keeps it as an artifact named `walkers_<version>.zip`, also when the smoke test fails, and
-  every run keeps the server logs (artifact `smoke-test-logs`).
+  every run keeps the server logs of both boots (artifact `smoke-test-logs`).
 
 ## Play-testing on your PC
 
@@ -85,10 +88,10 @@ before merging. The layout lets branches stay out of each other's files:
 | Settings | its own section in `Walkers/Config/WalkersConfig.<Feature>.cs`, a `partial` of the shared config class (example in `WalkersConfig.cs`) |
 | Text | `Walkers/assets/walkers/lang/<feature>/en.json`. The game merges every `en.json` under `lang/`, and the build fails if two files define the same key |
 | JSON patches | `Walkers/assets/walkers/patches/<feature>-*.json` |
-| Smoke checks | `tests/smoke/<feature>.expect` and, if needed, `tests/smoke/<feature>.commands` |
+| Smoke checks | `tests/smoke/<feature>.expect` and, if needed, `tests/smoke/<feature>.commands`; checks after a restart in `tests/smoke/<feature>.restart.commands` and `.restart.expect` |
 
-Planned feature folders: `Stalker` (stalker AI), `Director` (director and spawns), `Forms` (forms and
-kill ritual), `Commands` (config and commands), `Harassment` (harassment kit).
+Feature folders: `Commands` (config and commands) and `Director` (director, spawns and the return) so
+far; planned are `Stalker` (stalker AI), `Forms` (forms and kill ritual) and `Harassment` (harassment kit).
 
 The shared surfaces, and who changes them:
 

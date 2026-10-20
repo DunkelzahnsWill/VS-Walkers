@@ -8,7 +8,7 @@
 // getoutofwater stays above them all: it never swims.
 {
     "code": "skinwalker-animal",
-    "class": "EntityAgent",
+    "class": "walkers-walker",
     "tags": ["animal", "habitat-land"],
     "variantgroups": [
         {
@@ -176,7 +176,6 @@
         "behaviors": [
             { "code": "repulseagents" },
             { "code": "controlledphysics" },
-            { "code": "despawn", "minPlayerDistance": 64, "minSeconds": 600, "afterDays": 0.25 },
             {
                 "code": "health",
                 "currenthealthByType": {
@@ -317,177 +316,16 @@
                     { "code": "lookaround", "priority": 0.5 }
                 ]
             }
-        ],
-        "spawnconditions": {
-            "runtime": {
-                "group": "neutral",
-                "chance": 0.0001,
-                "maxQuantity": 1,
-                "maxQuantityByGroup": { "code": "walkers:skinwalker-*", "maxQuantity": 1 },
-                "spawnCapPlayerScaling": 0,
-                "minDistanceToPlayer": 40,
-                "tryOnlySurface": true,
-                "lightLevelType": "MaxTimeOfDayLight",
-                "maxLightLevel": 11,
-                "groupSize": { "avg": 1, "var": 0 },
-                "insideBlockCodes": ["game:air", "game:tallgrass-*", "game:snowlayer-1", "game:flower-*"]
-            }
-        },
-        "spawnconditionsByType": {
-            "*-whitetail": {
-                "runtime": {
-                    "minTemp": -5,
-                    "maxTemp": 15,
-                    "minRain": 0.25,
-                    "minY": 0.9,
-                    "maxY": 1.4,
-                    "minForest": 0.5,
-                    "maxForest": 0.75,
-                    "maxShrubs": 0.75
-                }
-            },
-            "*-redbrocket": {
-                "runtime": {
-                    "minTemp": 20,
-                    "maxTemp": 40,
-                    "minRain": 0.5,
-                    "minY": 0.9,
-                    "maxY": 1.4,
-                    "minForest": 0.6
-                }
-            },
-            "*-marsh": {
-                "runtime": {
-                    "minTemp": 11,
-                    "maxTemp": 25,
-                    "minRain": 0.35,
-                    "minY": 0.9,
-                    "maxY": 1.3,
-                    "minForest": 0.5,
-                    "maxForest": 0.9,
-                    "maxShrubs": 0.9
-                }
-            },
-            "*-caribou": {
-                "runtime": {
-                    "minTemp": -19,
-                    "maxTemp": 1,
-                    "minRain": 0.35,
-                    "minY": 0.9,
-                    "maxY": 1.5,
-                    "minForest": 0.5,
-                    "maxForest": 0.6,
-                    "maxShrubs": 0.7
-                }
-            },
-            "*-water": {
-                "runtime": {
-                    "minTemp": 5,
-                    "maxTemp": 18,
-                    "minRain": 0.65,
-                    "minY": 0.9,
-                    "maxY": 1.1,
-                    "minForest": 0.25,
-                    "maxForest": 0.4,
-                    "maxShrubs": 0.4
-                }
-            },
-            "*-pudu": {
-                "runtime": {
-                    "minTemp": 0,
-                    "maxTemp": 8,
-                    "minRain": 0.5,
-                    "maxRain": 0.8,
-                    "minY": 0.9,
-                    "maxY": 1.2,
-                    "minForest": 0.5
-                }
-            },
-            "*-elk": {
-                "runtime": {
-                    "minTemp": -14,
-                    "maxTemp": -2,
-                    "minRain": 0.2,
-                    "minY": 1.2,
-                    "maxY": 1.8,
-                    "minForest": 0.5,
-                    "maxForest": 0.6,
-                    "maxShrubs": 0.6
-                }
-            },
-            "*-taruca": {
-                "runtime": {
-                    "minTemp": 12,
-                    "maxTemp": 24,
-                    "minRain": 0.1,
-                    "maxRain": 0.6,
-                    "minY": 1.2,
-                    "maxY": 1.6,
-                    "minForest": 0.3,
-                    "maxForest": 0.5,
-                    "maxShrubs": 0.5
-                }
-            },
-            "*-chital": {
-                "runtime": {
-                    "minTemp": 16,
-                    "maxTemp": 28,
-                    "minRain": 0.2,
-                    "maxRain": 0.9,
-                    "minY": 0.9,
-                    "maxY": 1.2,
-                    "minForest": 0.5,
-                    "maxForest": 0.8,
-                    "maxShrubs": 0.1
-                }
-            },
-            "*-guemal": {
-                "runtime": {
-                    "minTemp": -5,
-                    "maxTemp": 8,
-                    "minRain": 0.1,
-                    "maxRain": 0.6,
-                    "minY": 1.2,
-                    "maxY": 1.6,
-                    "minForest": 0.3,
-                    "maxForest": 0.5,
-                    "maxShrubs": 0.5
-                }
-            },
-            "*-pampas": {
-                "runtime": {
-                    "minTemp": 6,
-                    "maxTemp": 30,
-                    "minRain": 0.41,
-                    "maxRain": 1.0,
-                    "minY": 0.9,
-                    "maxY": 1.2,
-                    "minForest": 0.25,
-                    "maxForest": 0.4,
-                    "maxShrubs": 0.4
-                }
-            },
-            "*-fallow": {
-                "runtime": {
-                    "minTemp": -5,
-                    "maxTemp": 15,
-                    "minRain": 0.4,
-                    "maxRain": 1.0,
-                    "minY": 0.9,
-                    "maxY": 1.2,
-                    "minForest": 0.5
-                }
-            }
-        }
+        ]
     },
     "soundsByType": {
         "*-redbrocket": {
             "hurt": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "death": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall3",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "idle": {
@@ -497,11 +335,11 @@
         },
         "*-pudu": {
             "hurt": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "death": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall3",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "idle": {
@@ -511,11 +349,11 @@
         },
         "*-water": {
             "hurt": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "death": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall3",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "idle": {
@@ -525,11 +363,11 @@
         },
         "*-caribou": {
             "hurt": {
-                "path": "game:creature/hooved/large/redstag/roar*",
+                "path": "game:creature/hooved/large/redstag/roar2",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "death": {
-                "path": "game:creature/hooved/large/redstag/roar*",
+                "path": "game:creature/hooved/large/redstag/roar1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "idle": {
@@ -539,11 +377,11 @@
         },
         "*-elk": {
             "hurt": {
-                "path": "game:creature/animal/mammal/hooved/deer/elk-hurt*",
+                "path": "game:creature/animal/mammal/hooved/deer/elk-hurt1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "death": {
-                "path": "game:creature/animal/mammal/hooved/deer/elk-death*",
+                "path": "game:creature/animal/mammal/hooved/deer/elk-death1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "idle": {
@@ -553,11 +391,11 @@
         },
         "*-pampas": {
             "hurt": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "death": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall3",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "idle": {
@@ -567,11 +405,11 @@
         },
         "*": {
             "hurt": {
-                "path": "game:creature/hooved/medium/buck-bellow*",
+                "path": "game:creature/hooved/medium/buck-bellow2",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "death": {
-                "path": "game:creature/hooved/medium/buck-bellow*",
+                "path": "game:creature/hooved/medium/buck-bellow1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "idle": {

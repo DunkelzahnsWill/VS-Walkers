@@ -1,0 +1,180 @@
+{
+	"code": "walkersdrawing",
+	"class": "BlockTapestry",
+	"entityClass": "Tapestry",
+	"behaviors": [
+		{
+			"name": "HorizontalAttachable"
+		}
+	],
+	"blockmaterial": "Cloth",
+	"attributes": {
+		"handbook": {
+			"exclude": true
+		},
+		"loreChapterIds": {
+			"walkers-statues": 0,
+			"walkers-ourdoor": 1,
+			"walkers-papassong": 2,
+			"walkers-outoftrees": 3
+		},
+		"sizes": {
+			"walkers-statues": "1x1",
+			"walkers-ourdoor": "1x1",
+			"walkers-papassong": "1x1",
+			"walkers-outoftrees": "1x1"
+		}
+	},
+	"variantgroups": [
+		{
+			"code": "side",
+			"loadFromProperties": "game:abstract/horizontalorientation"
+		}
+	],
+	"creativeinventoryStacksByType": {
+		"*-north": [
+			{
+				"tabs": [
+					"general",
+					"decorative"
+				],
+				"stacks": [
+					{
+						"type": "block",
+						"code": "walkersdrawing-north",
+						"attributes": {
+							"type": "walkers-statues",
+							"preserve": true
+						}
+					},
+					{
+						"type": "block",
+						"code": "walkersdrawing-north",
+						"attributes": {
+							"type": "walkers-ourdoor",
+							"preserve": true
+						}
+					},
+					{
+						"type": "block",
+						"code": "walkersdrawing-north",
+						"attributes": {
+							"type": "walkers-papassong",
+							"preserve": true
+						}
+					},
+					{
+						"type": "block",
+						"code": "walkersdrawing-north",
+						"attributes": {
+							"type": "walkers-outoftrees",
+							"preserve": true
+						}
+					}
+				]
+			}
+		]
+	},
+	"shapebytype": {
+		"*-north": {
+			"base": "game:block/cloth/tapestry",
+			"rotateY": 0
+		},
+		"*-east": {
+			"base": "game:block/cloth/tapestry",
+			"rotateY": 270
+		},
+		"*-south": {
+			"base": "game:block/cloth/tapestry",
+			"rotateY": 180
+		},
+		"*-west": {
+			"base": "game:block/cloth/tapestry",
+			"rotateY": 90
+		}
+	},
+	"shapeinventory": {
+		"base": "game:block/cloth/tapestryinventory"
+	},
+	"sidesolid": {
+		"all": false
+	},
+	"sideopaque": {
+		"all": false
+	},
+	"sideao": {
+		"all": true
+	},
+	"emitsideao": {
+		"all": false
+	},
+	"replaceable": 5001,
+	"lightAbsorption": 0,
+	"resistance": 0.1,
+	"collisionbox": null,
+	"selectionbox": {
+		"x1": 0,
+		"y1": 0,
+		"z1": 0,
+		"x2": 1,
+		"y2": 1,
+		"z2": 0.0625,
+		"rotateYByType": {
+			"*-east": 270,
+			"*-south": 180,
+			"*-west": 90,
+			"*-north": 0
+		}
+	},
+	"sounds": {
+		"place": "game:block/cloth",
+		"break": "game:block/cloth",
+		"hit": "game:block/cloth"
+	},
+	"guiTransform": {
+		"rotate": false,
+		"rotation": {
+			"x": -22.6,
+			"y": 25,
+			"z": 0
+		},
+		"scaleXyz": {
+			"x": -1.39,
+			"y": 1.39,
+			"z": 1.39
+		}
+	},
+	"groundTransform": {
+		"translation": {
+			"x": 0,
+			"y": 0,
+			"z": 0
+		},
+		"rotation": {
+			"x": 90,
+			"y": 0,
+			"z": 0
+		},
+		"origin": {
+			"x": 0.5,
+			"y": 0.5,
+			"z": 0.52
+		},
+		"scale": 2.75
+	},
+	"tpHandTransform": {
+		"translation": {
+			"x": -1.1,
+			"y": -0.69,
+			"z": -1
+		},
+		"rotation": {
+			"x": 0,
+			"y": 12,
+			"z": -25
+		},
+		"scale": 0.43
+	},
+	"rainPermeable": true,
+	"materialDensity": 600
+}

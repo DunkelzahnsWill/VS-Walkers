@@ -20,11 +20,11 @@ The first release, and the first Walker: the Skinwalker.
 - **The haunt.** It learns one person at a time, over days: it keeps its distance, creeps closer,
   stares, follows, and when it has learned enough, it hunts. It wants you alone; company, firelight
   and a barred door all matter. A haunt ends when its victim dies.
-- **Killing it.** Possible, but only properly. Ordinary weapons only bring it down for a while.
-  The old papers disagree about what works; some of them are right.
-- **Escalation.** A walker that is wronged, or left to haunt for long, grows worse over five levels,
-  from Interloping to Wrath: a few ripe crops gone, torches out, knocks at night, dead animals near
-  the door, and in the end a door torn off its hinges. It grows angrier, not stronger.
+- **Killing it.** Possible, but only properly. The old papers disagree about what works; some of
+  them are right.
+- **It gets worse.** The longer it haunts, the worse it gets, over five levels from Interloping to
+  Wrath: a few ripe crops gone, torches out, knocks at night, dead animals near the door. It grows
+  angrier, not stronger, and a door is not always enough.
 
 ### The haunting
 
@@ -35,16 +35,15 @@ titles: *Something's moving out there.* and *The Forest Saw That.*
 
 ### The lore
 
-The scattered papers of a lost hamlet called Ellesby: 24 journal chapters, two books and seven
+The scattered papers of a lost hamlet called Ellesby: 27 journal chapters, two books and seven
 parchments, handed out as the haunt goes on, from unreliable narrators who were each
 partly wrong. Painted hides and a child's drawings as wall blocks, and a chalk watching mark players
 can draw themselves (decoration only).
 
 ### Items
 
-Unnatural furs and the walker's eyes as trophies. Silver-only clay molds for a cast silver spear head,
-knife blade and arrowhead. Cast silver is meant to be weaker than copper; the plated silver falx stays
-the strong weapon.
+Unnatural furs and the walker's eyes as trophies. Silver-only clay molds for a cast spear head, knife
+blade and arrowhead.
 
 ### For server owners
 
@@ -57,7 +56,7 @@ the strong weapon.
   server a few days, in forest, in deer country, and places the walker out of sight. Haunts pause
   for offline, idle and underground players and during temporal storms.
 - Claims are respected: doors, chests, torches and crops are touched only in unclaimed land or a
-  claim the victim owns or shares. A padlock, a bar or anything behind a door keeps the break-in out.
+  claim the victim owns or shares. A padlock, a door bar, reinforcement or anything behind the door keeps the break-in out.
 - Tested headless on a 1.22.7 dedicated server: three walkers haunting three victims cost about
   0.2 ms of the server's time per second, with no memory growth over restarts.
 - Admin commands under `/walkers` (status, spawn, despawn, config, director, stalker, forms, harass,

@@ -48,8 +48,8 @@ them was right, and finish it properly, because something's moving out there.
   whispers, torches gone dark, doors that were shut, a scrape at the wall when you try to sleep.
   Most nights nothing touches you. It wants you alone; company and firelight matter.
 - **It can be ended.** Not easily, and not with just anything.
-- **It holds a grudge.** Wrong it, or let it linger, and its visits grow worse: crops, animals,
-  doors. Bar your doors.
+- **It holds a grudge.** Let it linger and things get worse: crops, animals, doors. Bar your
+  doors.
 - **Ellesby's papers.** Journals, books and parchments from people who met it before you, handed out
   as your haunt goes on. Painted hides and a child's drawings to hang on your walls.
 

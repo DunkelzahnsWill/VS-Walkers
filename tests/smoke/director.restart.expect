@@ -1,0 +1,15 @@
+# Replies and log lines for tests/smoke/director.restart.commands (second boot, same world).
+Director loaded: 1 walker\(s\) \(1 waiting\), 1 ledger entry, 0 block\(s\) to restore
+standin-1 at -?[0-9]+, [0-9]+, -?[0-9]+$
+Walker 1 died on day [0-9.]+ at -?[0-9]+, [0-9]+, -?[0-9]+: removed by an admin by the console; victim standin-1; released \(LeftAlone\)
+# return now: back for its last victim at return.startStage
+Walker 1 begins haunting standin-1 at stage 2, wearing a [a-z]+ deer \(return 1\)
+Walker 1 has returned and haunts standin-1 at stage 2
+Walker 1: haunting standin-1 at stage 2
+Walker 1 is banished \(removed by an admin\)\. Its id is retired\.
+Walker 1 is banished$
+Walker 1 died on day [0-9.]+ at -?[0-9]+, [0-9]+, -?[0-9]+: removed by an admin by the console; victim standin-1; returned
+Walker 1 died on day [0-9.]+ at -?[0-9]+, [0-9]+, -?[0-9]+: removed by an admin; victim standin-1; banished
+Stand-in standin-1 removed
+Saved debug\.standInVictims = false
+Saved director\.minForestDensity = 0\.25

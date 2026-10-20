@@ -24,7 +24,7 @@ Rules for this page (owner's decisions, 20 Oct 2026):
 | Tags | Creatures, Horror, Lore, Server-side config |
 | Source | https://github.com/DunkelzahnsWill/VS-Walkers |
 | License | see `LICENSE` in the source |
-| File | `walkers_1.0.0.zip`, notes: the 1.0.0 section of `CHANGELOG.md` |
+| File | `walkers_<version>.zip`; notes: that version's `CHANGELOG.md` section (on the first ModDB upload, every section so far) |
 
 ## Description
 

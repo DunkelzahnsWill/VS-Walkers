@@ -6,6 +6,12 @@ release, because a joining client must have exactly the server's version of the 
 This file is shown to players (it is pasted into the ModDB file notes), so it says what a player
 meets, not how every rule works. Server owners find the details in the README.
 
+## 1.0.2 (for Vintage Story 1.22.7)
+
+### Fixes
+
+- Fixed a game crash on the client when a title, a whisper or the banishing line appeared on screen.
+
 ## 1.0.1 (for Vintage Story 1.22.7)
 
 ### Items

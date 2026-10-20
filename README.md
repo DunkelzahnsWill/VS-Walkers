@@ -3,7 +3,7 @@
 A code mod for Vintage Story 1.22.7. Its first creature is the Skinwalker: something that looks like
 an ordinary animal until it doesn't. *Something's moving out there.*
 
-Version `1.0.1`, for Vintage Story 1.22.7. The Skinwalker wears the guise of a doe of the local
+Version `1.0.2`, for Vintage Story 1.22.7. The Skinwalker wears the guise of a doe of the local
 deer type and shifts to its true form out of sight. The director chooses one lone player at a time
 and places it; the stalker AI climbs a five-stage ladder from a distant watcher to the hunt; the
 harassment kit works through the night without touching the victim; the forms system shifts it and

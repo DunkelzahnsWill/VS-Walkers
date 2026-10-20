@@ -6,7 +6,8 @@
 #
 # Steps:
 #   1. refuses a dev, pre or rc version, a version without its own CHANGELOG.md section, and (unless
-#      --allow-dirty) uncommitted changes, so the zip matches a commit that can be tagged
+#      --allow-dirty) uncommitted changes, so the zip matches a commit that can be tagged; also refuses
+#      a direct SendIngameDiscovery call (see Walkers/Core/WalkersDiscovery.cs)
 #   2. scripts/setup.sh and ./build.sh, which validate, build and pack Releases/walkers_<version>.zip
 #   3. adds LICENSE and CHANGELOG.md to the zip root (the game ignores them)
 #   4. scripts/smoke-test.sh on that finished zip
@@ -36,6 +37,10 @@ print(m["modid"], m["version"], m["dependencies"]["game"])' Walkers/modinfo.json
   || fail "modinfo.json targets game $game but scripts/versions.env tests against $VS_VERSION"
 grep -q "^## ${version//./\\.} " CHANGELOG.md \
   || fail "CHANGELOG.md has no \"## $version (...)\" section"
+# A discovery sent without lang parameters crashes the 1.22.7 client (Walkers/Core/WalkersDiscovery.cs).
+direct_discovery="$(grep -rln --include='*.cs' 'SendIngameDiscovery(' Walkers | grep -v '^Walkers/Core/WalkersDiscovery.cs$' || true)"
+[[ -z "$direct_discovery" ]] \
+  || fail "Use SendWalkersDiscovery instead of SendIngameDiscovery in: $direct_discovery"
 if (( ! allow_dirty )) && [[ -n "$(git status --porcelain)" ]]; then
   fail "Uncommitted changes; commit them first or pass --allow-dirty for a trial run"
 fi

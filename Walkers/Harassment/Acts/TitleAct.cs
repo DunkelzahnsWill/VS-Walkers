@@ -1,6 +1,7 @@
 using Walkers.Config;
 using Walkers.Director;
 using Walkers.Stalker;
+using Walkers.Core;
 
 namespace Walkers.Harassment.Acts;
 
@@ -54,7 +55,7 @@ public sealed class TitleAct
         }
         else
         {
-            ctx.Api.SendIngameDiscovery(hitter, ForestSawCode, null);
+            ctx.Api.SendWalkersDiscovery(hitter, ForestSawCode);
         }
         ctx.System.Log(ctx, ActCode, $"\"The Forest Saw That.\" for {hitter.PlayerName}");
     }
@@ -72,7 +73,7 @@ public sealed class TitleAct
         }
         else
         {
-            ctx.Api.SendIngameDiscovery(player, code, null);
+            ctx.Api.SendWalkersDiscovery(player, code);
         }
         ctx.System.Log(ctx, ActCode, code);
     }

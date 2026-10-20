@@ -9,6 +9,7 @@ using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 using Walkers.Config;
 using Walkers.Director;
+using Walkers.Core;
 
 namespace Walkers.Forms;
 
@@ -130,7 +131,7 @@ public static class WalkerRitual
 
         foreach (var player in forms.CountingPlayersNear(body, BanishLineRange))
         {
-            forms.Sapi.SendIngameDiscovery(player, "walkers-banish", null);
+            forms.Sapi.SendWalkersDiscovery(player, "walkers-banish");
         }
 
         var director = forms.Director;

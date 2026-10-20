@@ -5,6 +5,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Server;
 using Walkers.Commands;
+using Walkers.Core;
 
 namespace Walkers.Director;
 
@@ -141,7 +142,7 @@ public partial class DirectorSystem
     {
         try
         {
-            sapi.SendIngameDiscovery(player, code);
+            sapi.SendWalkersDiscovery(player, code);
         }
         catch (Exception e)
         {

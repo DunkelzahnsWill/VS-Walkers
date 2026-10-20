@@ -1,0 +1,29 @@
+[
+	{
+		"ingredientPattern": "C",
+		"ingredients": {
+			"C": { "type": "item", "code": "game:stone-chalk" }
+		},
+		"width": 1,
+		"height": 1,
+		"output": { "type": "block", "code": "watchingmark-chalk-single-north", "quantity": 4 }
+	},
+	{
+		"ingredientPattern": "L",
+		"ingredients": {
+			"L": { "type": "item", "code": "game:nugget-limonite" }
+		},
+		"width": 1,
+		"height": 1,
+		"output": { "type": "block", "code": "watchingmark-limonite-single-north", "quantity": 4 }
+	},
+	{
+		"ingredientPattern": "MMM",
+		"ingredients": {
+			"M": { "type": "block", "code": "watchingmark-*-single-north", "name": "pigment" }
+		},
+		"width": 3,
+		"height": 1,
+		"output": { "type": "block", "code": "watchingmark-{pigment}-triple-north", "quantity": 1 }
+	}
+]

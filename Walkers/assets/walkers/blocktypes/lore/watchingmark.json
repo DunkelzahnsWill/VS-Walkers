@@ -38,5 +38,6 @@
 	"sounds": { "place": "game:block/sand", "break": "game:block/sand", "hit": "game:block/sand" },
 	"guiTransform": { "rotation": { "x": 0, "y": 0, "z": 0 }, "origin": { "x": 0.5, "y": 0.5, "z": 0.5 }, "scale": 1.4 },
 	"rainPermeable": true,
-	"materialDensity": 200
+	"materialDensity": 200,
+	"maxstacksize": 64
 }

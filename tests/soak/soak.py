@@ -258,16 +258,25 @@ def main():
     s.cmd("/walkers director ledger")
     play(s, "day2", PHASE_MINUTES)
 
-    bodies = walker_bodies(s)
-    if 2 in bodies:
-        note(f"killing walker 2's body #{bodies[2]} with no ritual")
-        s.cmd(f"/entity cmd e[id={bodies[2]}] kill")
+    # Any walker with a body in the world dies badly; a body that has withdrawn comes back within minutes.
+    killed = None
+    for _ in range(6):
+        bodies = walker_bodies(s)
+        if bodies:
+            killed, body = sorted(bodies.items())[-1]
+            break
+        play(s, "day2-wait", 0.5)
+    if killed is None:
+        note("FAIL: no walker had a body in the world to kill")
+    else:
+        note(f"killing walker {killed}'s body #{body} with no ritual")
+        s.cmd(f"/entity cmd e[id={body}] kill")
         s.cmd("/walkers director tick")
-        s.cmd("/walkers director status 2")
+        s.cmd(f"/walkers director status {killed}")
         # The husk's burn window (ritual.huskBurnWindowSeconds, 120 s) and the director's 60 s grace.
         play(s, "burn-window", 3.5)
         s.cmd("/walkers director tick")
-        s.cmd("/walkers director status 2")
+        s.cmd(f"/walkers director status {killed}")
     s.cmd("/walkers director ledger")
     s.stop()
 
@@ -286,19 +295,21 @@ def main():
     s.cmd("/walkers director status")
     s.cmd("/walkers director ledger")
     play(s, "after-return", 3)
-    # Escalation (on builds that have it): one improper death and a return reads 1; an in-game month of
-    # active haunting adds one; a second improper death and return adds one more; it stops at 3.
-    s.cmd("/walkers director status 2", wait=3)
+    # Escalation (the owner's five levels): 1 on the first haunt, +1 per improper death, +1 per
+    # escalation.monthsPerLevel of live haunting after one. Resting adds nothing; a second improper death
+    # and return adds one; ten days (over a 9-day month) inside the 12-day haunt adds one more.
+    w = killed or 2
+    s.cmd(f"/walkers director status {w}", wait=3)
     s.cmd("/time add 10 days", wait=4)
     s.cmd("/walkers director tick")
-    s.cmd("/walkers director status 2", wait=3)
-    s.cmd("/walkers director end 2 ledger")
-    s.cmd("/walkers director return 2 now")
+    s.cmd(f"/walkers director status {w}", wait=3)
+    s.cmd(f"/walkers director end {w} ledger")
+    s.cmd(f"/walkers director return {w} now")
     s.cmd("/walkers director tick")
-    s.cmd("/walkers director status 2", wait=3)
-    s.cmd("/time add 20 days", wait=4)
+    s.cmd(f"/walkers director status {w}", wait=3)
+    s.cmd("/time add 10 days", wait=4)
     s.cmd("/walkers director tick")
-    s.cmd("/walkers director status 2", wait=3)
+    s.cmd(f"/walkers director status {w}", wait=3)
     s.cmd("/walkers furs")
     s.cmd("/walkers harass status", wait=3)
     s.cmd("/time set 21:00", wait=3)

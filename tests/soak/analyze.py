@@ -154,8 +154,9 @@ if not acts:
     print("No act lines in server-debug.log.\n")
 for victim, items in sorted(acts.items()):
     counts = Counter(code for _, code, *_ in items)
-    # harass.minGapSeconds spaces the drawn acts; titles, pages and the dawn offering come on their own triggers.
-    drawn = [i for i in items if i[1] not in ("titles", "pages", "offerings")]
+    # harass.minGapSeconds spaces the drawn acts; titles, pages, dusk knocks, the dawn offering and the enraged
+    # dusk whisper (whisper 15, the iron line) come on their own triggers.
+    drawn = [i for i in items if i[1] not in ("titles", "pages", "offerings", "knocks") and not (i[1] == "whispers" and i[3].startswith("whisper 15"))]
     gaps = [(b[0] - a[0]).total_seconds() for a, b in zip(drawn, drawn[1:]) if a[4] == b[4]]
     nights = Counter()
     for when, code, stage, detail, boot in items:

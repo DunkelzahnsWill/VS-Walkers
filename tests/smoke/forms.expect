@@ -15,7 +15,7 @@ Forms self-test: burning the body in time banishes: ok
 Forms self-test: every silver item counts as silver, a copper arrow does not: ok
 Forms self-test: the guise refuses a player-caused death, and takes one an admin command allows: ok
 Forms: skinwalker-animal-whitetail #[0-9]+ refused a player-caused death
-Forms: 2 unnatural fur\(s\) of walker 9999 burned \(fire\)
-Forms self-test: a stamped unnatural fur dropped into fire burns up and reports its walker: ok
+Forms: 2 unnatural fur\(s\) burned \(fire\)
+Forms self-test: unnatural fur dropped into fire burns up and is reported: ok
 Forms self-test: 9 passed, 0 failed
 Forms: [0-9]+ walker bodies await the ritual

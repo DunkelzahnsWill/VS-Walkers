@@ -200,7 +200,6 @@ public class FormsSelfTest
             return;
         }
         var stack = new ItemStack(fur, 2);
-        ItemWalkerFur.Stamp(stack, 9999);
         var item = World.SpawnItemEntity(stack, at.AddCopy(0, 0.2, 0)) as EntityItem;
         if (item == null)
         {
@@ -209,7 +208,7 @@ public class FormsSelfTest
         }
         spawned.Add(item);
         int reported = 0;
-        void OnBurned(int walkerId, IPlayer? byPlayer, int count) => reported += walkerId == 9999 ? count : 0;
+        void OnBurned(IPlayer? byPlayer, int count) => reported += count;
         forms.FursBurned += OnBurned;
         try
         {
@@ -230,7 +229,7 @@ public class FormsSelfTest
             Fail("unnatural fur burns", item.Alive ? "it is still there" : "the burn reported " + reported + " furs, not 2");
             return;
         }
-        Pass("a stamped unnatural fur dropped into fire burns up and reports its walker");
+        Pass("unnatural fur dropped into fire burns up and is reported");
     }
 
     private bool Expect(Entity body, bool awaits, string name)

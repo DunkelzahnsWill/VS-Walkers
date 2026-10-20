@@ -11,7 +11,7 @@ namespace Walkers.Forms;
 
 /// <summary>
 /// The true form's body as a knife sees it ("walkers-husk", on both sides): after an ordinary death its
-/// victim or its killer can skin it for 2 to ritual.huskFurCount unnatural furs, each stamped with the walker's id; anyone else gets nothing (creature bible,
+/// victim or its killer can skin it for 2 to ritual.huskFurCount unnatural furs; anyone else gets nothing (creature bible,
 /// section 7). The knife looks for <see cref="IHarvestable"/> on the entity (ItemKnife.cs:227), so this
 /// stands in for vanilla's harvestable, which the true form does not have. The permitted players travel
 /// to clients in watched attributes, so the client only starts a cut the server will accept.
@@ -60,13 +60,8 @@ public class EntityBehaviorWalkerHusk : EntityBehavior, IHarvestable
         entity.WatchedAttributes.SetBool(SkinnedKey, true);
         if (entity.World.GetItem(new AssetLocation(Core.WalkersModSystem.ModId, "walkerfur")) is Item fur)
         {
-            var forms = entity.Api.ModLoader.GetModSystem<FormsModSystem>();
-            var stack = new ItemStack(fur, entity.World.Rand.Next(MinFurs, Math.Max(MinFurs, forms.Config.Ritual.HuskFurCount) + 1));
-            var director = forms.Director;
-            if (director != null && director.TryGetWalkerId(entity, out var walkerId))
-            {
-                ItemWalkerFur.Stamp(stack, walkerId);
-            }
+            int most = entity.Api.ModLoader.GetModSystem<FormsModSystem>().Config.Ritual.HuskFurCount;
+            var stack = new ItemStack(fur, entity.World.Rand.Next(MinFurs, Math.Max(MinFurs, most) + 1));
             if (!byPlayer.InventoryManager.TryGiveItemstack(stack, true))
             {
                 entity.World.SpawnItemEntity(stack, entity.Pos.XYZ.Add(0, 0.5, 0));

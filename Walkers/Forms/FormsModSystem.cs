@@ -36,11 +36,11 @@ public class FormsModSystem : ModSystem
     private FormsSelfTest? selfTest;
 
     /// <summary>
-    /// Unnatural furs burned (dropped into fire or lava, or cooked in a firepit): the walker's id (-1 for an
-    /// unstamped fur), the player who dropped them when known, and how many. The director owns what that
-    /// means for the marks (creature bible, section 7).
+    /// Unnatural furs burned (dropped into fire or lava, or cooked in a firepit): the player who dropped
+    /// them when known, and how many. The director owns what that means for the marks (creature bible,
+    /// section 7).
     /// </summary>
-    public event Action<int, IPlayer?, int>? FursBurned;
+    public event Action<IPlayer?, int>? FursBurned;
 
     public override void Start(ICoreAPI api)
     {
@@ -153,48 +153,15 @@ public class FormsModSystem : ModSystem
 
     // ---- Unnatural furs ----
 
-    /// <summary>True when the director knows the walker and it is banished.</summary>
-    public bool IsBanished(int walkerId) => walkerId >= 0 && Director?.GetWalker(walkerId)?.State == WalkerState.Banished;
-
-    internal void ReportFursBurned(int walkerId, string? byPlayerUid, int count, string how)
+    internal void ReportFursBurned(string? byPlayerUid, int count, string how)
     {
         if (count <= 0)
         {
             return;
         }
         var player = byPlayerUid == null ? null : Sapi.World.PlayerByUid(byPlayerUid);
-        Mod.Logger.Notification("Forms: {0} unnatural fur(s) of walker {1} burned ({2}{3})", count, walkerId, how, player == null ? "" : ", dropped by " + player.PlayerName);
-        FursBurned?.Invoke(walkerId, player, count);
-    }
-
-    /// <summary>
-    /// The walker is banished: its furs turn cold, in the inventories of online players and on the
-    /// ground. Furs elsewhere turn cold when next moved or dropped (<see cref="ItemWalkerFur"/>).
-    /// </summary>
-    internal void ColdFurs(int walkerId)
-    {
-        foreach (var player in Sapi.World.AllOnlinePlayers)
-        {
-            foreach (var inventory in player.InventoryManager.Inventories.Values)
-            {
-                foreach (var slot in inventory)
-                {
-                    if (slot?.Itemstack?.Collectible is ItemWalkerFur && ItemWalkerFur.WalkerIdOf(slot.Itemstack) == walkerId)
-                    {
-                        slot.Itemstack.Attributes.SetBool(ItemWalkerFur.ColdKey, true);
-                        slot.MarkDirty();
-                    }
-                }
-            }
-        }
-        foreach (var entity in Sapi.World.LoadedEntities.Values)
-        {
-            if (entity is EntityItem { Itemstack.Collectible: ItemWalkerFur } item && ItemWalkerFur.WalkerIdOf(item.Itemstack) == walkerId)
-            {
-                item.Itemstack.Attributes.SetBool(ItemWalkerFur.ColdKey, true);
-                item.WatchedAttributes.MarkAllDirty();
-            }
-        }
+        Mod.Logger.Notification("Forms: {0} unnatural fur(s) burned ({1}{2})", count, how, player == null ? "" : ", dropped by " + player.PlayerName);
+        FursBurned?.Invoke(player, count);
     }
 
     /// <summary>The weapon in hand when an attack begins: a blow that breaks it empties the hand before the damage lands.</summary>

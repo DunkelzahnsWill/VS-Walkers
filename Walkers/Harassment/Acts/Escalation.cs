@@ -13,22 +13,23 @@ using Walkers.Stalker.Tasks;
 namespace Walkers.Harassment.Acts;
 
 /// <summary>
-/// The escalation list (creature bible, section 7): what a victim finds after a walker comes back
-/// from an improper kill, keyed on the escalation level (<see cref="Enraged.Level"/>): "first return" is level 1. The kit runs it itself from the walker's memory;
-/// the director only counts the returns.
+/// The world side of the escalation ladder (creature bible, section 7; the owner's ladder of
+/// 2026-10-20), spent from the budgets of the walker's level (<see cref="Enraged.Rules"/>), all per
+/// haunt. The kit runs it itself from the walker's memory; the director only counts the level.
 /// <list type="bullet">
-/// <item>First return, the rotting herd: at the first dawn of stage 2 or later, once per return,
-/// escalation.herd.wildCarcasses dead does of the guise's own type lie 16 to 24 blocks from the
-/// victim's door, laid out only while no player is within 32 blocks. A knife gets only rot. They are
-/// removed after escalation.herd.decayHours, before vanilla decay can leave bones.</item>
-/// <item>First return, eaten crops: in stages 2 to 5, once a night, a line of
-/// escalation.crops.blocksPerAct ripe crops set back escalation.crops.stagesBack growth stages; at
-/// most maxPerReturn blocks and maxShare of the crops in range per return, only where the claim rule
-/// allows. Only crop blocks, so never berry bushes, troughs, hay or traps.</item>
-/// <item>Second return, livestock (escalation.herd.killLivestock, off by default): one of the
-/// victim's own farm animals found dead at dawn, once per return, inside a claim the victim owns.</item>
+/// <item>Eaten crops (cropsPerHaunt: 8 at Interloping, 12 from Grudge): in stages 2 to 5, once a
+/// night, a line of escalation.crops.blocksPerAct ripe crops set back escalation.crops.stagesBack
+/// growth stages; at most the budget and maxShare of the crops in range per haunt, only where the
+/// claim rule allows. Only crop blocks, so never berry bushes, troughs, hay or traps.</item>
+/// <item>Dead animals (animalsPerHaunt: 1 at Grudge, 3 from Rage), at the first dawn of stage 2 or
+/// later: with escalation.herd.killLivestock (off by default) one of the victim's own farm animals
+/// found dead inside a claim the victim owns, then the rest of the budget as a rotting herd of the
+/// guise's own type 16 to 24 blocks from the victim's door, laid out only while no player is within 32
+/// blocks. A knife gets only rot. They are removed after escalation.herd.decayHours, before vanilla
+/// decay can leave bones.</item>
 /// </list>
-/// The torn door and the enraged break-in are <see cref="BreakInAct"/>'s.
+/// Torches are <see cref="DouseTorchAct"/>'s, knocks <see cref="KnockAct"/>'s, torn doors and the
+/// break-in <see cref="BreakInAct"/>'s.
 /// </summary>
 public sealed class Escalation
 {
@@ -42,7 +43,6 @@ public sealed class Escalation
     /// <summary>In-game hours after dusk before the night's crop act.</summary>
     private const double CropsAfterDuskHours = 1;
 
-    private static readonly AssetLocation Eat = new("game", "sounds/player/eat");
     private static readonly AssetLocation Plant = new("game", "sounds/block/plant");
     private static readonly AssetLocation Rot = new("game", "rot");
 
@@ -55,33 +55,34 @@ public sealed class Escalation
 
     private EscalationConfig Config => system.Config.Escalation;
 
-    private static int Returns(HarassContext ctx) => Enraged.Level(ctx);
-
-    /// <summary>At dawn: the herd falls due, and (opt-in) an animal is found dead.</summary>
+    /// <summary>At dawn, once a haunt from stage 2: the animal budget falls due, (opt-in) one farm animal first, then the herd.</summary>
     public IEnumerable<(string Code, ActResult Result)> OnDawn(HarassContext ctx)
     {
-        if (!Config.Enabled || Returns(ctx) < 1)
+        var harass = ctx.Harass;
+        int budget = Enraged.Rules(ctx).AnimalsPerHaunt;
+        if (budget <= 0 || ctx.Stage < 2 || harass.GetBool(HarassMemory.HerdDone))
         {
             yield break;
         }
-        var harass = ctx.Harass;
-        if (ctx.Stage >= 2 && Config.Herd.WildCarcasses > 0 && harass.GetInt(HarassMemory.HerdFor) != Returns(ctx))
-        {
-            harass.SetInt(HarassMemory.HerdFor, Returns(ctx));
-            harass.SetBool(HarassMemory.HerdPending, true);
-            var home = Home(ctx);
-            harass.SetDouble("herdHomeX", home.X);
-            harass.SetDouble("herdHomeY", home.Y);
-            harass.SetDouble("herdHomeZ", home.Z);
-        }
-        if (Config.Herd.KillLivestock && Returns(ctx) >= 2 && harass.GetInt(HarassMemory.LivestockFor) != Returns(ctx))
+        harass.SetBool(HarassMemory.HerdDone, true);
+        if (Config.Herd.KillLivestock && !harass.GetBool(HarassMemory.LivestockDone))
         {
             var result = KillLivestock(ctx);
             if (result.Done)
             {
-                harass.SetInt(HarassMemory.LivestockFor, Returns(ctx));
+                harass.SetBool(HarassMemory.LivestockDone, true);
+                budget--;
             }
             yield return (LivestockCode, result);
+        }
+        if (budget > 0)
+        {
+            harass.SetBool(HarassMemory.HerdPending, true);
+            harass.SetInt(HarassMemory.HerdCount, budget);
+            var home = Home(ctx);
+            harass.SetDouble("herdHomeX", home.X);
+            harass.SetDouble("herdHomeY", home.Y);
+            harass.SetDouble("herdHomeZ", home.Z);
         }
     }
 
@@ -90,10 +91,6 @@ public sealed class Escalation
     {
         var harass = ctx.Harass;
         RemoveHerdWhenDue(ctx);
-        if (!Config.Enabled || Returns(ctx) < 1)
-        {
-            yield break;
-        }
         if (harass.GetBool(HarassMemory.HerdPending))
         {
             var herd = LayHerd(ctx);
@@ -105,7 +102,7 @@ public sealed class Escalation
             }
         }
         double dusk = harass.GetDouble(HarassMemory.Dusk);
-        if (ctx.Night && ctx.Stage >= 2 && harass.GetDouble(HarassMemory.CropsNight, -1) != dusk &&
+        if (ctx.Night && ctx.Stage >= 2 && Enraged.Rules(ctx).CropsPerHaunt > 0 && harass.GetDouble(HarassMemory.CropsNight, -1) != dusk &&
             ctx.Api.World.Calendar.TotalHours - dusk >= CropsAfterDuskHours)
         {
             harass.SetDouble(HarassMemory.CropsNight, dusk);
@@ -160,7 +157,8 @@ public sealed class Escalation
                 continue;
             }
             var ids = new List<long>();
-            for (int i = 0; i < Config.Herd.WildCarcasses; i++)
+            int count = Math.Max(1, harass.GetInt(HarassMemory.HerdCount, 1));
+            for (int i = 0; i < count; i++)
             {
                 var at = i == 0 ? spot : WalkerSpots.FindStanding(world.BlockAccessor, spot.X + ctx.Rand.NextDouble() * 4 - 2, spot.Y, spot.Z + ctx.Rand.NextDouble() * 4 - 2, 3, 1.2f) ?? spot;
                 var body = OfferingAct.SpawnDead(ctx, type, at, "walkersRottingHerd", RotOnly);
@@ -243,18 +241,13 @@ public sealed class Escalation
         var config = Config.Crops;
         var world = ctx.Api.World;
         var harass = ctx.Harass;
-        if (harass.GetInt(HarassMemory.CropsFor) != Returns(ctx))
-        {
-            harass.SetInt(HarassMemory.CropsFor, Returns(ctx));
-            harass.SetInt(HarassMemory.CropsEaten, 0);
-        }
         int eaten = harass.GetInt(HarassMemory.CropsEaten);
         var crops = CropsNear(ctx);
-        int allowed = Math.Min(config.MaxPerReturn, (int)Math.Floor(config.MaxShare * crops.Count)) - eaten;
+        int allowed = Math.Min(Enraged.Rules(ctx).CropsPerHaunt, (int)Math.Floor(config.MaxShare * crops.Count)) - eaten;
         int want = Math.Min(config.BlocksPerAct, allowed);
         if (want <= 0)
         {
-            return ActResult.Skip($"this return's crops are spent ({eaten} eaten, {crops.Count} in range)");
+            return ActResult.Skip($"this haunt's crops are spent ({eaten} eaten, {crops.Count} in range)");
         }
         var ripe = crops.Where(c => c.Value.CurrentStage() >= (c.Value.CropProps?.GrowthStages ?? int.MaxValue)).ToDictionary(c => c.Key, c => c.Value);
         List<BlockPos>? best = null;
@@ -303,7 +296,7 @@ public sealed class Escalation
             ctx.Api.Event.RegisterCallback(_ =>
             {
                 HarassSounds.At(world, Plant, at, 0.8f, 16, 0.8f);
-                HarassSounds.At(world, Eat, at, 0.6f, 16, 0.7f);
+                HarassSounds.At(world, HarassSounds.Eat, at, 0.6f, 16, 0.7f);
             }, 1 + i * 900);
             i++;
         }

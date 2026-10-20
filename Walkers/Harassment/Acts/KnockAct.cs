@@ -11,7 +11,8 @@ namespace Walkers.Harassment.Acts;
 /// watching, two has learnt you, three is tonight). One knock a night. Raps on the outside of the
 /// door nearest the victim within 16 blocks, or on a wall block beside them when there is no door.
 /// No other act raps, so the count always means what the lore says. Each counted knock leaves its page
-/// (K1, K2, K3) or the fallback letter.
+/// (K1, K2, K3) or the fallback letter. Only from an escalation level with knocks (Grudge on): an
+/// Interloping walker never knocks.
 /// </summary>
 public sealed class KnockAct : HarassAct
 {
@@ -34,14 +35,17 @@ public sealed class KnockAct : HarassAct
 
     public override int Cap(HarassConfig config) => 1;
 
-    public override ActResult Run(HarassContext ctx) => Knock(ctx, ctx.Stage >= 4 ? 2 : 1, scrape: false);
+    public override double Weight(HarassContext ctx) => Enraged.Rules(ctx).Knocks ? base.Weight(ctx) : 0;
+
+    public override ActResult Run(HarassContext ctx) =>
+        Enraged.Rules(ctx).Knocks ? Knock(ctx, ctx.Stage >= 4 ? 2 : 1, scrape: false) : ActResult.Skip($"no knocks at escalation level {Enraged.Level(ctx)}");
 
     /// <summary>Stage 5, at dusk: the three raps. Once per night, outside the budget.</summary>
     public ActResult RunDusk(HarassContext ctx)
     {
-        if (!ctx.Config.Knocks.Enabled || ctx.Stage < 5 || HarassMemory.Count(ctx.Harass, Code) >= 1)
+        if (!ctx.Config.Knocks.Enabled || ctx.Stage < 5 || HarassMemory.Count(ctx.Harass, Code) >= 1 || !Enraged.Rules(ctx).Knocks)
         {
-            return ActResult.Skip("off, below stage 5, or knocked already tonight");
+            return ActResult.Skip("off, below stage 5, knocked already tonight, or no knocks at this escalation level");
         }
         var result = Knock(ctx, 3, scrape: Enraged.Is(ctx));
         if (result.Done)

@@ -49,7 +49,7 @@ public static class HarassMemory
     /// <summary>int: break-ins in this haunt.</summary>
     public const string BreakIns = "breakIns";
 
-    /// <summary>int: doors torn off their hinges in this haunt.</summary>
+    /// <summary>int: wooden doors torn off their hinges in this haunt.</summary>
     public const string Tears = "tears";
 
     // ---- Enraged and the entry (creature bible, section 7, "Enraged"; the stalker AI reads these) ----
@@ -66,13 +66,16 @@ public static class HarassMemory
     /// <summary>bool: the entry door was torn off, so the way in is open.</summary>
     public const string EntryTorn = "entryTorn";
 
-    // ---- The escalation list (per return: each key holds the return count it was done for) ----
+    // ---- The escalation ladder (per haunt, reset with the flags above) ----
 
-    /// <summary>int: the return whose rotting herd is laid out (or pending, see <see cref="HerdPending"/>).</summary>
-    public const string HerdFor = "herdFor";
+    /// <summary>bool: this haunt's rotting herd is laid out or pending (see <see cref="HerdPending"/>).</summary>
+    public const string HerdDone = "herdDone";
 
     /// <summary>bool: the herd is due and waits for its spot to be free of players.</summary>
     public const string HerdPending = "herdPending";
+
+    /// <summary>int: does the pending herd will have.</summary>
+    public const string HerdCount = "herdCount";
 
     /// <summary>long array: entity ids of the rotting herd; removed after <see cref="HerdUntil"/>.</summary>
     public const string HerdIds = "herdIds";
@@ -80,14 +83,20 @@ public static class HarassMemory
     /// <summary>double: TotalHours at which the rotting herd is removed.</summary>
     public const string HerdUntil = "herdUntil";
 
-    /// <summary>int: the return the crop counter counts for, and crop blocks eaten in it.</summary>
-    public const string CropsFor = "cropsFor", CropsEaten = "cropsEaten";
+    /// <summary>int: crop blocks eaten in this haunt.</summary>
+    public const string CropsEaten = "cropsEaten";
 
     /// <summary>double: TotalHours of the dusk whose crop act happened.</summary>
     public const string CropsNight = "cropsNight";
 
-    /// <summary>int: the return whose livestock death happened.</summary>
-    public const string LivestockFor = "livestockFor";
+    /// <summary>bool: this haunt's livestock death happened.</summary>
+    public const string LivestockDone = "livestockDone";
+
+    /// <summary>int: iron or heavy doors torn off in this haunt (<see cref="Tears"/> counts the wooden ones).</summary>
+    public const string OtherTears = "otherTears";
+
+    /// <summary>double: TotalHours of the dusk whose break-in roll was made; bool: whether it came up.</summary>
+    public const string BreakInNight = "breakInNight", BreakInTonight = "breakInTonight";
 
     /// <summary>double: TotalHours of the dusk of the last stage-5 three-rap knock.</summary>
     public const string DuskKnockFor = "duskKnock";

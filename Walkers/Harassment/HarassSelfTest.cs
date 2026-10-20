@@ -182,6 +182,15 @@ public sealed class HarassSelfTest
         var capped = system.RunNow(ctx, Act(WhisperAct.ActCode));
         check("whispers: tonight's cap holds", !capped.Done && capped.Detail.Contains("cap"), capped.Detail);
 
+        // The escalation level (the director's walkers/escalation), put back when the checks end.
+        var memory = ctx.Memory;
+        bool hadLevel = memory.HasAttribute(Enraged.LevelKey);
+        int levelBefore = memory.GetInt(Enraged.LevelKey);
+        void SetLevel(int level) => memory.SetInt(Enraged.LevelKey, level);
+        SetLevel(1);
+        var quiet = system.RunNow(ctx, Act(KnockAct.ActCode));
+        check("knocks: none at Interloping (level 1)", !quiet.Done, quiet.Detail);
+        SetLevel(2);
         var knock = system.RunNow(ctx, Act(KnockAct.ActCode));
         check("knocks: one rap on the door", knock.Done && knock.Detail.StartsWith("1 rap", StringComparison.Ordinal), knock.Detail);
         int pages = world.GetEntitiesAround(standIn.Pos.XYZ, 20, 10, e => e is EntityItem item && item.Itemstack?.Attributes.GetString("category") == "walkers-step").Length;
@@ -228,26 +237,41 @@ public sealed class HarassSelfTest
         var sleep = system.RunNow(ctx, Act(SleepDisturbAct.ActCode));
         check("broken sleep: nothing while the victim is awake", !sleep.Done, sleep.Detail);
 
-        // Stage 5: the break-in, only when enraged (creature bible, section 7, "Enraged").
+        // Stage 5: the break-in, only when enraged (creature bible, section 7, "Enraged"; from Rage).
         ctx = Ctx(5)!;
-        var memory = ctx.Memory;
-        int returnsBefore = memory.GetInt(WalkerMemory.Returns);
         bool wasProvoked = brain.Ai.GetBool(StalkerMemory.Provoked);
         var breakInAct = Act(BreakInAct.ActCode);
+        var level3 = system.Config.Escalation.Levels.Level3;
+        float chance = level3.BreakInChance;
+        var harass = ctx.Harass;
+        void NewNight()
+        {
+            HarassMemory.NewNight(harass, world.Calendar.TotalHours);
+            harass.RemoveAttribute(HarassMemory.BreakInNight);
+        }
         try
         {
-            memory.SetInt(WalkerMemory.Returns, 0);
+            TornDoor.Immediate = true;
+            SetLevel(2);
             brain.Ai.SetBool(StalkerMemory.Provoked, true);
             var calm = breakInAct.Run(ctx);
             check("enraged: a hit alone does not enrage it (onProvoked off)", !calm.Done && calm.Detail == "not enraged", calm.Detail);
             brain.Ai.SetBool(StalkerMemory.Provoked, wasProvoked);
-            memory.SetInt(WalkerMemory.Returns, 1);
-            check("enraged: a walker that came back is enraged", Enraged.Is(ctx), "");
+            check("enraged: not below Rage", !Enraged.Is(ctx), "");
+            SetLevel(3);
+            check("enraged: from Rage (level 3) it is enraged", Enraged.Is(ctx), "");
             string hostility = world.Config.GetString("creatureHostility", "aggressive");
             world.Config.SetString("creatureHostility", "off");
             bool offCalm = !Enraged.Is(ctx);
             world.Config.SetString("creatureHostility", hostility);
             check("enraged: never while creature hostility is off", offCalm, "");
+
+            level3.BreakInChance = 0;
+            NewNight();
+            var unlucky = system.RunNow(ctx, breakInAct);
+            check("break-in: not on a night the roll fails", !unlucky.Done && unlucky.Detail.StartsWith("not tonight", StringComparison.Ordinal), unlucky.Detail);
+            level3.BreakInChance = 1;
+            NewNight();
 
             var stone = world.GetBlock(new AssetLocation("game", "rock-granite"));
             var behind = doorPos.AddCopy(-1, 0, 0);
@@ -257,56 +281,80 @@ public sealed class HarassSelfTest
             check("break-in: a block behind the door keeps it out", barred.Done && barred.Detail.StartsWith("kept out", StringComparison.Ordinal) && Doors.At(world, doorPos)?.Opened == false, barred.Detail);
             accessor.SetBlock(0, behind);
 
-            HarassMemory.NewNight(ctx.Harass, world.Calendar.TotalHours);
+            NewNight();
             ctx.State.LastWakeMs = world.ElapsedMilliseconds;
             var woke = system.RunNow(ctx, breakInAct);
             ctx.State.LastWakeMs = -100000;
             check("break-in: not within 10 seconds of a wake", !woke.Done && woke.Detail.Contains("woke"), woke.Detail);
 
             var breakIn = system.RunNow(ctx, breakInAct);
-            var harass = ctx.Harass;
-            bool entry = harass.GetLong(HarassMemory.EntryUntilMs) > world.ElapsedMilliseconds && harass.GetInt(HarassMemory.EntryX) == doorPos.X && !harass.GetBool(HarassMemory.EntryTorn);
-            check("break-in: enraged, the unlocked door bursts open", breakIn.Done && breakIn.Detail.Contains("forced open") && Doors.At(world, doorPos)?.Opened == true, breakIn.Detail);
+            var doorItem = world.GetEntitiesAround(doorPos.ToVec3d().Add(0.5, 0.5, 0.5), 3, 3, e => e is EntityItem i && i.Itemstack?.Block?.Code?.Path == "door-solid-oak").FirstOrDefault();
+            check("break-in: the wooden door comes off whole, as an item", breakIn.Done && accessor.GetBlock(doorPos).Id == 0 && doorItem != null, breakIn.Detail);
+            bool entry = harass.GetLong(HarassMemory.EntryUntilMs) > world.ElapsedMilliseconds && harass.GetInt(HarassMemory.EntryX) == doorPos.X && harass.GetBool(HarassMemory.EntryTorn);
             check("break-in: the way in opens for the stalker AI", entry, $"until {harass.GetLong(HarassMemory.EntryUntilMs)}");
             var again = system.RunNow(ctx, breakInAct);
             check("break-in: one entry a night", !again.Done, again.Detail);
-            system.Restore.UndoAllLocal(world);
-            check("break-in: the restore list closes the door", Doors.At(world, doorPos)?.Opened == false, "");
-
-            HarassMemory.NewNight(ctx.Harass, world.Calendar.TotalHours);
-            var tell = system.Knocks.RunDusk(ctx);
-            check("knocks: an enraged dusk ends in a long scrape", tell.Done && tell.Detail.Contains("long scrape"), tell.Detail);
-
-            // The torn door: only from the second return, once a haunt; hung back by the restore list.
-            var doorBh = world.BlockAccessor.GetBlockEntity(doorPos)?.GetBehavior<BEBehaviorDoor>();
-            check("torn door: not on the first return", doorBh != null && !BreakInAct.MayTear(ctx, doorBh), "");
-            memory.SetInt(WalkerMemory.Returns, 2);
-            bool mayTear = doorBh != null && BreakInAct.MayTear(ctx, doorBh);
-            bool torn = mayTear && TornDoor.TearNow(ctx, doorPos);
-            var doorItem = world.GetEntitiesAround(doorPos.ToVec3d().Add(0.5, 0.5, 0.5), 3, 3, e => e is EntityItem i && i.Itemstack?.Block?.Code?.Path == "door-solid-oak").FirstOrDefault();
-            check("torn door: from the second return it comes off whole, as an item", torn && accessor.GetBlock(doorPos).Id == 0 && doorItem != null, $"may {mayTear}, torn {torn}");
             placed.Add(doorPos.UpCopy());
             system.Restore.UndoAllLocal(world);
             bool rehung = world.BlockAccessor.GetBlockEntity(doorPos)?.GetBehavior<BEBehaviorDoor>() is { Opened: false } && doorItem is { Alive: false };
             check("torn door: hung back at dawn while its item lies there", rehung, accessor.GetBlock(doorPos).Code?.ToShortString() ?? "air");
-            memory.SetInt(WalkerMemory.Returns, 1);
 
-            EscalationChecks(check, ctx, standIn, origin, ground);
+            NewNight();
+            harass.SetInt(HarassMemory.Tears, level3.WoodenDoorsPerHaunt);
+            var spent = system.RunNow(ctx, breakInAct);
+            check("break-in: kept out once the haunt's wooden doors are spent", spent.Detail.Contains("wooden doors") && Doors.At(world, doorPos)?.Opened == false, spent.Detail);
+            harass.SetInt(HarassMemory.Tears, 0);
+            harass.SetInt(HarassMemory.BreakIns, 0);
+
+            NewNight();
+            var tell = system.Knocks.RunDusk(ctx);
+            check("knocks: an enraged dusk ends in a long scrape", tell.Done && tell.Detail.Contains("long scrape"), tell.Detail);
+
+            // From Hate the torches are eaten.
+            SetLevel(4);
+            NewNight();
+            accessor.ExchangeBlock(world.GetBlock(new AssetLocation("game", "torch-basic-lit-up"))!.Id, torchPos);
+            var eatenTorch = system.RunNow(ctx, Act(DouseTorchAct.ActCode));
+            check("torches: from Hate (level 4) the torch is eaten", eatenTorch.Done && eatenTorch.Detail.EndsWith("eaten", StringComparison.Ordinal) && accessor.GetBlock(torchPos).Id == 0, eatenTorch.Detail);
+
+            EscalationChecks(check, ctx, standIn, origin, ground, SetLevel);
         }
         finally
         {
-            memory.SetInt(WalkerMemory.Returns, returnsBefore);
+            TornDoor.Immediate = false;
+            level3.BreakInChance = chance;
             brain.Ai.SetBool(StalkerMemory.Provoked, wasProvoked);
+            if (hadLevel)
+            {
+                memory.SetInt(Enraged.LevelKey, levelBefore);
+            }
+            else
+            {
+                memory.RemoveAttribute(Enraged.LevelKey);
+            }
         }
     }
 
-    /// <summary>The rotting herd and the eaten crops, on the first return.</summary>
-    private void EscalationChecks(Action<string, bool, string> check, HarassContext ctx, Entity standIn, BlockPos origin, int ground)
+    /// <summary>The animal and crop budgets of the levels: the rotting herd and the eaten crops.</summary>
+    private void EscalationChecks(Action<string, bool, string> check, HarassContext ctx, Entity standIn, BlockPos origin, int ground, Action<int> setLevel)
     {
         var world = api.World;
         var accessor = world.BlockAccessor;
         var escalation = system.Escalation;
         var harass = ctx.Harass;
+        var levels = system.Config.Escalation.Levels;
+
+        // No dead animals at Interloping; from Rage the herd is three.
+        setLevel(1);
+        harass.RemoveAttribute(HarassMemory.HerdDone);
+        escalation.OnDawn(ctx).ToList();
+        check("rotting herd: none at Interloping (level 1)", !harass.GetBool(HarassMemory.HerdPending), "");
+        setLevel(3);
+        harass.RemoveAttribute(HarassMemory.HerdDone);
+        escalation.OnDawn(ctx).ToList();
+        bool due = harass.GetBool(HarassMemory.HerdPending) && harass.GetInt(HarassMemory.HerdCount) == levels.Level3.AnimalsPerHaunt;
+        harass.SetBool(HarassMemory.HerdPending, false);
+        check("rotting herd: at Rage it falls due once a haunt, three does", due && harass.GetBool(HarassMemory.HerdDone), $"{harass.GetInt(HarassMemory.HerdCount)} does");
 
         // The herd lies 16 to 24 blocks from the door, never while a player is within 32.
         harass.SetDouble("herdHomeX", origin.X + 0.5);
@@ -338,7 +386,7 @@ public sealed class HarassSelfTest
         }
         standIn.Pos.SetPos(victimAt);
         var ids = (harass["herdIds"] as LongArrayAttribute)?.value ?? Array.Empty<long>();
-        check("rotting herd: two does where nobody is", herd.Done && ids.Length == system.Config.Escalation.Herd.WildCarcasses, herd.Detail);
+        check("rotting herd: the does lie where nobody is", herd.Done && ids.Length == levels.Level3.AnimalsPerHaunt, herd.Detail);
         escalation.RemoveHerdNow(ctx);
         check("rotting herd: removed when its time is up", ids.All(id => world.GetEntityById(id) is not { Alive: true }) && !harass.HasAttribute("herdIds"), "");
 
@@ -357,6 +405,7 @@ public sealed class HarassSelfTest
         var cropConfig = system.Config.Escalation.Crops;
         var rule = cropConfig.ClaimRule;
         float share = cropConfig.MaxShare;
+        harass.RemoveAttribute(HarassMemory.CropsEaten);
         try
         {
             var unclaimed = escalation.EatCrops(ctx);

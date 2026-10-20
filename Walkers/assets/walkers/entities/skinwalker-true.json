@@ -118,6 +118,16 @@
                         "animationSpeed": 1.55
                     },
                     {
+                        "code": "walkers-lunge",
+                        "priority": 2.46,
+                        "priorityForCancel": 2.48,
+                        "animation": "stab",
+                        "animationSpeed": 1.5,
+                        "runAnimation": "run",
+                        "sound": "game:creature/drifter-hit",
+                        "soundStartMs": 400
+                    },
+                    {
                         "code": "walkers-retreat",
                         "priority": 2.4,
                         "priorityForCancel": 2.45,
@@ -125,16 +135,6 @@
                         "walkAnimationSpeed": 1.8,
                         "runAnimation": "run",
                         "runAnimationSpeed": 1
-                    },
-                    {
-                        "code": "walkers-lunge",
-                        "priority": 2.3,
-                        "priorityForCancel": 2.48,
-                        "animation": "stab",
-                        "animationSpeed": 1.5,
-                        "runAnimation": "run",
-                        "sound": "game:creature/drifter-hit",
-                        "soundStartMs": 400
                     },
                     {
                         "code": "walkers-doorway",

@@ -218,7 +218,11 @@ For feature code:
   level), never while it burns or within 20 seconds of a player's hit. Withdrawing bodies are the
   director's to remove.
 - **Restore list.** A door opened by `walkers-doorway` is entered as kind `walkers-doorway`, with its
-  own undo handler.
+  own undo handler. The task also closes the door itself when it lets go of it (the hold ends, the
+  hunt ends, or the body leaves), and tries again each second for ten minutes while someone stands in
+  the doorway.
+- **Strikes.** `walkers-lunge` checks its reach with a physical line, so glass blocks a strike even
+  though the gaze sees through it.
 
 ## Folder map
 

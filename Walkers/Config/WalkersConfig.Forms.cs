@@ -30,6 +30,14 @@ public class FormsConfig
     [Description("Allows the one shift in plain sight per haunt.")]
     public bool RevealShift { get; set; } = true;
 
+    [Description("The reveal happens only while its victim watches from within this many blocks.")]
+    [Range(4, 32)]
+    public float RevealDistance { get; set; } = 12;
+
+    [Description("Share of its true-form health it heals per in-game day while it wears the guise.")]
+    [Range(0, 1)]
+    public float HealPerDay { get; set; } = 0.25f;
+
     [Description("True-form health. For scale: a player has 15, a brown bear 64.")]
     [Range(20, 200)]
     public float TrueHealth { get; set; } = 50;

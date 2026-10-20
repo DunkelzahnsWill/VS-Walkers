@@ -1,0 +1,11 @@
+{
+	"code": "walkers-penn",
+	"title": "walkers:lore-penn-title",
+	"category": "walkers-penn",
+	"pieces": [
+		"walkers:lore-penn-piece1",
+		"walkers:lore-penn-piece2",
+		"walkers:lore-penn-piece3",
+		"walkers:lore-penn-piece4"
+	]
+}

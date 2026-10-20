@@ -1,0 +1,12 @@
+{
+	"code": "walkers-tull",
+	"title": "walkers:lore-tull-title",
+	"category": "walkers-tull",
+	"pieces": [
+		"walkers:lore-tull-piece1",
+		"walkers:lore-tull-piece2",
+		"walkers:lore-tull-piece3",
+		"walkers:lore-tull-piece4",
+		"walkers:lore-tull-piece5"
+	]
+}

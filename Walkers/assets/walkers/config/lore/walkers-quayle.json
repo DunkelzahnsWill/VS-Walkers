@@ -1,0 +1,11 @@
+{
+	"code": "walkers-quayle",
+	"title": "walkers:lore-quayle-title",
+	"category": "walkers-quayle",
+	"pieces": [
+		"walkers:lore-quayle-piece1",
+		"walkers:lore-quayle-piece2",
+		"walkers:lore-quayle-piece3",
+		"walkers:lore-quayle-piece4"
+	]
+}

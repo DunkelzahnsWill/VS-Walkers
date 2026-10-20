@@ -1,0 +1,9 @@
+{
+	"code": "walkers-pennlate",
+	"title": "walkers:lore-pennlate-title",
+	"category": "walkers-pennlate",
+	"pieces": [
+		"walkers:lore-pennlate-piece1",
+		"walkers:lore-pennlate-piece2"
+	]
+}

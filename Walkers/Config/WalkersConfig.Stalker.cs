@@ -4,9 +4,9 @@ using Newtonsoft.Json;
 
 namespace Walkers.Config;
 
-// Settings of the stalker AI: the behaviour ladder, the gaze check and stalking. Drafted from the
-// creature bible's "Config knobs" table; from here on this file belongs to the stalker AI thread,
-// which renames, adds and removes settings as its code needs.
+// Settings of the stalker AI: the behaviour ladder, the gaze check and stalking. This file belongs to
+// the stalker AI (Walkers/Stalker), which reads every value at the moment it uses it, so a reload
+// applies at once. Times ending in Seconds are real time; Hours and Nights are in-game time.
 public partial class WalkersConfig
 {
     [Description("How fast a walker climbs the behaviour ladder towards the hunt.")]
@@ -17,7 +17,7 @@ public partial class WalkersConfig
     [JsonProperty(Order = 21)]
     public GazeConfig Gaze { get; set; } = new();
 
-    [Description("How it keeps its distance, slips away and comes back.")]
+    [Description("How it keeps its distance, slips away, comes back and closes in.")]
     [JsonProperty(Order = 22)]
     public StalkConfig Stalk { get; set; } = new();
 }
@@ -48,15 +48,19 @@ public class LadderConfig
     [Range(0, 5)]
     public int Stage4Nights { get; set; } = 1;
 
-    [Description("Highest stage it reaches while the victim is with others.")]
+    [Description("Harassment acts the victim must have received before stages 3 and 4 move on.")]
+    [Range(0, 20)]
+    public int StageMinActs { get; set; } = 4;
+
+    [Description("Highest stage it reaches while the victim is with others; above it, company makes it fall back.")]
     [Range(1, 5)]
     public int GroupStageCap { get; set; } = 3;
 
-    [Description("Stages added when a player hurts the guise.")]
+    [Description("Stages added the first time its victim hurts the guise in a haunt, up to stage 4.")]
     [Range(0, 2)]
     public int HarmGuiseBonus { get; set; } = 1;
 
-    [Description("Pace multiplier while the victim's temporal stability is below 0.5.")]
+    [Description("Pace multiplier while the victim's temporal stability, not counting the walker's own drain, is below 0.5.")]
     [Range(1, 4)]
     public float LowStabilityPace { get; set; } = 1.5f;
 
@@ -67,6 +71,10 @@ public class LadderConfig
     [Description("In-game days it rests before climbing again after being driven off.")]
     [Range(0, 10)]
     public float DrivenOffRestDays { get; set; } = 1;
+
+    [Description("The hunt ends after this many nights the victim spent online in stage 5 with no hit either way.")]
+    [Range(1, 10)]
+    public int HuntMaxNights { get; set; } = 3;
 }
 
 public class GazeConfig
@@ -93,7 +101,7 @@ public class GazeConfig
 
 public class StalkConfig
 {
-    [Description("Stages 2 to 4: watched for this many real seconds, it slips away.")]
+    [Description("Stages 2 to 4: watched for this many real seconds, it slips away once nobody sees it.")]
     [Range(3, 60)]
     public float VanishWatchedSeconds { get; set; } = 10;
 
@@ -108,4 +116,35 @@ public class StalkConfig
     [Description("Before the hunt it never stands in block light this bright or brighter; 32 turns the rule off. Torches give 14 or 15, lanterns 18 to 20.")]
     [Range(1, 32)]
     public int AvoidBlockLight { get; set; } = 8;
+
+    [Description("Stage 4: the true form may be seen standing far off at night.")]
+    public bool Silhouettes { get; set; } = true;
+
+    [Description("Most silhouettes a night.")]
+    [Range(0, 5)]
+    public int SilhouettesPerNight { get; set; } = 2;
+
+    [Description("Closest a silhouette stands to the victim, in blocks.")]
+    [Range(16, 96)]
+    public int SilhouetteMinDistance { get; set; } = 32;
+
+    [Description("A silhouette slips away after being watched this many real seconds.")]
+    [Range(2, 30)]
+    public float SilhouetteWatchedSeconds { get; set; } = 5;
+
+    [Description("Guise walking speed, a deer's wander (about 0.8 blocks a second). Smaller deer types scale it down.")]
+    [Range(0.002, 0.03)]
+    public float GuiseSpeed { get; set; } = 0.006f;
+
+    [Description("True-form stalking speed, about 2.7 blocks a second (a walking player makes 3.4).")]
+    [Range(0.005, 0.05)]
+    public float StalkSpeed { get; set; } = 0.02f;
+
+    [Description("True-form chase, about 6.1 blocks a second, a wolf's pace (a sprinting player makes 6.8).")]
+    [Range(0.02, 0.08)]
+    public float ChaseSpeed { get; set; } = 0.045f;
+
+    [Description("Least real seconds between two lunges.")]
+    [Range(2, 30)]
+    public float LungeCooldownSeconds { get; set; } = 6;
 }

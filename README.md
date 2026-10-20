@@ -4,9 +4,10 @@ A code mod for Vintage Story 1.22.7. Its first creature is the Skinwalker: somet
 an ordinary animal until it doesn't. *Something's moving out there.*
 
 Status: prototype, version `0.1.0-dev.1`. The mod builds, packs and loads cleanly on a dedicated
-server. The Skinwalker has a deer guise and a placeholder true form (JSON), and a director that
-chooses whom it haunts, places it near them out of sight, and keeps a ledger of its deaths so it
-returns seasons later. The stalker AI, form shifts, kill ritual and harassment are still to come.
+server. The Skinwalker has a deer guise and a placeholder true form that spawn alone at night in
+forests (or with `/walkers spawn`), and the stalker AI drives both: it picks the nearest player, climbs
+the five-stage ladder, freezes while watched and hunts at stage 5. The director, form shifts, kill
+ritual and harassment are still to come.
 
 | Field | Value |
 | --- | --- |
@@ -172,44 +173,59 @@ drafts from the creature bible until their features land.
   range; `tests/smoke/commands.*` runs each command from the console. All `.commands` files share one
   server run, in file-name order, so a test that changes a setting restores it at the end.
 
-## The director
+## Stalker AI
 
-### For server owners
+The stalker AI (`Walkers/Stalker/`) runs on the server. It keeps a brain for every loaded walker body
+(`WalkerBrain`): its victim, a gaze check twice a second, a mode, the freeze and the slip-away. The
+brain picks the mode; the AI tasks in the entity JSON act on it.
 
-The director decides who is haunted, when, and where the walker appears; walkers never spawn on
-their own. Every 10 seconds it looks at the online players. Each player in survival or guest mode who is past
-`director.newPlayerGraceDays`, on the surface and near forest rolls `director.hauntChancePerDay` once
-an in-game day; a walker then haunts them for at most `director.hauntMaxDays`. The haunt pauses while
-its victim is offline, underground, away from the forest, in another game mode or in a temporal
-storm, and the walker withdraws out of sight. A walker killed without the ritual goes into the
-ledger and comes back for its last victim `return.afterSeasons` later. Everything is saved in the
-world's save game.
+| Task | Form | What it does |
+| --- | --- | --- |
+| `walkers-stare` | both | Slot 1: turns the body toward the victim in small steps while it stands still |
+| `walkers-creep` | both | Keeps the stage's distance band, moves a little closer after every look, never into bright block light; stage 4 at night, the true form stands far off in the open |
+| `walkers-hunt` | true | Stage 5: closes in while unwatched, runs within 16 blocks, holds at doors and while the victim sleeps |
+| `walkers-lunge` | true | From within `gaze.lungeRange`: a dash and one hit, capped at `forms.maxHitFraction` of the target's health |
+| `walkers-retreat` | both | Into cover after a break-off, a withdraw or a hit on the guise; to water while burning |
+| `walkers-doorway` | true | Stage 5: opens an unlocked door the victim is behind, holds the doorway, never walks in |
+
+Without a director, a body picks the nearest counting player within 64 blocks and climbs the ladder
+on its own every 10 seconds (a guise starts at stage 1, a true form at 5). Admin commands:
 
 | Command | What it does |
 | --- | --- |
-| `/walkers director status [walker or player]` | Every walker and online player as the director sees them, or one in detail |
-| `/walkers director haunt <player> [stage]` | Starts a haunt on that player now, or moves their haunt to a stage (1 to 5) |
-| `/walkers director end <walker or player> [rest\|ledger\|banish]` | Ends a haunt (rest), puts the walker in the ledger as if it died, or banishes it |
-| `/walkers director return <walker> [now]` | When a walker in the ledger returns; with `now`, at once |
-| `/walkers director ledger` | Every walker death, how it died and what came of it |
-| `/walkers director tick` | Runs one director update now |
-| `/walkers director standin add [position]`, `remove <name>`, `list` | Debug stand-in victims for servers with nobody online; needs `debug.standInVictims` |
+| `/walkers stalker status [radius]` | Each walker's mode, stage, victim, gaze, freeze, slip-away mark and ladder clocks |
+| `/walkers stalker stage <1-5> [radius]` | Sets the stage; its clocks start again |
+| `/walkers stalker victim <player or entity id> [radius]` | Sets the victim of walkers the director did not place; an entity id makes a stand-in |
+| `/walkers stalker selftest` | Ladder, view cone, gaze and slip-away checks with a playerbot stand-in (the smoke test runs it) |
 
-### For feature code
+For feature code:
 
-- Get the director with `api.GetWalkersDirector()` (`Walkers/Director/IWalkerDirector.cs`); it is
-  null on clients and when the director is not loaded, so a feature still runs on its own.
-- A walker's memory is one `TreeAttribute` under `walkers` in every body's `entity.Attributes`: the
-  same instance as the director's saved copy, so a value set on a body survives the body. Write only
-  your own subtree (`walkers/ai`, `walkers/harass`, `walkers/form`); the top-level keys
-  (`WalkerMemory`) are the director's.
-- A shift creates the new body, calls `AttachBody(walkerId, newBody)` before `SpawnEntity`, then
-  retires the old body with `Die(EnumDespawnReason.Expire)`.
-- Report to the director instead of keeping your own state: `ReportAct`, `ReportHarm`, `EndHaunt`,
-  `Banish`, `Release`, and `AddRestore` for every block a walker changes, with a handler for your kind
-  from `RegisterRestoreHandler`. The stage ladder plugs in with `RegisterLadder`.
-- Smoke tests: `tests/smoke/director.*` haunts a stand-in, places the walker, puts it in the ledger,
-  and `director.restart.*` checks after a restart that the ledger came back and the return works.
+- **The walker's memory.** The ladder is the only writer of the top-level `walkers/stage` during a
+  haunt. Everything else the stalker AI keeps is in `walkers/ai`; other features read it and never
+  write it. `StalkerMemory.cs` lists every key. The ones meant for others: `watched`,
+  `victimWatching`, `watchers`, `lastSeenMs` (the last gaze check), `breakOff` (why a true form broke
+  off: health, fire, company, dawn, drivenoff, stoodup, withdraw, huntover; empty when it has not),
+  `mode`, `silhouettesTonight`, `provoked`, `lastPlayerHitMs` and `lastAttacker`.
+- **The gaze in code.** `WalkerGaze.IsWatched(body, out watchers)` reads the last check;
+  `WalkerGaze.CheckNow(body, out watchers)` runs one. `StalkerModSystem.BrainOf(body)` gives the brain
+  (mode, victim, frozen), or null for a body the AI does not track.
+- **The ladder.** `StalkerLadder` implements `IWalkerLadder`; it registers with the director at the
+  RunGame phase. `OnHarm` gives its stage bonus once per haunt, so a hit reported by both forms and the
+  brain counts once. Stages 3 and 4 need `ladder.stageMinActs` acts (`IWalkerDirector.ReportAct`).
+  The low-stability pace leaves out the walker's own drain if the harassment kit writes the total it
+  drained as a double at `walkers/harass/drainTaken`.
+- **Forms.** Shift a guise to the true form in stage 4 at night only while `stalk.silhouettes` is on
+  and `walkers/ai/silhouettesTonight` is below `stalk.silhouettesPerNight`; past that the true form
+  breaks off with `withdraw`. Shift a true form with a non-empty `breakOff` back once nobody sees it.
+- **Removal.** The stalker AI removes a body itself only to slip away (`Die(Expire)`, logged at debug
+  level), never while it burns or within 20 seconds of a player's hit. Withdrawing bodies are the
+  director's to remove.
+- **Restore list.** A door opened by `walkers-doorway` is entered as kind `walkers-doorway`, with its
+  own undo handler. The task also closes the door itself when it lets go of it (the hold ends, the
+  hunt ends, or the body leaves), and tries again each second for ten minutes while someone stands in
+  the doorway.
+- **Strikes.** `walkers-lunge` checks its reach with a physical line, so glass blocks a strike even
+  though the gaze sees through it.
 
 ## Folder map
 
@@ -225,7 +241,8 @@ Walkers/                      the mod project
   Core/                       mod identity and startup log line
   Config/                     the shared config: walkers.json, its checks, player choices
   Commands/                   the /walkers command
-  Director/                   the director: haunts, placement, the ledger and the return, /walkers director
+  Stalker/                    the stalker AI: ladder, gaze, brain, AI tasks, /walkers stalker
+  Director/                   the director's interface (IWalkerDirector.cs)
   assets/walkers/             entities, shapes, textures, sounds, itemtypes, patches, lang, config/lore
 ```
 

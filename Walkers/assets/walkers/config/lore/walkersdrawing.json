@@ -1,0 +1,11 @@
+{
+	"code": "walkersdrawing",
+	"title": "walkers:lore-drawing-title",
+	"category": "walkersdrawing",
+	"pieces": [
+		"walkers:lore-drawing-piece1",
+		"walkers:lore-drawing-piece2",
+		"walkers:lore-drawing-piece3",
+		"walkers:lore-drawing-piece4"
+	]
+}

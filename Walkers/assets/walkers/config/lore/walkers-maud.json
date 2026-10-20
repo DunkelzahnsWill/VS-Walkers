@@ -1,0 +1,13 @@
+{
+	"code": "walkers-maud",
+	"title": "walkers:lore-maud-title",
+	"category": "walkers-maud",
+	"pieces": [
+		"walkers:lore-maud-piece1",
+		"walkers:lore-maud-piece2",
+		"walkers:lore-maud-piece3",
+		"walkers:lore-maud-piece4",
+		"walkers:lore-maud-piece5",
+		"walkers:lore-maud-piece6"
+	]
+}

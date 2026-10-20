@@ -1,0 +1,11 @@
+{
+	"code": "walkershide",
+	"title": "walkers:lore-hide-title",
+	"category": "walkershide",
+	"pieces": [
+		"walkers:lore-hide-piece1",
+		"walkers:lore-hide-piece2",
+		"walkers:lore-hide-piece3",
+		"walkers:lore-hide-piece4"
+	]
+}

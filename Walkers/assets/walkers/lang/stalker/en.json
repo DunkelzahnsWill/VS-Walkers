@@ -1,0 +1,21 @@
+{
+    "stalker-desc": "Stalker AI: status of every loaded walker, its stage, its victim, and a self-test",
+    "stalker-status-desc": "Shows each loaded walker's mode, stage, victim, gaze and ladder clocks, nearest first, or those within the given radius of you",
+    "stalker-stage-desc": "Sets the ladder stage (1 to 5) of every loaded walker, or of those within the given radius of you; the stage's clocks start again",
+    "stalker-victim-desc": "Makes a player (by name) or any entity (by id, a stand-in) the victim of every loaded walker the director did not place, or of those within the given radius",
+    "stalker-selftest-desc": "Checks the ladder, the gaze and the slip-away with a playerbot stand-in at the world spawn; for the headless smoke test",
+
+    "stalker-yes": "yes",
+    "stalker-no": "no",
+    "stalker-status-line": "Stalker AI: {0} walker(s) tracked ({1}); ladder {2}",
+    "stalker-status-ladder-director": "with the director",
+    "stalker-status-ladder-own": "on its own (no director)",
+    "stalker-status-header": "Stalker AI, walkers loaded: {0}",
+    "stalker-status-more": "  ... and {0} more",
+    "stalker-status-body": "  {0} #{1} at {2}, {3}, {4}: walker {5}, stage {6}, {7}, victim {8}",
+    "stalker-status-gaze": "    watched {0} ({1}), frozen {2}, watched {3} s in all, looks {4}, slips away: {5}, broke off: {6}",
+    "stalker-status-ladder": "    stage clock {0} h, nights {1}, acts {2}, sightings {3}, hunt nights {4}, company {5} h, provoked {6}",
+    "stalker-stage-set": "Set the stage of {0} walker(s) to {1}",
+    "stalker-victim-unknown": "No living player or entity called or numbered {0}",
+    "stalker-victim-set": "{0} walker(s) now haunt {1} #{2}; {3} placed by the director left as they are"
+}

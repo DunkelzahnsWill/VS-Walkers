@@ -25,6 +25,8 @@ public sealed class VictimState
     public long NextActMs;
     public long LastWakeMs = -100000;
     public long LastPanicMs;
+    /// <summary>When the last livestock-panic debug line was written; one a minute at most.</summary>
+    public long PanicLoggedMs = -100000;
     public long LastHurtMs = -100000;
     public int LastHurtCounter = -1;
     public long SeenHitMs = -1;
@@ -91,6 +93,9 @@ public sealed class HarassModSystem : ModSystem
     public LivestockPanic Panic { get; } = new();
 
     public Escalation Escalation { get; private set; } = null!;
+
+    /// <summary>The livestock panic repeats every 3 seconds while the walker passes; its debug line is written once a minute.</summary>
+    private const long PanicLogEveryMs = 60000;
 
     private readonly List<HarassAct> acts = new();
     private readonly Dictionary<string, VictimState> victims = new();
@@ -257,8 +262,9 @@ public sealed class HarassModSystem : ModSystem
             ReportEscalation(ctx, code, result);
         }
         int bolted = Panic.Tick(ctx);
-        if (bolted > 0)
+        if (bolted > 0 && Api.World.ElapsedMilliseconds - ctx.State.PanicLoggedMs >= PanicLogEveryMs)
         {
+            ctx.State.PanicLoggedMs = Api.World.ElapsedMilliseconds;
             Mod.Logger.Debug("Harassment: {0} animal(s) bolted from walker #{1}", bolted, ctx.Body.EntityId);
         }
         Schedule(ctx);

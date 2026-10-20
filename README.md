@@ -4,9 +4,9 @@ A code mod for Vintage Story 1.22.7. Its first creature is the Skinwalker: somet
 an ordinary animal until it doesn't. *Something's moving out there.*
 
 Status: prototype, version `0.1.0-dev.1`. The mod builds, packs and loads cleanly on a dedicated
-server. The Skinwalker exists as pure JSON: a deer guise and a placeholder true form that spawn alone
-at night in forests (or with `/walkers spawn`). The stalker AI, director, form shifts, kill ritual and
-harassment are still to come.
+server. The Skinwalker has a deer guise and a placeholder true form (JSON), and a director that
+chooses whom it haunts, places it near them out of sight, and keeps a ledger of its deaths so it
+returns seasons later. The stalker AI, form shifts, kill ritual and harassment are still to come.
 
 | Field | Value |
 | --- | --- |
@@ -24,7 +24,7 @@ scripts/smoke-test.sh   # boot a headless server with that zip; fails on any err
 ```
 
 Setup takes about a minute the first time (a 54 MB download) and skips finished steps afterwards.
-The build takes about 10 seconds, the smoke test about 40.
+The build takes about 10 seconds, the smoke test about two minutes (it boots the server twice).
 
 - **Game DLLs.** The mod compiles against the DLLs of the game folder named by the `VINTAGE_STORY`
   environment variable. When it is not set, `Directory.Build.props` points it at the server that
@@ -43,12 +43,15 @@ The build takes about 10 seconds, the smoke test about 40.
   world seed, types any console commands from `tests/smoke/*.commands`, then sends `/stop`. It fails
   unless the server stops cleanly, `walkers` is in the loaded mod list, every pattern in
   `tests/smoke/*.expect` matches a line of `server-main.log`, and the logs hold no `[Error]` or
-  `[Fatal]` line, no `[Warning]` line that mentions the mod, and no crash log. The world and logs stay
-  in `.cache/smoke/` afterwards.
+  `[Fatal]` line, no `[Warning]` line that mentions the mod, and no crash log. When there are
+  `tests/smoke/*.restart.commands`, it then boots the server a second time on the same world, types
+  those in and stops it again, and every `tests/smoke/*.restart.expect` must match that boot's log
+  (`data/Logs-restart/`), so a feature can check what it saved. The world and logs stay in
+  `.cache/smoke/` afterwards.
 - **CI.** `.github/workflows/build.yml` runs the same three scripts on every pull request and every
   commit on `main` (a new push to a pull request cancels its older run). Every run that gets as far
   as a zip keeps it as an artifact named `walkers_<version>.zip`, also when the smoke test fails, and
-  every run keeps the server logs (artifact `smoke-test-logs`).
+  every run keeps the server logs of both boots (artifact `smoke-test-logs`).
 
 ## Play-testing on your PC
 
@@ -84,10 +87,10 @@ before merging. The layout lets branches stay out of each other's files:
 | Settings | its own section in `Walkers/Config/WalkersConfig.<Feature>.cs`, a `partial` of the shared config class (example in `WalkersConfig.cs`) |
 | Text | `Walkers/assets/walkers/lang/<feature>/en.json`. The game merges every `en.json` under `lang/`, and the build fails if two files define the same key |
 | JSON patches | `Walkers/assets/walkers/patches/<feature>-*.json` |
-| Smoke checks | `tests/smoke/<feature>.expect` and, if needed, `tests/smoke/<feature>.commands` |
+| Smoke checks | `tests/smoke/<feature>.expect` and, if needed, `tests/smoke/<feature>.commands`; checks after a restart in `tests/smoke/<feature>.restart.commands` and `.restart.expect` |
 
-Planned feature folders: `Stalker` (stalker AI), `Director` (director and spawns), `Forms` (forms and
-kill ritual), `Commands` (config and commands), `Harassment` (harassment kit).
+Feature folders: `Commands` (config and commands) and `Director` (director, spawns and the return) so
+far; planned are `Stalker` (stalker AI), `Forms` (forms and kill ritual) and `Harassment` (harassment kit).
 
 The shared surfaces, and who changes them:
 
@@ -169,6 +172,45 @@ drafts from the creature bible until their features land.
   range; `tests/smoke/commands.*` runs each command from the console. All `.commands` files share one
   server run, in file-name order, so a test that changes a setting restores it at the end.
 
+## The director
+
+### For server owners
+
+The director decides who is haunted, when, and where the walker appears; walkers never spawn on
+their own. Every 10 seconds it looks at the online players. Each player in survival or guest mode who is past
+`director.newPlayerGraceDays`, on the surface and near forest rolls `director.hauntChancePerDay` once
+an in-game day; a walker then haunts them for at most `director.hauntMaxDays`. The haunt pauses while
+its victim is offline, underground, away from the forest, in another game mode or in a temporal
+storm, and the walker withdraws out of sight. A walker killed without the ritual goes into the
+ledger and comes back for its last victim `return.afterSeasons` later. Everything is saved in the
+world's save game.
+
+| Command | What it does |
+| --- | --- |
+| `/walkers director status [walker or player]` | Every walker and online player as the director sees them, or one in detail |
+| `/walkers director haunt <player> [stage]` | Starts a haunt on that player now, or moves their haunt to a stage (1 to 5) |
+| `/walkers director end <walker or player> [rest\|ledger\|banish]` | Ends a haunt (rest), puts the walker in the ledger as if it died, or banishes it |
+| `/walkers director return <walker> [now]` | When a walker in the ledger returns; with `now`, at once |
+| `/walkers director ledger` | Every walker death, how it died and what came of it |
+| `/walkers director tick` | Runs one director update now |
+| `/walkers director standin add [position]`, `remove <name>`, `list` | Debug stand-in victims for servers with nobody online; needs `debug.standInVictims` |
+
+### For feature code
+
+- Get the director with `api.GetWalkersDirector()` (`Walkers/Director/IWalkerDirector.cs`); it is
+  null on clients and when the director is not loaded, so a feature still runs on its own.
+- A walker's memory is one `TreeAttribute` under `walkers` in every body's `entity.Attributes`: the
+  same instance as the director's saved copy, so a value set on a body survives the body. Write only
+  your own subtree (`walkers/ai`, `walkers/harass`, `walkers/form`); the top-level keys
+  (`WalkerMemory`) are the director's.
+- A shift creates the new body, calls `AttachBody(walkerId, newBody)` before `SpawnEntity`, then
+  retires the old body with `Die(EnumDespawnReason.Expire)`.
+- Report to the director instead of keeping your own state: `ReportAct`, `ReportHarm`, `EndHaunt`,
+  `Banish`, `Release`, and `AddRestore` for every block a walker changes, with a handler for your kind
+  from `RegisterRestoreHandler`. The stage ladder plugs in with `RegisterLadder`.
+- Smoke tests: `tests/smoke/director.*` haunts a stand-in, places the walker, puts it in the ledger,
+  and `director.restart.*` checks after a restart that the ledger came back and the return works.
+
 ## Folder map
 
 ```
@@ -183,6 +225,7 @@ Walkers/                      the mod project
   Core/                       mod identity and startup log line
   Config/                     the shared config: walkers.json, its checks, player choices
   Commands/                   the /walkers command
+  Director/                   the director: haunts, placement, the ledger and the return, /walkers director
   assets/walkers/             entities, shapes, textures, sounds, itemtypes, patches, lang, config/lore
 ```
 

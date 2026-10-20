@@ -10,6 +10,7 @@
   broken sleep: nothing while the victim is awake: pass
   chest lids: not while the victim looks at it: pass
   chest lids: out of sight, the lid pops: pass
+  claims: harass.checkClaims off ignores them, on checks them: pass
   claims: nothing on someone else's claim: pass
   doors: a door or trapdoor out of sight swings open: pass
   doors: the restore list closes it: pass

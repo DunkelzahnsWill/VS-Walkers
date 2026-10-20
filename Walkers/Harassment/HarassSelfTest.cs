@@ -215,6 +215,12 @@ public sealed class HarassSelfTest
         world.Claims.Add(claim);
         var claimed = system.RunNow(ctx, Act(DoorAct.ActCode));
         var claimedTorch = system.RunNow(ctx, Act(DouseTorchAct.ActCode));
+        bool checkClaims = config.CheckClaims;
+        config.CheckClaims = false;
+        bool claimsIgnored = BlockRules.ClaimsAllow(world, ClaimRespect.VictimAccess, doorPos, standIn);
+        config.CheckClaims = checkClaims;
+        bool claimsChecked = !BlockRules.ClaimsAllow(world, ClaimRespect.VictimAccess, doorPos, standIn);
+        check("claims: harass.checkClaims off ignores them, on checks them", claimsIgnored && claimsChecked, "");
         world.Claims.Remove(claim);
         claim = null;
         check("claims: nothing on someone else's claim", !claimed.Done && !claimedTorch.Done, claimed.Detail);

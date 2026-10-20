@@ -342,8 +342,9 @@ them, the rules of a walker's death and the items that come of it.
   `ritual.huskFurCount` unnatural furs, and the walker is released to the director, as it is when
   the body is left alone. A lit torch sets it alight (`ritual.torchIgniteChance`).
 - **Items.** `walkers:walkerfur` (unnatural fur; burning it reports to the director, which clears the
-  dropper's mark), `walkers:walkereyes` (trophy), silver-only clay molds for a spear head, knife
-  blade and arrowhead, and `walkers:spear-silver`. Cast silver is weaker than copper on purpose.
+  dropper's mark), `walkers:walkereyes` (trophy), `walkers:spearhead-silver` (smithed on the
+  vanilla anvil from one silver ingot; vanilla has no silver spear head) and `walkers:spear-silver`,
+  weaker than copper on purpose. Every other silver weapon is vanilla's own; the mod adds no molds.
 
 | Command | What it does |
 | --- | --- |

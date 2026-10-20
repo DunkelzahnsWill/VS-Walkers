@@ -70,7 +70,6 @@ public class AiTaskWalkerCreep : WalkerTaskBase
             max = Math.Max(min, max - brain.Looks * WalkerBrain.CreepStepBlocks);
         }
         double dist = brain.VictimDistance;
-        bool lit = LightRuleApplies(brain) && WalkerSpots.BlockLight(world.BlockAccessor, entity.Pos.XYZ) >= Config.Stalk.AvoidBlockLight;
 
         if (Moving)
         {
@@ -81,9 +80,16 @@ public class AiTaskWalkerCreep : WalkerTaskBase
             return true;
         }
 
-        bool needMove = lit || dist > max + BandSlack || dist < min - BandSlack || (closerEachLook && brain.Looks != looksAtSpot);
         long now = world.ElapsedMilliseconds;
-        if (!needMove || now < nextPickMs)
+        if (now < nextPickMs)
+        {
+            return true;
+        }
+        // Read the light only when a new spot may be picked: a light read waits on the chunk's lock, which
+        // the chunk threads hold often (the soak test's profile found this call to be most of the walkers' cost).
+        bool lit = LightRuleApplies(brain) && WalkerSpots.BlockLight(world.BlockAccessor, entity.Pos.XYZ) >= Config.Stalk.AvoidBlockLight;
+        bool needMove = lit || dist > max + BandSlack || dist < min - BandSlack || (closerEachLook && brain.Looks != looksAtSpot);
+        if (!needMove)
         {
             return true;
         }

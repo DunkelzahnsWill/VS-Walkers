@@ -8,19 +8,23 @@
 #   - the server reaches "Dedicated Server now running", then stops cleanly on /stop
 #   - the mod is in the server's loaded mod list
 #   - every pattern in tests/smoke/*.expect is found in Logs/server-main.log
-#   - the server logs hold no [Error] or [Fatal] line, and no [Warning] line that mentions the mod
+#   - the server logs hold no [Error] or [Fatal] line, no [Warning] line that mentions the mod, and
+#     no crash log
 # Console commands in tests/smoke/*.commands are typed in after boot, before /stop.
 # The world and its logs stay in .cache/smoke/ for inspection; CI uploads them.
 #
 # Environment: SMOKE_BOOT_TIMEOUT (seconds, default 300), SMOKE_PORT (default 42420).
 set -euo pipefail
+# A write to the console after the server died must fail, not kill this script.
+trap '' PIPE
 # shellcheck source=scripts/lib.sh
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 
 boot_timeout="${SMOKE_BOOT_TIMEOUT:-300}"
 port="${SMOKE_PORT:-42420}"
-# A fixed seed keeps the smoke world the same from run to run.
-server_overrides='{ "Upnp": false, "AdvertiseServer": false, "WorldConfig": { "Seed": "20261020" } }'
+# A fixed seed keeps the smoke world the same from run to run. English, because the boot check
+# below and the expect files match English log lines.
+server_overrides='{ "Upnp": false, "AdvertiseServer": false, "ServerLanguage": "en", "WorldConfig": { "Seed": "20261020" } }'
 
 modid="$(python3 -I -c 'import json, sys; print(json.load(open(sys.argv[1]))["modid"])' "$repo_root/Walkers/modinfo.json")"
 zip="${1:-}"
@@ -59,6 +63,11 @@ trap cleanup EXIT
 server_pid=$!
 exec 3> "$run_dir/console"
 
+# Types one line into the server console. Fails when the server is gone.
+send() {
+  kill -0 "$server_pid" 2>/dev/null && printf '%s\n' "$1" >&3 2>/dev/null
+}
+
 started=$SECONDS
 until grep -q "Dedicated Server now running" "$run_dir/stdout.log"; do
   if ! kill -0 "$server_pid" 2>/dev/null; then
@@ -78,14 +87,14 @@ for commands in "$repo_root"/tests/smoke/*.commands; do
   while IFS= read -r line || [[ -n "$line" ]]; do
     [[ -z "${line// }" || "$line" == \#* ]] && continue
     log "> $line"
-    printf '%s\n' "$line" >&3
+    send "$line" || { log "The server is gone; skipping the remaining commands"; break 2; }
     sleep 1
   done < "$commands"
 done
 shopt -u nullglob
 sleep 2
 
-printf '/stop\n' >&3
+send /stop || log "The server is gone before /stop"
 stop_started=$SECONDS
 while kill -0 "$server_pid" 2>/dev/null; do
   if (( SECONDS - stop_started > 120 )); then
@@ -103,11 +112,17 @@ debug_log="$data_dir/Logs/server-debug.log"
 [[ -f "$main_log" ]] || fail "No server log at $main_log"
 problems=()
 
-(( exit_code == 0 )) || problems+=("The server exited with code $exit_code")
+if (( exit_code != 0 )); then
+  problems+=("The server exited with code $exit_code")
+  tail -n 40 "$run_dir/stdout.log" >&2
+fi
 grep -q "Stopped the server!" "$run_dir/stdout.log" || problems+=("The server did not report a clean stop")
 grep -Eq "Mods, sorted by dependency:.*\b${modid}\b" "$main_log" || problems+=("$modid is not in the loaded mod list")
 
 shopt -s nullglob
+for crash in "$data_dir"/Logs/*crash*.log; do
+  [[ -s "$crash" ]] && problems+=("Crash log ${crash##*/}:"$'\n'"$(head -n 20 "$crash")")
+done
 for expect in "$repo_root"/tests/smoke/*.expect; do
   expect_name="${expect##*/}"
   while IFS= read -r pattern || [[ -n "$pattern" ]]; do
@@ -118,7 +133,10 @@ done
 shopt -u nullglob
 
 # Log lines with the checkout path cut out, so a folder named like the mod does not count as a mention.
-log_lines() { cat "$@" 2>/dev/null | sed "s|$repo_root|<repo>|g"; }
+# The game prints paths under $HOME as ~/..., so cut that form too.
+repo_tilde="$repo_root"
+[[ "$repo_root" == "$HOME"/* ]] && repo_tilde="~${repo_root#"$HOME"}"
+log_lines() { cat "$@" 2>/dev/null | sed -e "s|$repo_root|<repo>|g" -e "s|$repo_tilde|<repo>|g"; }
 
 errors="$(log_lines "$main_log" "$debug_log" | grep -E '\[(Server )?(Error|Fatal)\]' | sort -u || true)"
 [[ -z "$errors" ]] || problems+=("Errors in the server log:"$'\n'"$errors")

@@ -1,0 +1,7 @@
+* text=auto
+*.sh text eol=lf
+*.env text eol=lf
+*.png binary
+*.ogg binary
+*.wav binary
+*.blend binary

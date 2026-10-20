@@ -42,8 +42,9 @@ can draw themselves (decoration only).
 
 ### Items
 
-Unnatural furs and the walker's eyes as trophies. Silver-only clay molds for a cast spear head, knife
-blade and arrowhead.
+Unnatural furs and the walker's eyes as trophies. No special tools for silver: vanilla's silver axe,
+knife, arrows and falx all count, and a silver spear head is smithed on the vanilla anvil from one
+silver ingot (a stick makes it a silver spear, weaker than copper).
 
 ### For server owners
 

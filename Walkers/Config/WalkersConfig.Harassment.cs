@@ -113,7 +113,7 @@ public class StabilityDrainConfig : HarassActConfig
 {
     [Description("Temporal stability drained per real minute while it is near.")]
     [Range(0, 0.2)]
-    public float PerMinute { get; set; } = 0.02f;
+    public float PerMinute { get; set; } = 0.05f;
 
     [Description("It never drains below this. Vanilla damage starts below 0.13.")]
     [Range(0.13, 1)]
@@ -123,8 +123,8 @@ public class StabilityDrainConfig : HarassActConfig
 public class LivestockPanicConfig : HarassActConfig
 {
     [Description("Radius, in blocks, in which animals panic.")]
-    [Range(8, 64)]
-    public int Radius { get; set; } = 24;
+    [Range(4, 24)]
+    public int Radius { get; set; } = 10;
 }
 
 public class DoorsConfig : HarassActConfig

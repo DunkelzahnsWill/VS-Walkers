@@ -105,7 +105,7 @@ public class StalkConfig
     [Range(20, 600)]
     public float ReappearSeconds { get; set; } = 90;
 
-    [Description("Before the hunt it never stands in block light this bright or brighter; 16 turns the rule off.")]
-    [Range(0, 16)]
+    [Description("Before the hunt it never stands in block light this bright or brighter; 32 turns the rule off. Torches give 14 or 15, lanterns 18 to 20.")]
+    [Range(1, 32)]
     public int AvoidBlockLight { get; set; } = 8;
 }

@@ -20,8 +20,31 @@ public partial class WalkersConfig
 
 public class FormsConfig
 {
-    [Description("Deer types the guise may wear, such as [\"whitetail\"]; [\"auto\"] wears the type whose climate fits the spot.")]
+    [Description("Deer types the guise may wear: [\"auto\"] picks a type that lives where the victim is; a list restricts the pool, and a single type skips the climate test.")]
     public string[] GuiseTypes { get; set; } = { "auto" };
+
+    [Description("Where no deer type lives (hot, dry land): \"pause\" rolls no haunt there and pauses a running one; a deer type, such as \"pampas\", wears that type anyway, for arid worlds.")]
+    public string GuiseNoFit { get; set; } = "pause";
+
+    [Description("How far inside a deer type's temperature range, in degrees, the victim's climate must be to pick that type.")]
+    [Range(0, 5)]
+    public float GuisePickMarginC { get; set; } = 1;
+
+    [Description("How far inside a deer type's rainfall range the victim's climate must be to pick that type.")]
+    [Range(0, 0.1)]
+    public float GuisePickMarginRain { get; set; } = 0.02f;
+
+    [Description("How many degrees past its type's temperature range a travelling victim may go before the haunt pauses; -1 never pauses for it.")]
+    [Range(-1, 10)]
+    public float GuiseKeepMarginC { get; set; } = 2;
+
+    [Description("How far past its type's rainfall range a travelling victim may go before the haunt pauses.")]
+    [Range(0, 0.2)]
+    public float GuiseKeepMarginRain { get; set; } = 0.05f;
+
+    [Description("Real wild deer of a fitting type within this many blocks decide the guise; 0 skips the count.")]
+    [Range(0, 128)]
+    public int GuiseCensusRadius { get; set; } = 96;
 
     [Description("The guise shrugs off what players do to it: no blow or burn of theirs kills it, and it is whole again soon after. Off, players can kill the guise like a deer; the true body then lies in its place.")]
     public bool GuiseShrugsDamage { get; set; } = true;

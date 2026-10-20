@@ -64,6 +64,7 @@ public partial class DirectorSystem
     {
         placementTriesLeft = config.Director.SpawnTriesPerTick;
         UpdateCandidates();
+        Guard("furs", UpdateFurs);
         bool storm = StormActive();
         foreach (var walker in walkers.Values.OrderBy(w => w.Id).ToList())
         {
@@ -121,6 +122,11 @@ public partial class DirectorSystem
         }
 
         var pause = PauseReason(victim, storm);
+        if (pause == null && walker.GuiseType != null && GuisePicker.OutOfCountry(sapi, victim!.Entity.Pos.AsBlockPos, walker.GuiseType, config.Forms))
+        {
+            // A travelling victim keeps the same doe; out of its country, the haunt waits for them to come back.
+            pause = "the victim is out of the " + walker.GuiseType + " deer's country";
+        }
         if (pause == null && victim != null && !FarFromOtherVictims(victim, walker))
         {
             pause = "another victim is nearby";
@@ -159,9 +165,15 @@ public partial class DirectorSystem
 
         // The haunt clock runs only while the victim is eligible (not idle) or asleep, and the haunt is not
         // paused. A slept night can jump it by hours.
+        double elapsed = Math.Max(0, nowHours - walker.ClockUpdatedTotalHours);
         if (victim!.Eligible || victim.Asleep)
         {
-            walker.HauntClockHours += Math.Max(0, nowHours - walker.ClockUpdatedTotalHours);
+            walker.HauntClockHours += elapsed;
+        }
+        // The escalation clock runs only during a live haunt, once the walker has died improperly.
+        if (ImproperDeaths(walker.Id) > 0)
+        {
+            walker.EscalationHauntHours += elapsed;
         }
         walker.ClockUpdatedTotalHours = nowHours;
         if (walker.HauntClockHours >= config.Director.HauntMaxDays * calendar.HoursPerDay)
@@ -276,7 +288,8 @@ public partial class DirectorSystem
             walker.Returns++;
             walker.ReturnPending = false;
         }
-        walker.GuiseType = GuisePicker.Pick(sapi, victim.Entity.Pos.AsBlockPos, config.Forms.GuiseTypes);
+        // Rolled haunts start only in deer country; an admin's haunt elsewhere wears the old fallback.
+        walker.GuiseType = GuisePicker.Pick(sapi, victim.Entity.Pos.AsBlockPos, config.Forms) ?? GuisePicker.Fallback;
 
         int stage = stageOverride ?? (isReturn ? config.Return.StartStage : 1);
         var memory = memories[walker.Id];
@@ -365,10 +378,15 @@ public partial class DirectorSystem
             {
                 continue;
             }
-            // Like any haunt, a return waits for its victim's rest; /walkers director return now skips it.
+            // Like any haunt, a return waits for its target's rest; /walkers director return now skips it.
+            // Its target is the most-marked fur carrier who has no walker of their own, else its last victim.
             bool skipRest = returnNow == walker.Id;
-            var victim = walker.VictimUid != null && candidates.TryGetValue(walker.VictimUid, out var last) &&
-                CanBeChosen(last, storm, skipRest ? double.MaxValue : now) ? last : null;
+            double restBy = skipRest ? double.MaxValue : now;
+            var victim = MarkedCarriers().FirstOrDefault(c => CanBeChosen(c, storm, restBy) && FarFromOtherVictims(c));
+            if (victim == null && walker.VictimUid != null && candidates.TryGetValue(walker.VictimUid, out var last) && CanBeChosen(last, storm, restBy))
+            {
+                victim = last;
+            }
             if (victim != null && active < cap && FarFromOtherVictims(victim))
             {
                 entry.Outcome = LedgerOutcome.Returned;
@@ -405,11 +423,13 @@ public partial class DirectorSystem
                 continue;
             }
             record.LastRollDay = today;
-            if (sapi.World.Rand.NextDouble() >= config.Director.HauntChancePerDay || !FarFromOtherVictims(victim))
+            // While a walker rests, a marked player rolls furs.restingRollMultiplier times as often.
+            double chance = config.Director.HauntChancePerDay * (MarkedWhileResting(victim.Uid) ? config.Furs.RestingRollMultiplier : 1);
+            if (sapi.World.Rand.NextDouble() >= chance || !FarFromOtherVictims(victim))
             {
                 continue;
             }
-            // A walker a marked player is owed stays reserved for them.
+            // A walker a player who hurt it is owed stays reserved for them.
             var reserved = playerRecords.Values.Select(r => r.MarkedByWalker).Where(id => id != 0).ToHashSet();
             var walker = walkers.Values.Where(w => w.State == WalkerState.Resting && !reserved.Contains(w.Id)).OrderBy(w => w.Id).FirstOrDefault() ?? CreateWalker();
             StartHaunt(walker, victim, walker.ReturnPending);
@@ -446,12 +466,13 @@ public partial class DirectorSystem
     }
 
     /// <summary>
-    /// May this player or stand-in be chosen now: exposed, rested by <paramref name="now"/>, not already
+    /// May this player or stand-in be chosen now: exposed, in deer country, rested by <paramref name="now"/>, not already
     /// haunted, past the world's grace time, and no storm.
     /// </summary>
     private bool CanBeChosen(Candidate c, bool storm, double now) =>
         !storm &&
         Exposed(c) &&
+        c.DeerCountry &&
         WorldGracePassed() &&
         now >= playerRecords[c.Uid].RestUntilTotalDays &&
         !walkers.Values.Any(w => w.VictimUid == c.Uid && w.State is WalkerState.Haunting or WalkerState.Paused or WalkerState.Down);

@@ -173,6 +173,65 @@ drafts from the creature bible until their features land.
   range; `tests/smoke/commands.*` runs each command from the console. All `.commands` files share one
   server run, in file-name order, so a test that changes a setting restores it at the end.
 
+## The director
+
+### For server owners
+
+The director decides who is haunted, when, and where the walker appears; walkers never spawn on
+their own. Every 10 seconds it looks at the online players. Each player in survival or guest mode who is past
+`director.newPlayerGraceDays`, on the surface, near forest and in deer country rolls
+`director.hauntChancePerDay` once an in-game day; a walker then haunts them for at most
+`director.hauntMaxDays`. Nobody can opt out; counterplay is fire, silver and a barred door.
+
+- **Deer country.** The guise wears a deer type that lives where its victim is, picked from the
+  climate (`forms.guisePickMarginC`, `forms.guisePickMarginRain`), then the wild deer nearby
+  (`forms.guiseCensusRadius`). Where no deer type lives, in hot dry land, nobody is haunted and a
+  running haunt pauses; `forms.guiseNoFit` set to a type, such as `pampas`, allows haunts there anyway.
+- **Pauses.** The haunt pauses while its victim is offline, idle, underground, away from the forest,
+  out of the doe's country, in another game mode or in a temporal storm, and the walker withdraws out
+  of sight.
+- **The return.** A walker killed without the ritual goes into the ledger and comes back
+  `return.afterSeasons` later, for the player most marked by walker furs, else its last victim. It
+  comes back angrier, not stronger: its escalation level, 1 (Interloping) to 5 (Wrath), is 1 plus
+  its improper deaths plus one per `escalation.monthsPerLevel` months of haunting since, and drives
+  the harassment kit's acts. At Wrath it returns in half the time.
+- **Unnatural furs.** Skinning the body gives furs that mark whoever carries them in their own
+  inventories after `furs.markThresholdHours` of play. Burning the furs or waiting clears the mark;
+  `furs.markTarget` off makes them trophies only.
+
+Everything is saved in the world's save game.
+
+| Command | What it does |
+| --- | --- |
+| `/walkers director status [walker or player]` | Every walker and online player as the director sees them, or one in detail |
+| `/walkers director haunt <player> [stage]` | Starts a haunt on that player now, or moves their haunt to a stage (1 to 5) |
+| `/walkers director end <walker or player> [rest\|ledger\|banish]` | Ends a haunt (rest), puts the walker in the ledger as if it died, or banishes it |
+| `/walkers director return <walker> [now]` | When a walker in the ledger returns; with `now`, at once |
+| `/walkers director ledger` | Every walker death, how it died and what came of it |
+| `/walkers director tick` | Runs one director update now |
+| `/walkers director standin add [position]`, `remove <name>`, `list` | Debug stand-in victims for servers with nobody online; needs `debug.standInVictims` |
+| `/walkers furs [status\|clear] [player]` | Who carries walker furs and how marked they are; clears every mark or one player's |
+
+### For feature code
+
+- Get the director with `api.GetWalkersDirector()` (`Walkers/Director/IWalkerDirector.cs`); it is
+  null on clients and when the director is not loaded, so a feature still runs on its own.
+- A walker's memory is one `TreeAttribute` under `walkers` in every body's `entity.Attributes`: the
+  same instance as the director's saved copy, so a value set on a body survives the body. Write only
+  your own subtree (`walkers/ai`, `walkers/harass`, `walkers/form`); the top-level keys
+  (`WalkerMemory`: id, victim, stage, pace, returns, escalation, guise, withdraw) are the director's.
+- A shift creates the new body, calls `AttachBody(walkerId, newBody)` before `SpawnEntity`, then
+  retires the old body with `Die(EnumDespawnReason.Expire)`.
+- Report to the director instead of keeping your own state: `ReportAct`, `ReportHarm`, `EndHaunt`,
+  `Banish`, `Release`, `ClearFurMarks` for burned furs, and `AddRestore` for every block a walker
+  changes, with a handler for your kind from `RegisterRestoreHandler`. The stage ladder plugs in with
+  `RegisterLadder`.
+- Furs carry no walker's identity: any `walkers:walkerfur` in a player's own inventories marks them
+  for every walker, while some walker that is not banished has had its furs taken
+  (`Release(..., fursTaken: true)`).
+- Smoke tests: `tests/smoke/director.*` haunts a stand-in, places the walker, puts it in the ledger,
+  and `director.restart.*` checks after a restart that the ledger came back and the return works.
+
 ## Stalker AI
 
 The stalker AI (`Walkers/Stalker/`) runs on the server. It keeps a brain for every loaded walker body
@@ -245,7 +304,7 @@ storm, while the walker withdraws, and from stage 4 while another player is with
 | `doors` | 4-5 | Shuts an open door or gate, or swings a closed one open out of sight; closed again after `harass.doors.maxOpenHours` |
 | `chestLids` | 4-5 | A chest lid out of sight lifts and drops; never one a player has open |
 | `sleepDisturb` | 4-5 | A scrape at the wall wakes the victim and leaves them too tired to sleep again at once |
-| `breakIn` | 5, enraged | Only after the walker was provoked or has returned: forces an unlocked door near the victim, pops lids and douses torches within `harass.breakIn.reach`. A bar, padlock, story lock or solid block behind the door keeps it out; then it scrapes and strains at the boards |
+| `breakIn` | 5, enraged | Forces a plain wooden door near the awake, lone victim (or, from the second escalation level, tears it off its hinges), pops lids and douses torches within `harass.breakIn.reach`, then opens the way in for the stalker AI. A padlock, bar, reinforcement, anything behind the door, a metal, heavy, gate or double door, or a foreign claim keeps it out; then it scrapes at the boards |
 
 Beside the drawn acts: the stability drain (toward `harass.stabilityDrain.targets` per stage, never
 below `floor`, faster while watched, handed back while paused, the warp of `harass.mundaneWarp` in
@@ -255,6 +314,18 @@ screen shake, and the Pages act, which hands out the lore journals' pages on the
 Every act has its own `harass.<act>.enabled` switch and a nightly cap. Doors, trapdoors, gates, chests
 and torches are touched only within 16 blocks of the victim, never under a padlock, and only where
 `harass.respectClaims` allows (`victimAccess`: unclaimed land or a claim the victim owns or shares).
+
+**Enraged and the escalation list** (creature bible, section 7). A walker is enraged for the whole
+haunt once its escalation level is 1 or more (`enraged.onReturn`), or after a hit if
+`enraged.onProvoked` is on (off by default), and never while creatureHostility is off. The level is the
+director's `walkers/escalation`, else `walkers/returns`. Enraged, its dusk knocks end in a long scrape
+and an iron-and-stone whisper, and it may break in (`enraged.entriesPerNight`, `entriesPerHaunt`); the
+stalker AI then comes in for at most `enraged.maxIndoorSeconds` and `maxIndoorBlocks`. From level 2 it
+tears one plain wooden door per haunt off its hinges: the door drops whole as an item and is hung back
+at dawn if it still lies there. Level 1 also brings the rotting herd (dead does 16 to 24 blocks from
+the door, rot only, gone after `escalation.herd.decayHours`) and eaten crops (a line of ripe crops set
+back, capped per return, only on the victim's own or shared claims by default); level 2 the opt-in
+livestock death (`escalation.herd.killLivestock`, off).
 
 | Command | What it does |
 | --- | --- |
@@ -266,10 +337,12 @@ For feature code:
 
 - **The walker's memory.** The kit writes only `walkers/harass` (`HarassMemory.cs` lists the keys);
   `drainTaken` is the total it drained, which the ladder reads. It reads `walkers/ai` (provoked,
-  sightings, lastPlayerHitMs, hauntBegan) and `walkers/form/revealed`.
+  sightings, lastPlayerHitMs, hauntBegan), `walkers/form/revealed` and `walkers/escalation`. For the
+  stalker AI's walk-in it keeps `enraged` and the entry (`entryX`, `entryY`, `entryZ`, `entryUntilMs`,
+  `entryTorn`); the hunt sets `entryUntilMs` to 0 when it leaves.
 - **Restore list.** Doors it opens go on the director's list as kind `walkers-harass-door` with their
-  own undo handler. Doused torches are not tracked: they stay out until a player relights them.
-  Without a director it keeps its own
+  own undo handler, and torn doors as `walkers-harass-torndoor`, hung back at dawn. Doused torches
+  are not tracked: they stay out until a player relights them. Without a director it keeps its own
   list and undoes it the same way.
 - **Pages.** Driven by the director's `WalkerReleased` and `WalkerBanished` events and its ledger, so
   no other feature calls the kit. Every page is checked against its journal's chapter count before it

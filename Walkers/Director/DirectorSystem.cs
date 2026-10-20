@@ -80,6 +80,7 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
         api.Event.ServerRunPhase(EnumServerRunPhase.RunGame, OnRunGame);
 
         RegisterCommands();
+        RegisterFursCommands();
         api.ModLoader.GetModSystem<WalkersCommandsSystem>().Status += AddStatusLines;
     }
 
@@ -93,6 +94,11 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
             }
         }
         ProcessRestore(startup: true);
+        WarnIfDeerCountryRare();
+        if (sapi.ModLoader.GetModSystem<Walkers.Forms.FormsModSystem>() is { } forms)
+        {
+            forms.FursBurned += OnFursBurned;
+        }
         sapi.Event.RegisterGameTickListener(OnSecond, e => Mod.Logger.Error("Director update failed: {0}", e), 1000);
     }
 
@@ -235,6 +241,7 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
         var tree = memories[walker.Id];
         tree.SetInt(WalkerMemory.Id, walker.Id);
         tree.SetInt(WalkerMemory.Returns, walker.Returns);
+        tree.SetInt(WalkerMemory.Escalation, EscalationLevel(walker));
         bool keepsVictim = walker.State is WalkerState.Haunting or WalkerState.Paused or WalkerState.Down;
         if (!keepsVictim)
         {
@@ -433,7 +440,8 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
             Cause = cause,
             KillerName = killer,
             ReturnsBefore = walker.Returns,
-            ReturnTotalDays = now + SeasonDays(config.Return.AfterSeasons),
+            // At Wrath, the top of the ladder, it comes back in half the time.
+            ReturnTotalDays = now + SeasonDays(config.Return.AfterSeasons) * (EscalationLevel(walker) >= WrathLevel ? 0.5 : 1),
         };
         data.Ledger.Add(entry);
         downSinceMs[walker.Id] = sapi.World.ElapsedMilliseconds;

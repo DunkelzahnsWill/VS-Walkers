@@ -4,9 +4,10 @@ A code mod for Vintage Story 1.22.7. Its first creature is the Skinwalker: somet
 an ordinary animal until it doesn't. *Something's moving out there.*
 
 Status: prototype, version `0.1.0-dev.1`. The mod builds, packs and loads cleanly on a dedicated
-server. The Skinwalker exists as pure JSON: a deer guise and a placeholder true form that spawn alone
-at night in forests (or with `/walkers spawn`). The stalker AI, director, form shifts, kill ritual and
-harassment are still to come.
+server. The Skinwalker has a deer guise and a placeholder true form that spawn alone at night in
+forests (or with `/walkers spawn`), and the stalker AI drives both: it picks the nearest player, climbs
+the five-stage ladder, freezes while watched and hunts at stage 5. The director, form shifts, kill
+ritual and harassment are still to come.
 
 | Field | Value |
 | --- | --- |
@@ -169,6 +170,56 @@ drafts from the creature bible until their features land.
   range; `tests/smoke/commands.*` runs each command from the console. All `.commands` files share one
   server run, in file-name order, so a test that changes a setting restores it at the end.
 
+## Stalker AI
+
+The stalker AI (`Walkers/Stalker/`) runs on the server. It keeps a brain for every loaded walker body
+(`WalkerBrain`): its victim, a gaze check twice a second, a mode, the freeze and the slip-away. The
+brain picks the mode; the AI tasks in the entity JSON act on it.
+
+| Task | Form | What it does |
+| --- | --- | --- |
+| `walkers-stare` | both | Slot 1: turns the body toward the victim in small steps while it stands still |
+| `walkers-creep` | both | Keeps the stage's distance band, moves a little closer after every look, never into bright block light; stage 4 at night, the true form stands far off in the open |
+| `walkers-hunt` | true | Stage 5: closes in while unwatched, runs within 16 blocks, holds at doors and while the victim sleeps |
+| `walkers-lunge` | true | From within `gaze.lungeRange`: a dash and one hit, capped at `forms.maxHitFraction` of the target's health |
+| `walkers-retreat` | both | Into cover after a break-off, a withdraw or a hit on the guise; to water while burning |
+| `walkers-doorway` | true | Stage 5: opens an unlocked door the victim is behind, holds the doorway, never walks in |
+
+Without a director, a body picks the nearest counting player within 64 blocks and climbs the ladder
+on its own every 10 seconds (a guise starts at stage 1, a true form at 5). Admin commands:
+
+| Command | What it does |
+| --- | --- |
+| `/walkers stalker status [radius]` | Each walker's mode, stage, victim, gaze, freeze, slip-away mark and ladder clocks |
+| `/walkers stalker stage <1-5> [radius]` | Sets the stage; its clocks start again |
+| `/walkers stalker victim <player or entity id> [radius]` | Sets the victim of walkers the director did not place; an entity id makes a stand-in |
+| `/walkers stalker selftest` | Ladder, view cone, gaze and slip-away checks with a playerbot stand-in (the smoke test runs it) |
+
+For feature code:
+
+- **The walker's memory.** The ladder is the only writer of the top-level `walkers/stage` during a
+  haunt. Everything else the stalker AI keeps is in `walkers/ai`; other features read it and never
+  write it. `StalkerMemory.cs` lists every key. The ones meant for others: `watched`,
+  `victimWatching`, `watchers`, `lastSeenMs` (the last gaze check), `breakOff` (why a true form broke
+  off: health, fire, company, dawn, drivenoff, stoodup, withdraw, huntover; empty when it has not),
+  `mode`, `silhouettesTonight`, `provoked`, `lastPlayerHitMs` and `lastAttacker`.
+- **The gaze in code.** `WalkerGaze.IsWatched(body, out watchers)` reads the last check;
+  `WalkerGaze.CheckNow(body, out watchers)` runs one. `StalkerModSystem.BrainOf(body)` gives the brain
+  (mode, victim, frozen), or null for a body the AI does not track.
+- **The ladder.** `StalkerLadder` implements `IWalkerLadder`; it registers with the director at the
+  RunGame phase. `OnHarm` gives its stage bonus once per haunt, so a hit reported by both forms and the
+  brain counts once. Stages 3 and 4 need `ladder.stageMinActs` acts (`IWalkerDirector.ReportAct`).
+  The low-stability pace leaves out the walker's own drain if the harassment kit writes the total it
+  drained as a double at `walkers/harass/drainTaken`.
+- **Forms.** Shift a guise to the true form in stage 4 at night only while `stalk.silhouettes` is on
+  and `walkers/ai/silhouettesTonight` is below `stalk.silhouettesPerNight`; past that the true form
+  breaks off with `withdraw`. Shift a true form with a non-empty `breakOff` back once nobody sees it.
+- **Removal.** The stalker AI removes a body itself only to slip away (`Die(Expire)`, logged at debug
+  level), never while it burns or within 20 seconds of a player's hit. Withdrawing bodies are the
+  director's to remove.
+- **Restore list.** A door opened by `walkers-doorway` is entered as kind `walkers-doorway`, with its
+  own undo handler.
+
 ## Folder map
 
 ```
@@ -183,6 +234,8 @@ Walkers/                      the mod project
   Core/                       mod identity and startup log line
   Config/                     the shared config: walkers.json, its checks, player choices
   Commands/                   the /walkers command
+  Stalker/                    the stalker AI: ladder, gaze, brain, AI tasks, /walkers stalker
+  Director/                   the director's interface (IWalkerDirector.cs)
   assets/walkers/             entities, shapes, textures, sounds, itemtypes, patches, lang, config/lore
 ```
 

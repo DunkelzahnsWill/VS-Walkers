@@ -1,0 +1,112 @@
+[
+	{
+		"op": "add",
+		"path": "/selling/list/-",
+		"file": "game:config/tradelists/trader-luxuries.json",
+		"value": {
+			"code": "walkers:walkershide-north",
+			"type": "block",
+			"stacksize": 1,
+			"stock": {
+				"avg": 1,
+				"var": 0.25
+			},
+			"price": {
+				"avg": 8,
+				"var": 2
+			},
+			"attributes": {
+				"type": "walkers-rye1",
+				"preserve": true
+			}
+		}
+	},
+	{
+		"op": "add",
+		"path": "/selling/list/-",
+		"file": "game:config/tradelists/trader-luxuries.json",
+		"value": {
+			"code": "walkers:walkershide-north",
+			"type": "block",
+			"stacksize": 1,
+			"stock": {
+				"avg": 1,
+				"var": 0.25
+			},
+			"price": {
+				"avg": 8,
+				"var": 2
+			},
+			"attributes": {
+				"type": "walkers-rye2",
+				"preserve": true
+			}
+		}
+	},
+	{
+		"op": "add",
+		"path": "/selling/list/-",
+		"file": "game:config/tradelists/trader-luxuries.json",
+		"value": {
+			"code": "walkers:walkershide-north",
+			"type": "block",
+			"stacksize": 1,
+			"stock": {
+				"avg": 1,
+				"var": 0.25
+			},
+			"price": {
+				"avg": 8,
+				"var": 2
+			},
+			"attributes": {
+				"type": "walkers-lookedup1",
+				"preserve": true
+			}
+		}
+	},
+	{
+		"op": "add",
+		"path": "/selling/list/-",
+		"file": "game:config/tradelists/trader-luxuries.json",
+		"value": {
+			"code": "walkers:walkershide-north",
+			"type": "block",
+			"stacksize": 1,
+			"stock": {
+				"avg": 1,
+				"var": 0.25
+			},
+			"price": {
+				"avg": 8,
+				"var": 2
+			},
+			"attributes": {
+				"type": "walkers-lookedup2",
+				"preserve": true
+			}
+		}
+	},
+	{
+		"op": "add",
+		"path": "/selling/list/-",
+		"file": "game:config/tradelists/trader-luxuries.json",
+		"value": {
+			"code": "walkers:walkershide-north",
+			"type": "block",
+			"stacksize": 1,
+			"stock": {
+				"avg": 1,
+				"var": 0.25
+			},
+			"price": {
+				"avg": 8,
+				"var": 2
+			},
+			"attributes": {
+				"type": "walkers-lookedup3",
+				"preserve": true
+			}
+		}
+	}
+]

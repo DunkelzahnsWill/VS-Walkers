@@ -13,8 +13,9 @@ namespace Walkers.Harassment.Acts;
 /// player has hurt it during this haunt, or it came back after an improper kill. The closed, unlocked
 /// door nearest the victim (within 16 blocks, where it may touch) bursts open with a crack of wood,
 /// and inside, within harass.breakIn.reach of the door, up to two lids pop and up to two torches go
-/// out. Nothing is broken, taken or placed, and every change goes on the restore list like the other
-/// acts. The body stays outside: at most the stalker AI's doorway lunge goes a step in.
+/// out. Nothing is broken, taken or placed. The door goes on the restore list; doused torches stay
+/// out, as with the torch act. The body stays outside: at most the stalker AI's doorway lunge goes a
+/// step in.
 ///
 /// What keeps it out: a barred door, a padlock, a block set behind the door, a story lock, or a door
 /// on land the claim rule forbids. Kept out, it scrapes at the boards and the door creaks. It never

@@ -49,7 +49,7 @@ public class HarassConfig
     [Description("Animals near it flee before players see it.")]
     public LivestockPanicConfig LivestockPanic { get; set; } = new();
 
-    [Description("Puts out torches near the victim at night; they are relit at dawn.")]
+    [Description("Puts out torches near the victim at night; they stay out until a player relights them.")]
     public DouseTorchesConfig DouseTorches { get; set; } = new();
 
     [Description("Opens doors and trapdoors, or shuts a door, trapdoor or gate left open. It never opens a fence gate.")]

@@ -241,7 +241,7 @@ storm, while the walker withdraws, and from stage 4 while another player is with
 | `knocks` | 3-5 | Raps on the outer face of the nearest door (one rap, two in stage 4, three at dusk in stage 5) and leaves a page |
 | `wrongCalls` | 2-5 | A deer, small-deer or elk call from 20-40 blocks off, at a lowered pitch; sometimes another answers |
 | `whispers` | 3-5 | A line from the lore bible's whisper table; W5 uses the player's name only when their prefs allow it |
-| `douseTorches` | 3-5 | A lit torch out of the victim's sight goes out; relit at dawn |
+| `douseTorches` | 3-5 | A lit torch out of the victim's sight goes out and stays out until a player relights it |
 | `doors` | 4-5 | Shuts an open door or gate, or swings a closed one open out of sight; closed again after `harass.doors.maxOpenHours` |
 | `chestLids` | 4-5 | A chest lid out of sight lifts and drops; never one a player has open |
 | `sleepDisturb` | 4-5 | A scrape at the wall wakes the victim and leaves them too tired to sleep again at once |
@@ -268,7 +268,8 @@ For feature code:
   `drainTaken` is the total it drained, which the ladder reads. It reads `walkers/ai` (provoked,
   sightings, lastPlayerHitMs, hauntBegan) and `walkers/form/revealed`.
 - **Restore list.** Doors it opens go on the director's list as kind `walkers-harass-door` with their
-  own undo handler; torches as plain `block` swaps undone at dawn. Without a director it keeps its own
+  own undo handler. Doused torches are not tracked: they stay out until a player relights them.
+  Without a director it keeps its own
   list and undoes it the same way.
 - **Pages.** Driven by the director's `WalkerReleased` and `WalkerBanished` events and its ledger, so
   no other feature calls the kit. Every page is checked against its journal's chapter count before it

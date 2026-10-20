@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Cake.Common;
+using Cake.Common.Diagnostics;
 using Cake.Common.IO;
 using Cake.Common.Tools.DotNet;
 using Cake.Common.Tools.DotNet.Clean;
@@ -49,8 +50,7 @@ public class BuildContext : FrostingContext
 [TaskName("ValidateJson")]
 public sealed class ValidateJsonTask : FrostingTask<BuildContext>
 {
-    // The game parses assets with Newtonsoft as well, but keeps the last of two duplicate keys without
-    // a word. Failing on duplicates catches two branches adding the same lang key or property.
+    // The game parses assets with Newtonsoft as well and keeps the LAST of two equal keys without a word.
     private static readonly JsonLoadSettings StrictLoad = new()
     {
         DuplicatePropertyNameHandling = DuplicatePropertyNameHandling.Error,
@@ -65,31 +65,54 @@ public sealed class ValidateJsonTask : FrostingTask<BuildContext>
         var errors = new List<string>();
         var assetsRoot = Path.GetFullPath($"../{BuildContext.ProjectName}/assets");
         // Lang files can be split per feature (lang/<feature>/en.json) and the game merges them, so a
-        // key in two files of one domain and language silently keeps only one value.
+        // key in two files of one language silently keeps only one value.
         var langKeyFiles = new Dictionary<string, string>();
         var jsonFiles = context.GetFiles($"../{BuildContext.ProjectName}/assets/**/*.json")
             .Concat(context.GetFiles($"../{BuildContext.ProjectName}/*.json"));
         foreach (var file in jsonFiles)
         {
+            var text = File.ReadAllText(file.FullPath);
+            var parts = Path.GetRelativePath(assetsRoot, file.FullPath).Replace('\\', '/').Split('/');
+            var isLang = parts.Length >= 3 && parts[1] == "lang";
+
             JToken token;
             try
             {
-                token = JToken.Parse(File.ReadAllText(file.FullPath), StrictLoad);
+                token = JToken.Parse(text);
             }
             catch (JsonException ex)
             {
                 errors.Add($"{file.FullPath}: {ex.Message}");
                 continue;
             }
-
-            var parts = Path.GetRelativePath(assetsRoot, file.FullPath).Replace('\\', '/').Split('/');
-            if (parts.Length >= 3 && parts[1] == "lang" && token is JObject lang)
+            try
             {
+                JToken.Parse(text, StrictLoad);
+            }
+            catch (JsonException ex)
+            {
+                // In a lang file a repeated key is a mistake. Vanilla assets copied as a starting point
+                // sometimes repeat a key on purpose, so elsewhere it is only a warning.
+                var message = $"{file.FullPath}: {ex.Message} The game uses the last value.";
+                if (isLang)
+                    errors.Add(message);
+                else
+                    context.Warning("{0}", message);
+            }
+
+            if (isLang && token is JObject lang)
+            {
+                // Keyed the way the game keys them: <lang>.json and worldconfig-<lang>.json share one
+                // table, and a key without a domain gets the folder's domain in front.
+                var langCode = Path.GetFileNameWithoutExtension(parts[^1]);
+                if (langCode.StartsWith("worldconfig-"))
+                    langCode = langCode["worldconfig-".Length..];
                 foreach (var key in lang.Properties().Select(p => p.Name))
                 {
-                    var id = $"{parts[0]}:{parts[^1]}:{key}";
+                    var fullKey = key.Contains(':') ? key : $"{parts[0]}:{key}";
+                    var id = $"{langCode}|{fullKey}";
                     if (langKeyFiles.TryGetValue(id, out var firstFile))
-                        errors.Add($"{file.FullPath}: lang key \"{key}\" is also in {firstFile}");
+                        errors.Add($"{file.FullPath}: lang key \"{fullKey}\" is also in {firstFile}");
                     else
                         langKeyFiles[id] = file.FullPath;
                 }

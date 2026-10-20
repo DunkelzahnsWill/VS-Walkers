@@ -43,6 +43,10 @@
     <Content Include="modicon.png" Condition="Exists('modicon.png')">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <!-- Read only from the mod's root, so the launch profiles' folder mod needs it next to modinfo.json. -->
+    <Content Include="worldconfig.json" Condition="Exists('worldconfig.json')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

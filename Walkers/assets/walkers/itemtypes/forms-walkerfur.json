@@ -1,7 +1,9 @@
-// Walker fur: 2 to 4 from skinning the true form's body after an ordinary death (creature bible, section 7).
-// No recipe in version 1. Shape and texture from Art and sound.
+// Unnatural fur: 2 to ritual.huskFurCount from skinning the true form's body after an ordinary death
+// (creature bible, section 7); the director decides whom carrying them marks. Burns in fire or lava, and cooks to charcoal in
+// a firepit; Walkers.Forms.ItemWalkerFur reports either. No recipe in version 1. Art from Art and sound.
 {
     "code": "walkerfur",
+    "class": "walkers-fur",
     "maxstacksize": 16,
     "shape": { "base": "walkers:item/walkerfur" },
     "behaviors": [
@@ -10,6 +12,14 @@
     "attributes": { "displaycaseable": true, "shelvable": true },
     "creativeinventory": { "general": ["*"], "items": ["*"] },
     "materialDensity": 620,
+    "combustibleProps": {
+        "meltingPoint": 250,
+        "meltingDuration": 10,
+        "smeltingType": "cook",
+        "smeltedRatio": 1,
+        "smeltedStack": { "type": "item", "code": "game:powder-charcoal" },
+        "requiresContainer": false
+    },
     "guiTransform": { "rotation": { "x": 150, "y": 25, "z": 0 }, "origin": { "x": 0.56, "y": 0.12, "z": 0.53 }, "scale": 1.7 },
     "tpHandTransform": { "translation": { "x": -1.15, "y": -0.1, "z": -0.95 }, "rotation": { "x": 0, "y": 90, "z": -74 }, "scale": 0.45 },
     "groundTransform": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 3.6 }

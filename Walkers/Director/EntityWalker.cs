@@ -13,5 +13,21 @@ public class EntityWalker : EntityAgent
 {
     public const string ClassCode = Core.WalkersModSystem.ModId + "-walker";
 
+    /// <summary>
+    /// Asked before a body dies; true refuses the death and the body lives on. Forms uses it so no
+    /// player kills the guise (creature bible, section 4). Never asked for a death without a cause.
+    /// </summary>
+    public static System.Func<EntityWalker, EnumDespawnReason, DamageSource, bool>? RefuseDeath;
+
     public override bool StoreWithChunk => false;
+
+    public override void Die(EnumDespawnReason reason = EnumDespawnReason.Death, DamageSource? damageSourceForDeath = null)
+    {
+        if (Alive && reason == EnumDespawnReason.Death && damageSourceForDeath != null && World?.Side == EnumAppSide.Server &&
+            RefuseDeath?.Invoke(this, reason, damageSourceForDeath) == true)
+        {
+            return;
+        }
+        base.Die(reason, damageSourceForDeath);
+    }
 }

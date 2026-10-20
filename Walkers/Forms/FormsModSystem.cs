@@ -35,10 +35,18 @@ public class FormsModSystem : ModSystem
 
     private FormsSelfTest? selfTest;
 
+    /// <summary>
+    /// Unnatural furs burned (dropped into fire or lava, or cooked in a firepit): the player who dropped
+    /// them when known, and how many. The director owns what that means for the marks (creature bible,
+    /// section 7).
+    /// </summary>
+    public event Action<IPlayer?, int>? FursBurned;
+
     public override void Start(ICoreAPI api)
     {
         api.RegisterEntityBehaviorClass(EntityBehaviorWalkerForm.Code, typeof(EntityBehaviorWalkerForm));
         api.RegisterEntityBehaviorClass(EntityBehaviorWalkerHusk.Code, typeof(EntityBehaviorWalkerHusk));
+        api.RegisterItemClass(ItemWalkerFur.ClassCode, typeof(ItemWalkerFur));
     }
 
     /// <summary>
@@ -82,6 +90,7 @@ public class FormsModSystem : ModSystem
         Sapi = api;
         selfTest = new FormsSelfTest(this);
         api.Event.OnPlayerInteractEntity += OnPlayerInteractEntity;
+        EntityWalker.RefuseDeath = RefuseDeath;
 
         var parsers = api.ChatCommands.Parsers;
         api.ChatCommands.GetOrCreate(WalkersModSystem.ModId)
@@ -104,6 +113,55 @@ public class FormsModSystem : ModSystem
             int lying = api.World.LoadedEntities.Values.Count(e => e.GetBehavior<EntityBehaviorWalkerForm>()?.AwaitsRitual == true);
             lines.Add(Lang.Get("walkers:forms-status", lying));
         };
+    }
+
+    public override void Dispose()
+    {
+        if (Sapi != null && EntityWalker.RefuseDeath == RefuseDeath)
+        {
+            EntityWalker.RefuseDeath = null;
+        }
+        base.Dispose();
+    }
+
+    /// <summary>One-shot permission for the next player-caused death of this guise, for an admin command that means it.</summary>
+    public static void AllowDeathOnce(Entity guise) => guise.Attributes.SetBool(AllowDeathFlag, true);
+
+    private const string AllowDeathFlag = "walkersAllowDeath";
+
+    /// <summary>
+    /// No player kills the guise (creature bible, section 4): the damage clamp keeps it above zero, and
+    /// this catches what gets past it, such as another mod's damage or a direct Die. Never refuses a
+    /// death without a player behind it, or one an admin command allowed.
+    /// </summary>
+    private bool RefuseDeath(EntityWalker body, EnumDespawnReason reason, DamageSource source)
+    {
+        if (!FormMemory.IsGuise(body) || !Config.Forms.GuiseShrugsDamage ||
+            (source.Source != EnumDamageSource.Player && WalkerRitual.PlayerOf(source) == null))
+        {
+            return false;
+        }
+        if (body.Attributes.GetBool(AllowDeathFlag))
+        {
+            body.Attributes.RemoveAttribute(AllowDeathFlag);
+            return false;
+        }
+        body.GetBehavior<EntityBehaviorWalkerForm>()?.OnDeathRefused();
+        Mod.Logger.Notification("Forms: {0} #{1} refused a player-caused death", body.Code.Path, body.EntityId);
+        return true;
+    }
+
+    // ---- Unnatural furs ----
+
+    internal void ReportFursBurned(string? byPlayerUid, int count, string how)
+    {
+        if (count <= 0)
+        {
+            return;
+        }
+        var player = byPlayerUid == null ? null : Sapi.World.PlayerByUid(byPlayerUid);
+        Mod.Logger.Notification("Forms: {0} unnatural fur(s) burned ({1}{2})", count, how, player == null ? "" : ", dropped by " + player.PlayerName);
+        FursBurned?.Invoke(player, count);
     }
 
     /// <summary>The weapon in hand when an attack begins: a blow that breaks it empties the hand before the damage lands.</summary>

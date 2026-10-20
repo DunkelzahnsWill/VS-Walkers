@@ -142,7 +142,7 @@ as they were (on startup, the defaults) until it is fixed.
 | `/walkers despawn [radius]` | admins | Removes every loaded walker, or those within the radius of you. A removal is not a death: no drops, and it does not count as a kill |
 | `/walkers reload` | admins | Reads the file again and lists what changed |
 | `/walkers config [setting] [value]` | admins | Without arguments lists the sections; with a section or setting shows its values, default, range and meaning; with a value sets it |
-| `/walkers me [choice] [value]` | every player | Shows or sets the player's own choices: `noName`, `noScreenEffects`, `noTitles`, `scareVolume` (0 to 1), and `noHaunt` where `director.allowPlayerOptOut` is on |
+| `/walkers me [choice] [value]` | every player | Shows or sets the player's own choices: `noName`, `noScreenEffects`, `noTitles`, and `scareVolume` (0 to 1). These change only how scares reach the player; nobody can opt out of being haunted |
 
 Admin commands need the `controlserver` privilege. Settings use the paths the file shows, such as
 `harass.doors.enabled`; case does not matter. Times ending in Seconds, Minutes or Ms are real time;
@@ -245,7 +245,7 @@ storm, while the walker withdraws, and from stage 4 while another player is with
 | `doors` | 4-5 | Shuts an open door or gate, or swings a closed one open out of sight; closed again after `harass.doors.maxOpenHours` |
 | `chestLids` | 4-5 | A chest lid out of sight lifts and drops; never one a player has open |
 | `sleepDisturb` | 4-5 | A scrape at the wall wakes the victim and leaves them too tired to sleep again at once |
-| `breakIn` | 5, enraged | Only after the walker was provoked or has returned: forces an unlocked door near the victim, pops lids and douses torches within `harass.breakIn.reach`. A bar, padlock, story lock or solid block behind the door keeps it out; then it scrapes and strains at the boards |
+| `breakIn` | 5, enraged | Forces a plain wooden door near the awake, lone victim (or, from the second escalation level, tears it off its hinges), pops lids and douses torches within `harass.breakIn.reach`, then opens the way in for the stalker AI. A padlock, bar, reinforcement, anything behind the door, a metal, heavy, gate or double door, or a foreign claim keeps it out; then it scrapes at the boards |
 
 Beside the drawn acts: the stability drain (toward `harass.stabilityDrain.targets` per stage, never
 below `floor`, faster while watched, handed back while paused, the warp of `harass.mundaneWarp` in
@@ -255,6 +255,18 @@ screen shake, and the Pages act, which hands out the lore journals' pages on the
 Every act has its own `harass.<act>.enabled` switch and a nightly cap. Doors, trapdoors, gates, chests
 and torches are touched only within 16 blocks of the victim, never under a padlock, and only where
 `harass.respectClaims` allows (`victimAccess`: unclaimed land or a claim the victim owns or shares).
+
+**Enraged and the escalation list** (creature bible, section 7). A walker is enraged for the whole
+haunt once its escalation level is 1 or more (`enraged.onReturn`), or after a hit if
+`enraged.onProvoked` is on (off by default), and never while creatureHostility is off. The level is the
+director's `walkers/escalation`, else `walkers/returns`. Enraged, its dusk knocks end in a long scrape
+and an iron-and-stone whisper, and it may break in (`enraged.entriesPerNight`, `entriesPerHaunt`); the
+stalker AI then comes in for at most `enraged.maxIndoorSeconds` and `maxIndoorBlocks`. From level 2 it
+tears one plain wooden door per haunt off its hinges: the door drops whole as an item and is hung back
+at dawn if it still lies there. Level 1 also brings the rotting herd (dead does 16 to 24 blocks from
+the door, rot only, gone after `escalation.herd.decayHours`) and eaten crops (a line of ripe crops set
+back, capped per return, only on the victim's own or shared claims by default); level 2 the opt-in
+livestock death (`escalation.herd.killLivestock`, off).
 
 | Command | What it does |
 | --- | --- |
@@ -266,10 +278,12 @@ For feature code:
 
 - **The walker's memory.** The kit writes only `walkers/harass` (`HarassMemory.cs` lists the keys);
   `drainTaken` is the total it drained, which the ladder reads. It reads `walkers/ai` (provoked,
-  sightings, lastPlayerHitMs, hauntBegan) and `walkers/form/revealed`.
+  sightings, lastPlayerHitMs, hauntBegan), `walkers/form/revealed` and `walkers/escalation`. For the
+  stalker AI's walk-in it keeps `enraged` and the entry (`entryX`, `entryY`, `entryZ`, `entryUntilMs`,
+  `entryTorn`); the hunt sets `entryUntilMs` to 0 when it leaves.
 - **Restore list.** Doors it opens go on the director's list as kind `walkers-harass-door` with their
-  own undo handler. Doused torches are not tracked: they stay out until a player relights them.
-  Without a director it keeps its own
+  own undo handler, and torn doors as `walkers-harass-torndoor`, hung back at dawn. Doused torches
+  are not tracked: they stay out until a player relights them. Without a director it keeps its own
   list and undoes it the same way.
 - **Pages.** Driven by the director's `WalkerReleased` and `WalkerBanished` events and its ledger, so
   no other feature calls the kit. Every page is checked against its journal's chapter count before it

@@ -95,9 +95,6 @@ public class DirectorConfig : IWalkersConfigCheck
     [Description("No new appearances during a temporal storm, and active walkers withdraw.")]
     public bool PauseDuringStorms { get; set; } = true;
 
-    [Description("Lets a player opt out of being chosen at all, with /walkers me noHaunt on.")]
-    public bool AllowPlayerOptOut { get; set; } = false;
-
     public void Check(string path, List<string> fixes)
     {
         if (SpawnDistanceMin > SpawnDistanceMax)

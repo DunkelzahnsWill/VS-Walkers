@@ -28,9 +28,6 @@ public class WalkersPlayerPrefs
     [Description("Volume, 0 to 1, of sounds sent to me alone. Sounds everyone nearby hears cannot be lowered for one player.")]
     [Range(0, 1)]
     public float ScareVolume { get; set; } = 1;
-
-    [Description("Never choose me as a victim. Works only while the server allows it (director.allowPlayerOptOut).")]
-    public bool NoHaunt { get; set; }
 }
 
 public static class WalkersPlayerPrefsExtensions

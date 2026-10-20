@@ -1,0 +1,10 @@
+{
+	"code": "walkers-losses",
+	"title": "walkers:lore-losses-title",
+	"category": "walkers-losses",
+	"pieces": [
+		"walkers:lore-losses-piece1",
+		"walkers:lore-losses-piece2",
+		"walkers:lore-losses-piece3"
+	]
+}

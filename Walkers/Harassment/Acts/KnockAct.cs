@@ -34,7 +34,7 @@ public sealed class KnockAct : HarassAct
 
     public override int Cap(HarassConfig config) => 1;
 
-    public override ActResult Run(HarassContext ctx) => Knock(ctx, ctx.Stage >= 4 ? 2 : 1);
+    public override ActResult Run(HarassContext ctx) => Knock(ctx, ctx.Stage >= 4 ? 2 : 1, scrape: false);
 
     /// <summary>Stage 5, at dusk: the three raps. Once per night, outside the budget.</summary>
     public ActResult RunDusk(HarassContext ctx)
@@ -43,7 +43,7 @@ public sealed class KnockAct : HarassAct
         {
             return ActResult.Skip("off, below stage 5, or knocked already tonight");
         }
-        var result = Knock(ctx, 3);
+        var result = Knock(ctx, 3, scrape: Enraged.Is(ctx));
         if (result.Done)
         {
             HarassMemory.AddCount(ctx.Harass, Code);
@@ -51,7 +51,8 @@ public sealed class KnockAct : HarassAct
         return result;
     }
 
-    private static ActResult Knock(HarassContext ctx, int raps)
+    /// <summary>The raps; on an enraged dusk (the tell, creature bible section 7) they end in one long scrape, never a fourth rap.</summary>
+    private static ActResult Knock(HarassContext ctx, int raps, bool scrape)
     {
         var world = ctx.Api.World;
         var spot = FindKnockSpot(ctx, out string what);
@@ -69,6 +70,13 @@ public sealed class KnockAct : HarassAct
                 HarassSounds.At(world, HarassSounds.KnockClick, spot, pitch, 32, 0.9f);
             }, delay);
         }
+        if (scrape)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                ctx.Api.Event.RegisterCallback(_ => HarassSounds.At(world, HarassSounds.Scrape, spot, 0.45f, 24, 1f), raps * RapGapMs + 300 + i * 450);
+            }
+        }
         if (spot.DistanceTo(ctx.Victim.Pos.XYZ) <= ShakeRange)
         {
             ScreenShake.Send(ctx, 0.08f);
@@ -80,7 +88,7 @@ public sealed class KnockAct : HarassAct
             _ => PageTrigger.K3,
         };
         ctx.System.Pages.OnKnock(ctx, trigger);
-        return ActResult.Ok($"{raps} rap(s) on {what} at {EchoAct.Fmt(spot)}");
+        return ActResult.Ok($"{raps} rap(s){(scrape ? " and a long scrape" : "")} on {what} at {EchoAct.Fmt(spot)}");
     }
 
     /// <summary>The outer face of the nearest door within 16 blocks of the victim; else the face of a solid block within 4 blocks of them.</summary>

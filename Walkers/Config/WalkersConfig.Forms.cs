@@ -20,8 +20,38 @@ public partial class WalkersConfig
 
 public class FormsConfig
 {
-    [Description("Deer types the guise may wear, such as [\"whitetail\"]; [\"auto\"] wears the type whose climate fits the spot.")]
+    [Description("Deer types the guise may wear: [\"auto\"] picks a type that lives where the victim is; a list restricts the pool, and a single type skips the climate test.")]
     public string[] GuiseTypes { get; set; } = { "auto" };
+
+    [Description("Where no deer type lives (hot, dry land): \"pause\" rolls no haunt there and pauses a running one; a deer type, such as \"pampas\", wears that type anyway, for arid worlds.")]
+    public string GuiseNoFit { get; set; } = "pause";
+
+    [Description("How far inside a deer type's temperature range, in degrees, the victim's climate must be to pick that type.")]
+    [Range(0, 5)]
+    public float GuisePickMarginC { get; set; } = 1;
+
+    [Description("How far inside a deer type's rainfall range the victim's climate must be to pick that type.")]
+    [Range(0, 0.1)]
+    public float GuisePickMarginRain { get; set; } = 0.02f;
+
+    [Description("How many degrees past its type's temperature range a travelling victim may go before the haunt pauses; -1 never pauses for it.")]
+    [Range(-1, 10)]
+    public float GuiseKeepMarginC { get; set; } = 2;
+
+    [Description("How far past its type's rainfall range a travelling victim may go before the haunt pauses.")]
+    [Range(0, 0.2)]
+    public float GuiseKeepMarginRain { get; set; } = 0.05f;
+
+    [Description("Real wild deer of a fitting type within this many blocks decide the guise; 0 skips the count.")]
+    [Range(0, 128)]
+    public int GuiseCensusRadius { get; set; } = 96;
+
+    [Description("The guise shrugs off what players do to it: no blow or burn of theirs kills it, and it is whole again soon after. Off, players can kill the guise like a deer; the true body then lies in its place.")]
+    public bool GuiseShrugsDamage { get; set; } = true;
+
+    [Description("From stage 3, a guise a player hurts or sets alight stands up as the true form this many real milliseconds later.")]
+    [Range(0, 500)]
+    public int HurtShiftDelayMs { get; set; } = 400;
 
     [Description("Least real seconds between two shifts.")]
     [Range(10, 600)]
@@ -72,6 +102,7 @@ public class RitualConfig
         "game:knife-generic-silver",
         "game:blade-falx-silver",
         "game:spear-generic-ornatesilver",
+        "game:axe-felling-silver",
     };
 
     [Description("Damage multiplier for silver hits.")]
@@ -96,6 +127,10 @@ public class RitualConfig
 
     [Description("The body can be skinned for its furs instead of burned; the walker then returns.")]
     public bool AllowHarvestHusk { get; set; } = true;
+
+    [Description("Most unnatural furs one skinning gives; it gives from 2 up to this many.")]
+    [Range(2, 4)]
+    public int HuskFurCount { get; set; } = 4;
 
     [Description("Temporal stability given back to the killer on a ritual kill.")]
     [Range(0, 1)]

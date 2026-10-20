@@ -17,6 +17,10 @@ public partial class WalkersConfig
     [JsonProperty(Order = 40)]
     public ReturnConfig Return { get; set; } = new();
 
+    [Description("Unnatural furs, skinned from a walker's body: whoever carries them is marked as its target.")]
+    [JsonProperty(Order = 41)]
+    public FursConfig Furs { get; set; } = new();
+
     [Description("Aids for testing on a server with no player online. Leave them off on a real server.")]
     [JsonProperty(Order = 90)]
     public DebugConfig Debug { get; set; } = new();
@@ -119,9 +123,9 @@ public class ReturnConfig
     [Range(1, 4)]
     public float PaceMultiplier { get; set; } = 1.5f;
 
-    [Description("Extra true-form health per return, as a share of its base health, up to return.healthBonusCap.")]
+    [Description("Extra true-form health per return, as a share of its base health, up to return.healthBonusCap. 0 by default: a walker comes back angrier (the escalation list), not stronger.")]
     [Range(0, 0.5)]
-    public float HealthBonusPerReturn { get; set; } = 0.1f;
+    public float HealthBonusPerReturn { get; set; } = 0;
 
     [Description("Most extra true-form health a walker can gain from returns, as a share of its base health.")]
     [Range(0, 1)]
@@ -130,6 +134,52 @@ public class ReturnConfig
     [Description("If its last victim stays away this many seasons past the return date, it goes back to the roster for whoever the next normal roll picks.")]
     [Range(0, 8)]
     public float VictimAbsentSeasons { get; set; } = 1;
+}
+
+public class FursConfig : IWalkersConfigCheck
+{
+    [Description("Carried furs mark their carrier as the walker's target; off makes them trophies only.")]
+    public bool MarkTarget { get; set; } = true;
+
+    [Description("In-game hours of carrying, online, eligible and not idle, before the mark takes.")]
+    [Range(0, 72)]
+    public float MarkThresholdHours { get; set; } = 6;
+
+    [Description("The strongest a mark grows, in hours of carrying.")]
+    [Range(6, 240)]
+    public float MarkCapHours { get; set; } = 72;
+
+    [Description("How many hours a mark fades per in-game hour once its carrier stops carrying.")]
+    [Range(0.1, 10)]
+    public float DecayPerHour { get; set; } = 1;
+
+    [Description("Furs that another player carried before do not count for this many in-game hours after they are picked up.")]
+    [Range(0, 72)]
+    public float ForeignGraceHours { get; set; } = 12;
+
+    [Description("A marked player's daily haunt chance is multiplied by this while the walker that marked them rests.")]
+    [Range(1, 5)]
+    public float RestingRollMultiplier { get; set; } = 2;
+
+    [Description("Burning the furs (in fire, lava or a firepit) clears the mark of whoever dropped or burned them.")]
+    public bool BurnClearsMark { get; set; } = true;
+
+    public void Check(string path, List<string> fixes)
+    {
+        if (MarkThresholdHours > MarkCapHours)
+        {
+            fixes.Add($"{path}.markThresholdHours {MarkThresholdHours} is above {path}.markCapHours {MarkCapHours}; using {MarkCapHours} for both");
+            MarkThresholdHours = MarkCapHours;
+        }
+    }
+}
+
+// The director's half of escalation.*; the harassment kit adds its acts' keys in its own file.
+public partial class EscalationConfig
+{
+    [Description("In-game months of live haunting after its first improper death that add one escalation level, as a death does; 0 turns the monthly step off.")]
+    [Range(0, 12)]
+    public float MonthsPerLevel { get; set; } = 1;
 }
 
 public class DebugConfig

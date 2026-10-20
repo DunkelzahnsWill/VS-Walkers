@@ -117,6 +117,12 @@ public interface IWalkerDirector
     /// </summary>
     void Release(int walkerId, WalkerRelease reason, bool fursTaken);
 
+    /// <summary>
+    /// Clears the mark a player carries from walkers' unnatural furs (creature bible, section 7): Forms
+    /// calls it when the player burns furs or drops them into fire (furs.burnClearsMark).
+    /// </summary>
+    void ClearFurMarks(string playerUid);
+
     /// <summary>The walker's latest death, with its return day; null if it never died.</summary>
     LedgerEntry? GetLedgerEntry(int walkerId);
 
@@ -194,6 +200,14 @@ public static class WalkerMemory
 
     /// <summary>string: the deer type the guise wears for this haunt, such as "whitetail".</summary>
     public const string Guise = "guise";
+
+    /// <summary>
+    /// int, 1 to 5: the walker's escalation level on the owner's ladder (1 Interloping, 2 Grudge, 3 Rage,
+    /// 4 Hate, 5 Wrath): 1, plus its improper deaths, plus one for every escalation.monthsPerLevel
+    /// in-game months of live haunting since the first; 0 once banished. Set when a haunt starts or
+    /// returns and when a body is placed; the harassment kit reads it. At 5 its return comes in half the time.
+    /// </summary>
+    public const string Escalation = "escalation";
 
     /// <summary>bool: the director wants the body gone (the haunt paused or ended): walk into cover. The director removes it once nobody sees it.</summary>
     public const string Withdraw = "withdraw";

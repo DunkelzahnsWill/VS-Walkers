@@ -18,7 +18,7 @@
     "director-by": " by {0}",
 
     "director-status-header": "Director: {0}; haunting {1} of {2}; ledger entries: {3}; blocks to restore: {4}; ladder: {5}",
-    "director-status-memory": "  Memory: pace {0:0.##}, returns {1}, feature data: {2}",
+    "director-status-memory": "  Memory: pace {0:0.##}, returns {1}, escalation {3}, feature data: {2}",
     "director-status-record": "  {0}: first seen day {1}, rests until day {2} ({3:0.#} days left), marked by walker {4}",
     "director-status-unknown-player": "The director knows nothing about {0} yet",
 
@@ -38,6 +38,7 @@
     "director-fact-not-eligible": "not eligible",
     "director-fact-surface": "on the surface",
     "director-fact-forest": "near forest",
+    "director-fact-deer": "deer country",
     "director-fact-alone": "alone",
     "director-fact-night": "night",
     "director-fact-asleep": "asleep",
@@ -84,5 +85,16 @@
     "director-standin-none": "No stand-ins. Add one with /walkers director standin add",
     "director-standin-header": "Stand-ins: {0}",
     "director-standin-entry": "{0} at {1}, {2}, {3}",
-    "director-standin-entry-unloaded": "{0} at {1}, {2}, {3} (not loaded)"
+    "director-standin-entry-unloaded": "{0} at {1}, {2}, {3} (not loaded)",
+    "director-cmd-furs-desc": "Marks from unnatural furs: who carries walker furs and how strongly they are marked. Without a subcommand it shows them all",
+    "director-cmd-furs-status-desc": "Shows every fur mark, or one player's",
+    "director-cmd-furs-clear-desc": "Clears every fur mark, or one player's",
+    "director-furs-header": "Fur marks (a mark takes after {0:0.#} hours of carrying):",
+    "director-furs-header-off": "Fur marks are off (furs.markTarget); furs are trophies only. Kept marks:",
+    "director-furs-marked": "{0}: marked, {1:0.#} hours{2}",
+    "director-furs-carrying": "{0}: {1:0.#} hours, not marked yet{2}",
+    "director-furs-now": ", carrying them now",
+    "director-furs-none": "Nobody carries walker furs",
+    "director-furs-cleared-all": "Every fur mark is cleared",
+    "director-furs-cleared": "{0}'s fur mark is cleared"
 }

@@ -80,6 +80,7 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
         api.Event.ServerRunPhase(EnumServerRunPhase.RunGame, OnRunGame);
 
         RegisterCommands();
+        RegisterFursCommands();
         api.ModLoader.GetModSystem<WalkersCommandsSystem>().Status += AddStatusLines;
     }
 
@@ -93,6 +94,7 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
             }
         }
         ProcessRestore(startup: true);
+        WarnIfDeerCountryRare();
         sapi.Event.RegisterGameTickListener(OnSecond, e => Mod.Logger.Error("Director update failed: {0}", e), 1000);
     }
 
@@ -235,6 +237,7 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
         var tree = memories[walker.Id];
         tree.SetInt(WalkerMemory.Id, walker.Id);
         tree.SetInt(WalkerMemory.Returns, walker.Returns);
+        tree.SetInt(WalkerMemory.Escalation, EscalationLevel(walker));
         bool keepsVictim = walker.State is WalkerState.Haunting or WalkerState.Paused or WalkerState.Down;
         if (!keepsVictim)
         {
@@ -471,6 +474,7 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
         {
             record.MarkedByWalker = 0;
         }
+        ClearMarksOf(walkerId);
         SyncMemory(walker);
         Mod.Logger.Notification("Walker {0} is banished ({1}{2}). Its id is retired.", walkerId, cause, byPlayer == null ? "" : ", by " + byPlayer.PlayerName);
         Raise(WalkerBanished, Info(walker), Snapshot(entry));

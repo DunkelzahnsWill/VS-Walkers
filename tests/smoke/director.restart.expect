@@ -6,6 +6,8 @@ Walker 1 died on day [0-9.]+ at -?[0-9]+, [0-9]+, -?[0-9]+: removed by an admin 
 Walker 1 begins haunting standin-1 at stage 2, wearing a [a-z]+ deer \(return 1\)
 Walker 1 has returned and haunts standin-1 at stage 2
 Walker 1: haunting standin-1 at stage 2
+# One improper death: escalation level 1 for the kit
+Memory: pace 1\.5, returns 1, escalation 1,
 Walker 1 is banished \(removed by an admin\)\. Its id is retired\.
 Walker 1 is banished$
 Walker 1 died on day [0-9.]+ at -?[0-9]+, [0-9]+, -?[0-9]+: removed by an admin by the console; victim standin-1; returned

@@ -103,6 +103,7 @@ public partial class DirectorSystem
         body.Pos.Pitch = 0;
         // Facing its victim (an entity's yaw is atan2 of x over z).
         body.Pos.Yaw = (float)Math.Atan2(victimPos.X - spot.X, victimPos.Z - spot.Z);
+        memories[walker.Id].SetInt(WalkerMemory.Escalation, EscalationLevel(walker));
         AttachBody(walker.Id, body);
         sapi.World.SpawnEntity(body);
 

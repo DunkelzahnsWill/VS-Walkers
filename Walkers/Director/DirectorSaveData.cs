@@ -36,6 +36,10 @@ public class DirectorSaveData
 
     [ProtoMember(8)]
     public int NextStandInNumber { get; set; } = 1;
+
+    /// <summary>Calendar.TotalHours of the last fur-mark update, so marks grow and fade by in-game time.</summary>
+    [ProtoMember(9)]
+    public double FursUpdatedTotalHours { get; set; }
 }
 
 /// <summary>What the director remembers about one player (or stand-in) across sessions.</summary>
@@ -67,6 +71,10 @@ public class PlayerRecord
     /// <summary>Calendar.TotalDays when the director last saw them online.</summary>
     [ProtoMember(7)]
     public double LastSeenTotalDays { get; set; }
+
+    /// <summary>The marks this player carries from walkers' unnatural furs (creature bible, section 7).</summary>
+    [ProtoMember(8)]
+    public List<FurMark> FurMarks { get; set; } = new();
 }
 
 [ProtoContract]
@@ -133,6 +141,14 @@ public class WalkerRecord
     /// <summary>It has appeared at least once in its current haunt; the first appearance uses director.spawnDistance*.</summary>
     [ProtoMember(18)]
     public bool AppearedThisHaunt { get; set; }
+
+    /// <summary>Everyone who has carried this walker's furs; a later carrier gets furs.foreignGraceHours first.</summary>
+    [ProtoMember(19)]
+    public List<string> FurCarriers { get; set; } = new();
+
+    /// <summary>In-game hours of live haunting since its first improper death; escalation.monthsPerLevel months of it add a level.</summary>
+    [ProtoMember(20)]
+    public double EscalationHauntHours { get; set; }
 }
 
 /// <summary>One death. The ledger only grows; an entry's outcome changes as the walker moves on.</summary>
@@ -249,4 +265,30 @@ public class StandInRecord
 
     [ProtoMember(5)]
     public double Z { get; set; }
+}
+
+/// <summary>One player's mark from one walker's furs.</summary>
+[ProtoContract]
+public class FurMark
+{
+    [ProtoMember(1)]
+    public int WalkerId { get; set; }
+
+    /// <summary>Hours of carrying, up to furs.markCapHours; the mark holds from furs.markThresholdHours.</summary>
+    [ProtoMember(2)]
+    public double Hours { get; set; }
+
+    /// <summary>Calendar.TotalHours until which carrying does not count (furs another player carried before).</summary>
+    [ProtoMember(3)]
+    public double GraceUntilTotalHours { get; set; }
+
+    /// <summary>The player carried these furs at the last update.</summary>
+    [ProtoMember(4)]
+    public bool Carrying { get; set; }
+
+    [ProtoMember(5)]
+    public bool ToldHeld { get; set; }
+
+    [ProtoMember(6)]
+    public bool ToldMarked { get; set; }
 }

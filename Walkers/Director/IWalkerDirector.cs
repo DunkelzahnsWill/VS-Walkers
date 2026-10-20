@@ -117,6 +117,13 @@ public interface IWalkerDirector
     /// </summary>
     void Release(int walkerId, WalkerRelease reason, bool fursTaken);
 
+    /// <summary>
+    /// Clears the mark a player carries from a walker's unnatural furs (creature bible, section 7): Forms
+    /// calls it when the player burns or drops furs into fire (furs.burnClearsMark). A
+    /// <paramref name="walkerId"/> of 0 clears the marks of every walker.
+    /// </summary>
+    void ClearFurMarks(string playerUid, int walkerId = 0);
+
     /// <summary>The walker's latest death, with its return day; null if it never died.</summary>
     LedgerEntry? GetLedgerEntry(int walkerId);
 
@@ -194,6 +201,13 @@ public static class WalkerMemory
 
     /// <summary>string: the deer type the guise wears for this haunt, such as "whitetail".</summary>
     public const string Guise = "guise";
+
+    /// <summary>
+    /// int, 0 to 3: the walker's escalation level (creature bible, section 7, the escalation list): its
+    /// improper deaths plus one for every escalation.monthsPerLevel in-game months of live haunting
+    /// since the first. Set when a haunt starts or returns and when a body is placed; the harassment kit reads it.
+    /// </summary>
+    public const string Escalation = "escalation";
 
     /// <summary>bool: the director wants the body gone (the haunt paused or ended): walk into cover. The director removes it once nobody sees it.</summary>
     public const string Withdraw = "withdraw";
@@ -373,4 +387,11 @@ public static class WalkersDirectorExtensions
     /// <summary>The director on the server; null on a client or when it is not loaded.</summary>
     public static IWalkerDirector? GetWalkersDirector(this ICoreAPI api) =>
         api.ObjectCache.TryGetValue(CacheKey, out var director) ? director as IWalkerDirector : null;
+}
+
+/// <summary>Unnatural furs: walkers:walkerfur stacks, skinned from a walker's body (creature bible, section 7).</summary>
+public static class WalkerFur
+{
+    /// <summary>int item-stack attribute: the walker whose body the furs came from. Forms stamps it when the body is skinned.</summary>
+    public const string WalkerIdKey = "walkersWalkerId";
 }

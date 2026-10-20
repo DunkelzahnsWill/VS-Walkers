@@ -111,7 +111,7 @@ public partial class DirectorSystem
             var memory = memories[id];
             var subtrees = string.Join(", ", new[] { WalkerMemory.Ai, WalkerMemory.Harass, WalkerMemory.Form }.Where(memory.HasAttribute));
             lines.Add(L(args, "director-status-memory", memory.GetFloat(WalkerMemory.Pace, 1), memory.GetInt(WalkerMemory.Returns),
-                subtrees.Length == 0 ? L(args, "director-none") : subtrees));
+                subtrees.Length == 0 ? L(args, "director-none") : subtrees, EscalationLevel(walker)));
             if (LatestEntry(id) is { } entry)
             {
                 lines.Add(DescribeLedgerEntry(args, entry));
@@ -180,6 +180,7 @@ public partial class DirectorSystem
         facts.Add(L(args, c.Eligible ? "director-fact-eligible" : "director-fact-not-eligible"));
         if (c.Surface) facts.Add(L(args, "director-fact-surface"));
         if (c.NearForest) facts.Add(L(args, "director-fact-forest"));
+        if (c.DeerCountry) facts.Add(L(args, "director-fact-deer"));
         if (c.Alone) facts.Add(L(args, "director-fact-alone"));
         if (c.Night) facts.Add(L(args, "director-fact-night"));
         if (c.Asleep) facts.Add(L(args, "director-fact-asleep"));

@@ -46,10 +46,12 @@ public partial class DirectorSystem
 
         /// <summary>Counting player, creature bible section 5.</summary>
         public bool Counting;
-        /// <summary>Counting, in the main world, past their grace time, not opted out: may be chosen and their clock runs.</summary>
+        /// <summary>Counting, in the main world, past their grace time: may be chosen and their clock runs.</summary>
         public bool Eligible;
         public bool Surface;
         public bool NearForest;
+        /// <summary>Some deer type lives here (creature bible, section 8, deer country); no haunt is rolled outside it.</summary>
+        public bool DeerCountry;
         public bool Alone;
         public bool Night;
         public bool Asleep;
@@ -244,6 +246,7 @@ public partial class DirectorSystem
                 }
             }
             candidate.Night = IsNight(pos.XYZ);
+            candidate.DeerCountry = GuisePicker.InDeerCountry(sapi, pos.AsBlockPos, config.Forms);
             if (candidate.IsStandIn)
             {
                 // A stand-in is alone and on the surface by definition (creature bible, section 9); the forest is real.
@@ -468,6 +471,24 @@ public partial class DirectorSystem
         int cx = (int)standIn.X / GlobalConstants.ChunkSize, cz = (int)standIn.Z / GlobalConstants.ChunkSize;
         sapi.WorldManager.LoadChunkColumnPriority(cx - StandInChunkRadius, cz - StandInChunkRadius, cx + StandInChunkRadius, cz + StandInChunkRadius,
             new ChunkLoadOptions { KeepLoaded = true });
+    }
+
+    /// <summary>
+    /// Logs once at start when the world's settings make deer country rare: a hot start or a dry world,
+    /// where vanilla has gazelles and few deer, so haunts will be rare unless forms.guiseNoFit names a type.
+    /// </summary>
+    private void WarnIfDeerCountryRare()
+    {
+        var world = sapi.World.Config;
+        string start = world.GetString("startingClimate", "temperate");
+        bool dry = double.TryParse(world.GetString("globalPrecipitation", "1"), System.Globalization.NumberStyles.Float,
+            System.Globalization.CultureInfo.InvariantCulture, out var rain) && rain < 0.5;
+        if ((start == "hot" || dry) && string.Equals(config.Forms.GuiseNoFit, "pause", StringComparison.OrdinalIgnoreCase))
+        {
+            Mod.Logger.Notification("This world {0}: deer live in few places, and walkers haunt only where deer live. " +
+                "Set forms.guiseNoFit to a deer type, such as pampas, to allow haunts everywhere.",
+                start == "hot" ? "starts hot" : "is dry");
+        }
     }
 
     /// <summary>

@@ -1,0 +1,22 @@
+# Replies to tests/smoke/commands.commands, as the server logs them.
+# status
+Walkers [0-9]+\.[0-9]+\.[0-9]+[^:]*: on, mundane mode "auto"
+Config: ModConfig/walkers\.json, problems: 0
+Walkers loaded: 0
+# config: the list, one setting, a bad value, a value set and saved, then restored
+Settings in ModConfig/walkers\.json
+^  enabled = true$
+mundaneMode = "auto" \(default "auto", "auto" \| "on" \| "off"\)\. Mundane mode drops
+Cannot set mundaneMode: expected one of auto, on, off
+Saved mundaneMode = "on"
+^  mundaneMode "auto" → "on"
+\[walkers\] Reloaded ModConfig/walkers\.json: 1 setting\(s\) changed, 0 problem\(s\)
+# reload of the file just saved: nothing changes
+Reloaded ModConfig/walkers\.json\. Settings changed: 0
+Saved mundaneMode = "auto"
+^  mundaneMode "on" → "auto"
+# spawn: until the creature's entity JSON lands no walker type exists; afterwards it spawns at the world spawn
+(Spawned skinwalker-true #[0-9]+ at|No walker entity types are loaded yet)
+Removed every loaded walker: [0-9]+
+# me is for players only
+Caller must be player

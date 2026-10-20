@@ -1,0 +1,45 @@
+{
+    "commands-desc": "Walkers admin commands: status, spawn, despawn, reload, config. Players: /walkers me",
+    "commands-status-desc": "Shows the mod's state, problems in the config file and every loaded walker",
+    "commands-spawn-desc": "Spawns a walker in the given form (animal, true, or animal-deertype) in front of you or of a named player; from the console, at the world spawn",
+    "commands-despawn-desc": "Removes every loaded walker, or those within the given radius of you. A removal is not a death: no drops, and it does not count as a kill",
+    "commands-reload-desc": "Reads ModConfig/walkers.json again and applies it without a restart",
+    "commands-config-desc": "Shows the settings, one section or one setting, or sets a setting and saves it to ModConfig/walkers.json",
+    "commands-me-desc": "Shows or changes your own choices: noName, noScreenEffects, noTitles, scareVolume, noHaunt",
+
+    "commands-on": "on",
+    "commands-off": "off",
+    "commands-problems": "Problems in the file: {0}",
+
+    "commands-status-header": "Walkers {0}: {1}, mundane mode {2}",
+    "commands-status-config": "Config: ModConfig/{0}, problems: {1}",
+    "commands-status-walkers": "Walkers loaded: {0}",
+    "commands-status-distance": ", {0} blocks away",
+    "commands-status-more": "  ... and {0} more",
+
+    "commands-spawn-none-loaded": "No walker entity types are loaded yet. They arrive with the creature's entity JSON.",
+    "commands-spawn-unknown-form": "No walker form called {0}. Loaded forms: {1}",
+    "commands-no-such-player": "No online player called {0}",
+    "commands-spawn-not-loaded": "The world spawn is not loaded. Name an online player to spawn near them instead.",
+    "commands-spawn-no-spot": "Found no free ground to stand on there. Try again from another spot.",
+    "commands-spawned": "Spawned {0} #{1} at {2}, {3}, {4}",
+
+    "commands-despawn-radius-needs-position": "A radius needs a position; from the console, leave it out to remove every walker",
+    "commands-despawned-all": "Removed every loaded walker: {0}",
+    "commands-despawned-near": "Removed {0} walker(s) within {1} blocks",
+
+    "commands-reloaded": "Reloaded ModConfig/{0}. Settings changed: {1}",
+    "commands-reload-failed": "Could not read ModConfig/{0}, so the current settings stay: {1}",
+
+    "commands-config-header": "Settings in ModConfig/{0}. Name a section or setting to see more, add a value to set it:",
+    "commands-config-unknown": "No setting called {0}. Try /walkers config to list them.",
+    "commands-config-section": "{0} is a section. Name one of its settings to set a value.",
+    "commands-config-bad-value": "Cannot set {0}: {1}",
+    "commands-config-not-saved": "Not saved: {0}",
+    "commands-config-saved": "Saved {0} = {1}",
+
+    "commands-me-header": "Your choices about what the Walker may do to you. Change one with /walkers me setting value:",
+    "commands-me-unknown": "No choice called {0}. You can set: {1}",
+    "commands-me-nohaunt-off": "This server does not let players opt out of being haunted.",
+    "commands-me-saved": "Saved: {0} = {1}"
+}

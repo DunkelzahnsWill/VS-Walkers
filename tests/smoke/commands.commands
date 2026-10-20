@@ -1,0 +1,13 @@
+# Typed into the server console after boot; tests/smoke/commands.expect checks the replies.
+# Only settings this feature owns are changed, and each is restored, so later .commands files start
+# from the defaults.
+/walkers status
+/walkers config
+/walkers config mundaneMode
+/walkers config mundaneMode sometimes
+/walkers config mundaneMode on
+/walkers reload
+/walkers config mundaneMode auto
+/walkers spawn true
+/walkers despawn
+/walkers me

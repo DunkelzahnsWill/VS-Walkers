@@ -89,13 +89,11 @@ kill ritual), `Commands` (config and commands), `Harassment` (harassment kit).
 
 The shared surfaces, and who changes them:
 
-- **The config accessor** (`Walkers/Config/WalkersConfig.cs` and `WalkersConfigSystem.cs`) is the one
-  piece of code every feature uses. It loads `ModConfig/walkers.json` on the server before any other
-  Walkers system starts, so server code can read it from `Start` on with `api.GetWalkersConfig()`. On
-  a client it holds the defaults until the config work adds syncing, and the object may be replaced
-  on sync or reload, so read values when you need them rather than keeping the object. The config and
-  commands work owns these two files (client sync, world-config options, commands); other branches
-  only add their own `WalkersConfig.<Feature>.cs`.
+- **The config** (`Walkers/Config/`) is the one piece of code every feature uses; see
+  [Config and commands](#config-and-commands) below. The config and commands work owns
+  `WalkersConfig.cs`, `WalkersConfigJson.cs`, `WalkersConfigSystem.cs` and `WalkersPlayerPrefs.cs`.
+  Each feature owns its own `WalkersConfig.<Feature>.cs`; the director, stalker AI, forms and
+  harassment ones start as drafts of the creature bible's settings, and their features change them freely.
 - **The `/walkers` chat command** is one root shared by every feature. Get it with
   `api.ChatCommands.GetOrCreate(WalkersModSystem.ModId)` and add only your own
   `.BeginSubCommand("<feature>")`; never `Create` the root, or the second feature to start fails once
@@ -113,6 +111,62 @@ registered code prefixed with the mod id (AI tasks `walkers-<name>`, behaviors a
 using `WalkersModSystem.ModId`), no Harmony, additive patches only, and server-only C# unless a
 client effect truly needs client code.
 
+## Config and commands
+
+### For server owners
+
+Every setting lives in `ModConfig/walkers.json` in the server's data folder (on Windows,
+`%APPDATA%\VintagestoryData\ModConfig\walkers.json`). The server writes it with the defaults on its
+first start with the mod, and adds settings that later versions bring. Change it either way:
+
+- edit the file and type `/walkers reload`, or
+- set one value with `/walkers config <setting> <value>`, which saves it to the file and applies it.
+
+Changes apply at once, without a restart. Nothing in the file can stop the server: a value it cannot
+read keeps its default, a number out of range is clamped to the nearest allowed value, and an
+unknown key is ignored. Each case appears as a warning in the server log and under
+`/walkers status`. While the file has such a problem, or comments, the server never rewrites it, so
+nothing you typed is lost; fix it and reload. A file that cannot be read at all leaves the settings
+as they were (on startup, the defaults) until it is fixed.
+
+| Command | Who | What it does |
+| --- | --- | --- |
+| `/walkers status` | admins | Version, master switch, config problems, every loaded walker with its position |
+| `/walkers spawn <form> [player]` | admins | Spawns a walker 8 blocks in front of you or the named player; from the console, at the world spawn. Forms: `animal` (a random deer type), `animal-<deertype>`, `true` |
+| `/walkers despawn [radius]` | admins | Removes every loaded walker, or those within the radius of you. A removal is not a death: no drops, and it does not count as a kill |
+| `/walkers reload` | admins | Reads the file again and lists what changed |
+| `/walkers config [setting] [value]` | admins | Without arguments lists the sections; with a section or setting shows its values, default, range and meaning; with a value sets it |
+| `/walkers me [choice] [value]` | every player | Shows or sets the player's own choices: `noName`, `noScreenEffects`, `noTitles`, `scareVolume` (0 to 1), and `noHaunt` where `director.allowPlayerOptOut` is on |
+
+Admin commands need the `controlserver` privilege. Settings use the paths the file shows, such as
+`harass.doors.enabled`; case does not matter. Times ending in Seconds, Minutes or Ms are real time;
+Hours, Days, Nights and Seasons are in-game time. The settings beyond `enabled` and `mundaneMode` are
+drafts from the creature bible until their features land.
+
+### For feature code
+
+- **Read** the config once in your system's `Start` and keep it:
+  `var config = api.GetWalkersConfig();`. Read values at the moment you use them
+  (`config.Harass.Doors.Enabled`); a reload changes them in place, in the same objects. If you build
+  something from the values (a lookup table, a timer), rebuild it on `WalkersConfigSystem.Changed`.
+  The server has the file's values; a client gets the server's copy a moment after joining and has
+  the defaults before that.
+- **Add a setting** to your own `Walkers/Config/WalkersConfig.<Feature>.cs`: a property with a
+  default, a `[Description]` and, for numbers, a `[Range]`. A new top-level section also takes a
+  `[JsonProperty(Order = …)]` (director 10s, stalker AI 20s, forms 30s, return 40s, harassment 50s,
+  new features 60 and up). The rules are in the comment on `WalkersConfig`; the file, the checks,
+  `/walkers config` and the client copy pick a new setting up on their own.
+- **A player's choices**: `player.GetWalkersPrefs()` before acting on that player, for example skip
+  the drain when `NoScreenEffects` is set.
+- **Your own subcommand**: `api.ChatCommands.GetOrCreate(WalkersModSystem.ModId).BeginSubCommand("ledger")…EndSubCommand()`
+  in your own system. It inherits the admin privilege. To add a line to `/walkers status`, subscribe
+  to `WalkersCommandsSystem.Status`.
+- **Replies**: wrap your handler in `WalkersCommandsSystem.SafeReply(...)`, so a brace in a reply
+  (a JSON error, a player's argument) reaches the caller instead of breaking the server's formatting.
+- **Smoke tests**: `tests/smoke/config.expect` proves the file is written with every default in
+  range; `tests/smoke/commands.*` runs each command from the console. All `.commands` files share one
+  server run, in file-name order, so a test that changes a setting restores it at the end.
+
 ## Folder map
 
 ```
@@ -125,7 +179,8 @@ tests/smoke/                  per-feature smoke expectations and console command
 Walkers/                      the mod project
   modinfo.json
   Core/                       mod identity and startup log line
-  Config/                     the shared config accessor
+  Config/                     the shared config: walkers.json, its checks, player choices
+  Commands/                   the /walkers command
   assets/walkers/             entities, shapes, textures, sounds, itemtypes, patches, lang, config/lore
 ```
 

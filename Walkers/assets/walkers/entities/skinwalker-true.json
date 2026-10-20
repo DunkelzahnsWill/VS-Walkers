@@ -1,10 +1,10 @@
 // Skinwalker, true form. Placeholder body: the vanilla bowtorn shape without its rib crossbow, a dark bark texture and glowing eyes.
 // It keeps 5 to 13 blocks from a player and stares, strikes only within reach, and below 30% health flees for 20 seconds.
-// Test-only for the JSON play-test: the spawn rules and the despawn behavior. The release build has neither; the Director
-// takes them over.
+// Spawning and despawning belong to the Director (Walkers/Director): no JSON spawn rules and no despawn behavior. The
+// walker entity class keeps bodies out of chunk saves; the Director places them again from each walker's record.
 {
     "code": "skinwalker-true",
-    "class": "EntityAgent",
+    "class": "walkers-walker",
     "tags": ["habitat-land"],
     "weight": 110,
     "canClimb": true,
@@ -81,7 +81,6 @@
             { "code": "health", "currenthealth": 50, "maxhealth": 50 },
             { "code": "deaddecay", "hoursToDecay": 1 },
             { "code": "floatupwhenstuck", "onlyWhenDead": true },
-            { "code": "despawn", "minPlayerDistance": 64, "minSeconds": 600, "afterDays": 0.25 },
             {
                 "code": "emotionstates",
                 "states": [
@@ -189,25 +188,7 @@
                     { "code": "lookaround", "priority": 0.5 }
                 ]
             }
-        ],
-        "spawnconditions": {
-            "runtime": {
-                "group": "hostile",
-                "chance": 5e-05,
-                "maxQuantity": 1,
-                "maxQuantityByGroup": { "code": "walkers:skinwalker-*", "maxQuantity": 1 },
-                "spawnCapPlayerScaling": 0,
-                "minDistanceToPlayer": 48,
-                "tryOnlySurface": true,
-                "lightLevelType": "MaxTimeOfDayLight",
-                "maxLightLevel": 9,
-                "minForest": 0.6,
-                "minTemp": -18,
-                "minRain": 0.15,
-                "groupSize": { "avg": 1, "var": 0 },
-                "insideBlockCodes": ["game:air", "game:tallgrass-*", "game:snowlayer-1", "game:flower-*"]
-            }
-        }
+        ]
     },
     "sounds": {
         "hurt": {

@@ -1,14 +1,14 @@
 // Skinwalker, guise (animal form): a lone female deer of whichever vanilla type lives in the region, in the more wooded part of its habitat.
 // Tells: eyes set a little too far forward with a red catch-light, it never flees, it stands still and turns to face you.
 // Per-type numbers are copied from vanilla deer-adult.json (1.22.7, female). Vanilla assets need the "game:" prefix here.
-// Test-only for the JSON play-test: the spawn rules and the despawn behavior. The release build has neither; the Director
-// takes them over. Spawn chance is per deer type, so a region where several types live gets more guises.
+// Spawning and despawning belong to the Director (Walkers/Director): no JSON spawn rules and no despawn behavior. The
+// walker entity class keeps bodies out of chunk saves; the Director places them again from each walker's record.
 // stayinrange and lookatentity stand in for the Stalker AI's own tasks. Known limit: stayinrange keeps its first target and
 // skips its cooldown while out of its band, so terrain that blocks its step freezes the creature until the player comes
 // back into the band.
 {
     "code": "skinwalker-animal",
-    "class": "EntityAgent",
+    "class": "walkers-walker",
     "tags": ["animal", "habitat-land"],
     "variantgroups": [
         {
@@ -176,7 +176,6 @@
         "behaviors": [
             { "code": "repulseagents" },
             { "code": "controlledphysics" },
-            { "code": "despawn", "minPlayerDistance": 64, "minSeconds": 600, "afterDays": 0.25 },
             {
                 "code": "health",
                 "currenthealthByType": {
@@ -303,168 +302,7 @@
                     { "code": "lookaround", "priority": 0.5 }
                 ]
             }
-        ],
-        "spawnconditions": {
-            "runtime": {
-                "group": "neutral",
-                "chance": 0.0001,
-                "maxQuantity": 1,
-                "maxQuantityByGroup": { "code": "walkers:skinwalker-*", "maxQuantity": 1 },
-                "spawnCapPlayerScaling": 0,
-                "minDistanceToPlayer": 40,
-                "tryOnlySurface": true,
-                "lightLevelType": "MaxTimeOfDayLight",
-                "maxLightLevel": 11,
-                "groupSize": { "avg": 1, "var": 0 },
-                "insideBlockCodes": ["game:air", "game:tallgrass-*", "game:snowlayer-1", "game:flower-*"]
-            }
-        },
-        "spawnconditionsByType": {
-            "*-whitetail": {
-                "runtime": {
-                    "minTemp": -5,
-                    "maxTemp": 15,
-                    "minRain": 0.25,
-                    "minY": 0.9,
-                    "maxY": 1.4,
-                    "minForest": 0.5,
-                    "maxForest": 0.75,
-                    "maxShrubs": 0.75
-                }
-            },
-            "*-redbrocket": {
-                "runtime": {
-                    "minTemp": 20,
-                    "maxTemp": 40,
-                    "minRain": 0.5,
-                    "minY": 0.9,
-                    "maxY": 1.4,
-                    "minForest": 0.6
-                }
-            },
-            "*-marsh": {
-                "runtime": {
-                    "minTemp": 11,
-                    "maxTemp": 25,
-                    "minRain": 0.35,
-                    "minY": 0.9,
-                    "maxY": 1.3,
-                    "minForest": 0.5,
-                    "maxForest": 0.9,
-                    "maxShrubs": 0.9
-                }
-            },
-            "*-caribou": {
-                "runtime": {
-                    "minTemp": -19,
-                    "maxTemp": 1,
-                    "minRain": 0.35,
-                    "minY": 0.9,
-                    "maxY": 1.5,
-                    "minForest": 0.5,
-                    "maxForest": 0.6,
-                    "maxShrubs": 0.7
-                }
-            },
-            "*-water": {
-                "runtime": {
-                    "minTemp": 5,
-                    "maxTemp": 18,
-                    "minRain": 0.65,
-                    "minY": 0.9,
-                    "maxY": 1.1,
-                    "minForest": 0.25,
-                    "maxForest": 0.4,
-                    "maxShrubs": 0.4
-                }
-            },
-            "*-pudu": {
-                "runtime": {
-                    "minTemp": 0,
-                    "maxTemp": 8,
-                    "minRain": 0.5,
-                    "maxRain": 0.8,
-                    "minY": 0.9,
-                    "maxY": 1.2,
-                    "minForest": 0.5
-                }
-            },
-            "*-elk": {
-                "runtime": {
-                    "minTemp": -14,
-                    "maxTemp": -2,
-                    "minRain": 0.2,
-                    "minY": 1.2,
-                    "maxY": 1.8,
-                    "minForest": 0.5,
-                    "maxForest": 0.6,
-                    "maxShrubs": 0.6
-                }
-            },
-            "*-taruca": {
-                "runtime": {
-                    "minTemp": 12,
-                    "maxTemp": 24,
-                    "minRain": 0.1,
-                    "maxRain": 0.6,
-                    "minY": 1.2,
-                    "maxY": 1.6,
-                    "minForest": 0.3,
-                    "maxForest": 0.5,
-                    "maxShrubs": 0.5
-                }
-            },
-            "*-chital": {
-                "runtime": {
-                    "minTemp": 16,
-                    "maxTemp": 28,
-                    "minRain": 0.2,
-                    "maxRain": 0.9,
-                    "minY": 0.9,
-                    "maxY": 1.2,
-                    "minForest": 0.5,
-                    "maxForest": 0.8,
-                    "maxShrubs": 0.1
-                }
-            },
-            "*-guemal": {
-                "runtime": {
-                    "minTemp": -5,
-                    "maxTemp": 8,
-                    "minRain": 0.1,
-                    "maxRain": 0.6,
-                    "minY": 1.2,
-                    "maxY": 1.6,
-                    "minForest": 0.3,
-                    "maxForest": 0.5,
-                    "maxShrubs": 0.5
-                }
-            },
-            "*-pampas": {
-                "runtime": {
-                    "minTemp": 6,
-                    "maxTemp": 30,
-                    "minRain": 0.41,
-                    "maxRain": 1.0,
-                    "minY": 0.9,
-                    "maxY": 1.2,
-                    "minForest": 0.25,
-                    "maxForest": 0.4,
-                    "maxShrubs": 0.4
-                }
-            },
-            "*-fallow": {
-                "runtime": {
-                    "minTemp": -5,
-                    "maxTemp": 15,
-                    "minRain": 0.4,
-                    "maxRain": 1.0,
-                    "minY": 0.9,
-                    "maxY": 1.2,
-                    "minForest": 0.5
-                }
-            }
-        }
+        ]
     },
     "soundsByType": {
         "*-redbrocket": {

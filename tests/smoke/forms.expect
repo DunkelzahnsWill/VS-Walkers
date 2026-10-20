@@ -1,0 +1,17 @@
+# Replies and log lines of tests/smoke/forms.commands.
+Forms: skinwalker-animal-elk #[0-9]+ shifted into skinwalker-true #[0-9]+ \(self-test\)
+Forms: skinwalker-true #[0-9]+ shifted into skinwalker-animal-elk #[0-9]+ \(self-test\)
+Forms self-test: shift elk guise -> true form -> elk guise, memory carried: ok
+Forms: skinwalker-animal-whitetail #[0-9]+ died with no player as the cause; true body #[0-9]+ lies in its place
+Forms self-test: a guise that fell to its death left the true body, which awaits the ritual: ok
+Forms: walker body #[0-9]+ banished \(silver arrow|silver weapon\)
+Forms self-test: silver kill banishes: ok
+Forms: walker body #[0-9]+ banished \(fire\)
+Forms self-test: a kill while it burns banishes: ok
+Forms: true body #[0-9]+ lies for 120 s after an ordinary death
+Forms self-test: an ordinary kill leaves the body for the burn window: ok
+Forms: walker body #[0-9]+ banished \(burned body\)
+Forms self-test: burning the body in time banishes: ok
+Forms self-test: every silver item counts as silver, a copper arrow does not: ok
+Forms self-test: 7 passed, 0 failed
+Forms: [0-9]+ walker bodies await the ritual

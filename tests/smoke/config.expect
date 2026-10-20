@@ -1,0 +1,4 @@
+# The config loads before any other Walkers system and, on a fresh server, writes the default file.
+# "0 problem(s)" also proves every default sits inside its own [Range].
+\[walkers\] Wrote the default ModConfig/walkers\.json
+\[walkers\] Config loaded from ModConfig/walkers\.json: new file, 0 problem\(s\)

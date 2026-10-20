@@ -383,7 +383,10 @@ the two titles ("Something's moving out there.", "The Forest Saw That." for whoe
 screen shake, and the Pages act, which hands out the lore journals' pages on the lore bible's triggers.
 Every act has its own `harass.<act>.enabled` switch and a nightly cap. Doors, trapdoors, gates, chests
 and torches are touched only within 16 blocks of the victim, never under a padlock, and only where
-`harass.respectClaims` allows (`victimAccess`: unclaimed land or a claim the victim owns or shares).
+`harass.respectClaims` allows (`victimAccess`: unclaimed land or a claim the victim owns, shares
+through its group, or was granted access to). `harass.checkClaims` (on by default) switches every claim
+check, the break-in, eaten crops and the stalker AI's doorway included, off at once; padlocks and bars
+still hold.
 
 **The escalation ladder** (creature bible, section 7; the owner's ladder). The level is the
 director's `walkers/escalation`, 1 to 5 (else 1 + `walkers/returns`; always 1 while

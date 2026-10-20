@@ -124,7 +124,7 @@
                         "animation": "stab",
                         "animationSpeed": 1.5,
                         "runAnimation": "run",
-                        "sound": "game:creature/drifter-hit",
+                        "sound": "game:player/strike*",
                         "soundStartMs": 400
                     },
                     {
@@ -194,16 +194,16 @@
     },
     "sounds": {
         "hurt": {
-            "path": "game:creature/bowtorn/hurt",
-            "pitch": { "avg": 0.8, "var": 0.05 }
+            "path": "game:block/stickbreak",
+            "pitch": { "avg": 0.8, "var": 0.1 }
         },
         "death": {
-            "path": "game:creature/bowtorn/death",
-            "pitch": { "avg": 0.8, "var": 0.05 }
+            "path": "game:block/creak/woodcreak_long3",
+            "pitch": { "avg": 0.85, "var": 0.05 }
         },
         "idle": {
-            "path": "game:creature/bowtorn/idle",
-            "range": 16,
+            "path": "game:block/creak/woodcreak*",
+            "range": 12,
             "pitch": { "avg": 0.7, "var": 0.1 }
         }
     },

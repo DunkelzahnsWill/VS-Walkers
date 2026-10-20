@@ -483,11 +483,11 @@
     "soundsByType": {
         "*-redbrocket": {
             "hurt": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "death": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall3",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "idle": {
@@ -497,11 +497,11 @@
         },
         "*-pudu": {
             "hurt": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "death": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall3",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "idle": {
@@ -511,11 +511,11 @@
         },
         "*-water": {
             "hurt": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "death": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall3",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "idle": {
@@ -525,11 +525,11 @@
         },
         "*-caribou": {
             "hurt": {
-                "path": "game:creature/hooved/large/redstag/roar*",
+                "path": "game:creature/hooved/large/redstag/roar2",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "death": {
-                "path": "game:creature/hooved/large/redstag/roar*",
+                "path": "game:creature/hooved/large/redstag/roar1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "idle": {
@@ -539,11 +539,11 @@
         },
         "*-elk": {
             "hurt": {
-                "path": "game:creature/animal/mammal/hooved/deer/elk-hurt*",
+                "path": "game:creature/animal/mammal/hooved/deer/elk-hurt1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "death": {
-                "path": "game:creature/animal/mammal/hooved/deer/elk-death*",
+                "path": "game:creature/animal/mammal/hooved/deer/elk-death1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "idle": {
@@ -553,11 +553,11 @@
         },
         "*-pampas": {
             "hurt": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "death": {
-                "path": "game:creature/hooved/small/callsmall*",
+                "path": "game:creature/hooved/small/callsmall3",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "idle": {
@@ -567,11 +567,11 @@
         },
         "*": {
             "hurt": {
-                "path": "game:creature/hooved/medium/buck-bellow*",
+                "path": "game:creature/hooved/medium/buck-bellow2",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "death": {
-                "path": "game:creature/hooved/medium/buck-bellow*",
+                "path": "game:creature/hooved/medium/buck-bellow1",
                 "pitch": { "avg": 0.8, "var": 0.05 }
             },
             "idle": {

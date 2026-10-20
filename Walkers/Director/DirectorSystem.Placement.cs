@@ -81,11 +81,13 @@ public partial class DirectorSystem
         // Section 8's light rule holds for every appearance; only the Stalker AI's movement ignores light in the hunt.
         int lightLimit = config.Stalk.AvoidBlockLight >= 32 ? int.MaxValue : config.Stalk.AvoidBlockLight;
         var victimPos = victim.Entity.Pos;
+        bool wrath = IsWrath(walker);
         while (placementTriesLeft > 0)
         {
             placementTriesLeft--;
             var spot = CandidateSpot(victimPos, band, lightLimit);
-            if (spot == null || !FarFromBystanders(spot, victimPos.Dimension, victim.Entity) || CanBeSeen(spot, height, victimPos.Dimension))
+            // At Wrath it no longer keeps away from the victim's company; it still appears where nobody can see it.
+            if (spot == null || (!wrath && !FarFromBystanders(spot, victimPos.Dimension, victim.Entity)) || CanBeSeen(spot, height, victimPos.Dimension))
             {
                 continue;
             }

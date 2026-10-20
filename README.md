@@ -194,7 +194,9 @@ their own. Every 10 seconds it looks at the online players. Each player in survi
   `return.afterSeasons` later, for the player most marked by walker furs, else its last victim. It
   comes back angrier, not stronger: its escalation level, 1 (Interloping) to 5 (Wrath), is 1 plus
   its improper deaths plus one per `escalation.monthsPerLevel` months of haunting since, and drives
-  the harassment kit's acts. At Wrath it returns in half the time.
+  the harassment kit's acts. At Wrath it returns in half the time, and groups no longer hold it
+  back: it may appear near the victim's company (never in anyone's sight) and haunt a victim who is
+  near another victim.
 - **Unnatural furs.** Skinning the body gives furs that mark whoever carries them in their own
   inventories after `furs.markThresholdHours` of play. Burning the furs or waiting clears the mark;
   `furs.markTarget` off makes them trophies only.

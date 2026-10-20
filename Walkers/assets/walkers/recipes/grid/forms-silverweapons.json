@@ -1,5 +1,5 @@
 // Cast silver heads into weapons, with vanilla's patterns (survival recipes/grid/tool/*.json).
-// The knife, arrow and falx are vanilla's silver weapons; the spear is the mod's own.
+// The knife and arrow are vanilla's silver weapons; the spear is the mod's own.
 [
 	{
 		ingredientPattern: "T	S",
@@ -31,15 +31,5 @@
 		width: 1,
 		height: 3,
 		output: { type: "item", code: "game:arrow-silver", quantity: 1 }
-	},
-	{
-		ingredientPattern: "T	S",
-		ingredients: {
-			"T": { type: "item", code: "walkers:casthead-falx-silver" },
-			"S": { type: "item", code: "game:stick" }
-		},
-		width: 1,
-		height: 2,
-		output: { type: "item", code: "game:blade-falx-silver", quantity: 1 }
 	}
 ]

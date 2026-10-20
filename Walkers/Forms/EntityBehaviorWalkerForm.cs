@@ -8,6 +8,7 @@ using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 using Walkers.Director;
+using Walkers.Core;
 
 namespace Walkers.Forms;
 
@@ -623,7 +624,7 @@ public class EntityBehaviorWalkerForm : EntityBehavior
         var uid = FormMemory.Tree(entity).GetString(WalkerMemory.Victim);
         if (uid != null && entity.World.PlayerByUid(uid) is IServerPlayer victim && victim.ConnectionState == EnumClientState.Playing)
         {
-            forms.Sapi.SendIngameDiscovery(victim, "walkers-whisper-06", null);
+            forms.Sapi.SendWalkersDiscovery(victim, "walkers-whisper-06");
         }
     }
 

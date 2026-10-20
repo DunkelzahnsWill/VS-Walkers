@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Walkers.Config;
+using Walkers.Core;
 
 namespace Walkers.Harassment.Acts;
 
@@ -81,11 +82,11 @@ public sealed class WhisperAct : HarassAct
         }
         if (line == NameLine)
         {
-            ctx.Api.SendIngameDiscovery(player, CodeOf(line), null, player.PlayerName);
+            ctx.Api.SendWalkersDiscovery(player, CodeOf(line), player.PlayerName);
         }
         else
         {
-            ctx.Api.SendIngameDiscovery(player, CodeOf(line), null);
+            ctx.Api.SendWalkersDiscovery(player, CodeOf(line));
         }
         HarassSounds.For(player, HarassSounds.BreathOut, 0.62f + (float)ctx.Rand.NextDouble() * 0.06f, 0.6f);
         return ActResult.Ok($"whisper {line:00}");

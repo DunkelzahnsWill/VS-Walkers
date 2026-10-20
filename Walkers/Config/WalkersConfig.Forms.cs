@@ -23,6 +23,13 @@ public class FormsConfig
     [Description("Deer types the guise may wear, such as [\"whitetail\"]; [\"auto\"] wears the type whose climate fits the spot.")]
     public string[] GuiseTypes { get; set; } = { "auto" };
 
+    [Description("The guise shrugs off what players do to it: no blow or burn of theirs kills it, and it is whole again soon after. Off, players can kill the guise like a deer; the true body then lies in its place.")]
+    public bool GuiseShrugsDamage { get; set; } = true;
+
+    [Description("From stage 3, a guise a player hurts or sets alight stands up as the true form this many real milliseconds later.")]
+    [Range(0, 500)]
+    public int HurtShiftDelayMs { get; set; } = 400;
+
     [Description("Least real seconds between two shifts.")]
     [Range(10, 600)]
     public float ShiftCooldownSeconds { get; set; } = 60;
@@ -72,6 +79,7 @@ public class RitualConfig
         "game:knife-generic-silver",
         "game:blade-falx-silver",
         "game:spear-generic-ornatesilver",
+        "game:axe-felling-silver",
     };
 
     [Description("Damage multiplier for silver hits.")]
@@ -96,6 +104,10 @@ public class RitualConfig
 
     [Description("The body can be skinned for its furs instead of burned; the walker then returns.")]
     public bool AllowHarvestHusk { get; set; } = true;
+
+    [Description("Most unnatural furs one skinning gives; it gives from 2 up to this many.")]
+    [Range(2, 4)]
+    public int HuskFurCount { get; set; } = 4;
 
     [Description("Temporal stability given back to the killer on a ritual kill.")]
     [Range(0, 1)]

@@ -2,7 +2,7 @@
 Forms: skinwalker-animal-elk #[0-9]+ shifted into skinwalker-true #[0-9]+ \(self-test\)
 Forms: skinwalker-true #[0-9]+ shifted into skinwalker-animal-elk #[0-9]+ \(self-test\)
 Forms self-test: shift elk guise -> true form -> elk guise, memory carried: ok
-Forms: skinwalker-animal-whitetail #[0-9]+ died with no player as the cause; true body #[0-9]+ lies in its place
+Forms: skinwalker-animal-whitetail #[0-9]+ died; true body #[0-9]+ lies in its place
 Forms self-test: a guise that fell to its death left the true body, which awaits the ritual: ok
 Forms: walker body #[0-9]+ banished \(silver arrow|silver weapon\)
 Forms self-test: silver kill banishes: ok
@@ -13,5 +13,9 @@ Forms self-test: an ordinary kill leaves the body for the burn window: ok
 Forms: walker body #[0-9]+ banished \(burned body\)
 Forms self-test: burning the body in time banishes: ok
 Forms self-test: every silver item counts as silver, a copper arrow does not: ok
-Forms self-test: 7 passed, 0 failed
+Forms self-test: the guise refuses a player-caused death, and takes one an admin command allows: ok
+Forms: skinwalker-animal-whitetail #[0-9]+ refused a player-caused death
+Forms: 2 unnatural fur\(s\) of walker 9999 burned \(fire\)
+Forms self-test: a stamped unnatural fur dropped into fire burns up and reports its walker: ok
+Forms self-test: 9 passed, 0 failed
 Forms: [0-9]+ walker bodies await the ritual

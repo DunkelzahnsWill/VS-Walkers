@@ -35,10 +35,18 @@ public class FormsModSystem : ModSystem
 
     private FormsSelfTest? selfTest;
 
+    /// <summary>
+    /// Unnatural furs burned (dropped into fire or lava, or cooked in a firepit): the walker's id (-1 for an
+    /// unstamped fur), the player who dropped them when known, and how many. The director owns what that
+    /// means for the marks (creature bible, section 7).
+    /// </summary>
+    public event Action<int, IPlayer?, int>? FursBurned;
+
     public override void Start(ICoreAPI api)
     {
         api.RegisterEntityBehaviorClass(EntityBehaviorWalkerForm.Code, typeof(EntityBehaviorWalkerForm));
         api.RegisterEntityBehaviorClass(EntityBehaviorWalkerHusk.Code, typeof(EntityBehaviorWalkerHusk));
+        api.RegisterItemClass(ItemWalkerFur.ClassCode, typeof(ItemWalkerFur));
     }
 
     /// <summary>
@@ -82,6 +90,7 @@ public class FormsModSystem : ModSystem
         Sapi = api;
         selfTest = new FormsSelfTest(this);
         api.Event.OnPlayerInteractEntity += OnPlayerInteractEntity;
+        EntityWalker.RefuseDeath = RefuseDeath;
 
         var parsers = api.ChatCommands.Parsers;
         api.ChatCommands.GetOrCreate(WalkersModSystem.ModId)
@@ -104,6 +113,88 @@ public class FormsModSystem : ModSystem
             int lying = api.World.LoadedEntities.Values.Count(e => e.GetBehavior<EntityBehaviorWalkerForm>()?.AwaitsRitual == true);
             lines.Add(Lang.Get("walkers:forms-status", lying));
         };
+    }
+
+    public override void Dispose()
+    {
+        if (Sapi != null && EntityWalker.RefuseDeath == RefuseDeath)
+        {
+            EntityWalker.RefuseDeath = null;
+        }
+        base.Dispose();
+    }
+
+    /// <summary>One-shot permission for the next player-caused death of this guise, for an admin command that means it.</summary>
+    public static void AllowDeathOnce(Entity guise) => guise.Attributes.SetBool(AllowDeathFlag, true);
+
+    private const string AllowDeathFlag = "walkersAllowDeath";
+
+    /// <summary>
+    /// No player kills the guise (creature bible, section 4): the damage clamp keeps it above zero, and
+    /// this catches what gets past it, such as another mod's damage or a direct Die. Never refuses a
+    /// death without a player behind it, or one an admin command allowed.
+    /// </summary>
+    private bool RefuseDeath(EntityWalker body, EnumDespawnReason reason, DamageSource source)
+    {
+        if (!FormMemory.IsGuise(body) || !Config.Forms.GuiseShrugsDamage ||
+            (source.Source != EnumDamageSource.Player && WalkerRitual.PlayerOf(source) == null))
+        {
+            return false;
+        }
+        if (body.Attributes.GetBool(AllowDeathFlag))
+        {
+            body.Attributes.RemoveAttribute(AllowDeathFlag);
+            return false;
+        }
+        body.GetBehavior<EntityBehaviorWalkerForm>()?.OnDeathRefused();
+        Mod.Logger.Notification("Forms: {0} #{1} refused a player-caused death", body.Code.Path, body.EntityId);
+        return true;
+    }
+
+    // ---- Unnatural furs ----
+
+    /// <summary>True when the director knows the walker and it is banished.</summary>
+    public bool IsBanished(int walkerId) => walkerId >= 0 && Director?.GetWalker(walkerId)?.State == WalkerState.Banished;
+
+    internal void ReportFursBurned(int walkerId, string? byPlayerUid, int count, string how)
+    {
+        if (count <= 0)
+        {
+            return;
+        }
+        var player = byPlayerUid == null ? null : Sapi.World.PlayerByUid(byPlayerUid);
+        Mod.Logger.Notification("Forms: {0} unnatural fur(s) of walker {1} burned ({2}{3})", count, walkerId, how, player == null ? "" : ", dropped by " + player.PlayerName);
+        FursBurned?.Invoke(walkerId, player, count);
+    }
+
+    /// <summary>
+    /// The walker is banished: its furs turn cold, in the inventories of online players and on the
+    /// ground. Furs elsewhere turn cold when next moved or dropped (<see cref="ItemWalkerFur"/>).
+    /// </summary>
+    internal void ColdFurs(int walkerId)
+    {
+        foreach (var player in Sapi.World.AllOnlinePlayers)
+        {
+            foreach (var inventory in player.InventoryManager.Inventories.Values)
+            {
+                foreach (var slot in inventory)
+                {
+                    if (slot?.Itemstack?.Collectible is ItemWalkerFur && ItemWalkerFur.WalkerIdOf(slot.Itemstack) == walkerId)
+                    {
+                        slot.Itemstack.Attributes.SetBool(ItemWalkerFur.ColdKey, true);
+                        slot.MarkDirty();
+                    }
+                }
+            }
+        }
+        foreach (var entity in Sapi.World.LoadedEntities.Values)
+        {
+            if (entity is EntityItem { Itemstack.Collectible: ItemWalkerFur } item && ItemWalkerFur.WalkerIdOf(item.Itemstack) == walkerId)
+            {
+                item.Itemstack.Attributes.SetBool(ItemWalkerFur.ColdKey, true);
+                item.WatchedAttributes.MarkAllDirty();
+            }
+        }
     }
 
     /// <summary>The weapon in hand when an attack begins: a blow that breaks it empties the hand before the damage lands.</summary>

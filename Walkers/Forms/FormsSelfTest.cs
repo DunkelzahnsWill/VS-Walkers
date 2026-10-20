@@ -40,8 +40,8 @@ public class FormsSelfTest
         {
             return TextCommandResult.Error("Forms self-test: the world spawn is not loaded");
         }
-        var spots = FindSpots(origin, 5);
-        if (spots.Count < 5)
+        var spots = FindSpots(origin, 7);
+        if (spots.Count < 7)
         {
             return TextCommandResult.Error("Forms self-test: found only " + spots.Count + " open spots near the world spawn");
         }
@@ -53,6 +53,8 @@ public class FormsSelfTest
             TestFire(spots[3]);
             TestBurnedBody(spots[4]);
             TestSilverItems();
+            TestRefusedDeath(spots[5]);
+            TestFurBurns(spots[6]);
         }
         catch (Exception e)
         {
@@ -163,6 +165,72 @@ public class FormsSelfTest
         {
             Pass("every silver item counts as silver, a copper arrow does not");
         }
+    }
+
+    private void TestRefusedDeath(Vec3d at)
+    {
+        var guise = Spawn(FormMemory.GuiseCode("whitetail"), at);
+        guise.Die(EnumDespawnReason.Death, new DamageSource { Source = EnumDamageSource.Player, Type = EnumDamageType.BluntAttack });
+        if (!guise.Alive)
+        {
+            Fail("guise refuses a player-caused death", "it died");
+            return;
+        }
+        FormsModSystem.AllowDeathOnce(guise);
+        guise.Die(EnumDespawnReason.Death, new DamageSource { Source = EnumDamageSource.Player, Type = EnumDamageType.BluntAttack });
+        var body = World.GetEntitiesAround(at, 2, 3, e => FormMemory.IsTrueForm(e) && !e.Alive).FirstOrDefault();
+        if (body != null)
+        {
+            spawned.Add(body);
+        }
+        if (guise.Alive)
+        {
+            Fail("guise refuses a player-caused death", "a death the command allowed was refused too");
+            return;
+        }
+        Pass("the guise refuses a player-caused death, and takes one an admin command allows");
+    }
+
+    private void TestFurBurns(Vec3d at)
+    {
+        var fur = World.GetItem(new AssetLocation(Core.WalkersModSystem.ModId, "walkerfur"));
+        if (fur is not ItemWalkerFur)
+        {
+            Fail("unnatural fur burns", fur == null ? "no item walkers:walkerfur" : "walkers:walkerfur is not an ItemWalkerFur");
+            return;
+        }
+        var stack = new ItemStack(fur, 2);
+        ItemWalkerFur.Stamp(stack, 9999);
+        var item = World.SpawnItemEntity(stack, at.AddCopy(0, 0.2, 0)) as EntityItem;
+        if (item == null)
+        {
+            Fail("unnatural fur burns", "the fur did not spawn");
+            return;
+        }
+        spawned.Add(item);
+        int reported = 0;
+        void OnBurned(int walkerId, IPlayer? byPlayer, int count) => reported += walkerId == 9999 ? count : 0;
+        forms.FursBurned += OnBurned;
+        try
+        {
+            item.Ignite();
+            if (!item.IsOnFire)
+            {
+                Fail("unnatural fur burns", "it does not catch fire");
+                return;
+            }
+            fur.OnGroundIdle(item);
+        }
+        finally
+        {
+            forms.FursBurned -= OnBurned;
+        }
+        if (item.Alive || reported != 2)
+        {
+            Fail("unnatural fur burns", item.Alive ? "it is still there" : "the burn reported " + reported + " furs, not 2");
+            return;
+        }
+        Pass("a stamped unnatural fur dropped into fire burns up and reports its walker");
     }
 
     private bool Expect(Entity body, bool awaits, string name)

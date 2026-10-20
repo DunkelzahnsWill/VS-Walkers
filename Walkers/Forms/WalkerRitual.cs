@@ -137,6 +137,7 @@ public static class WalkerRitual
         if (director != null && director.TryGetWalkerId(body, out var walkerId))
         {
             director.Banish(walkerId, byPlayer, cause);
+            forms.ColdFurs(walkerId);
         }
         forms.Mod.Logger.Notification("Forms: walker body #{0} banished ({1}{2})", body.EntityId, cause, byPlayer == null ? "" : ", by " + byPlayer.PlayerName);
     }

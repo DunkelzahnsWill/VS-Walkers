@@ -85,7 +85,7 @@ public static class WalkerShift
     }
 
     /// <summary>
-    /// The guise died with no player as the cause: its carcass gives way at once to the true form's body,
+    /// The guise died (with no player as the cause, or with forms.guiseShrugsDamage off): its carcass gives way at once to the true form's body,
     /// which dies of the same death (creature bible, section 7). Returns the dead true body.
     /// </summary>
     public static Entity? ReplaceCarcass(FormsModSystem forms, Entity guise, DamageSource? damage)
@@ -109,7 +109,7 @@ public static class WalkerShift
         world.SpawnEntity(body);
         body.Die(EnumDespawnReason.Death, damage);
         // The guise has no deaddecay, so its carcass despawns on the next tick; nothing of it stays.
-        forms.Mod.Logger.Notification("Forms: {0} #{1} died with no player as the cause; true body #{2} lies in its place", guise.Code.Path, guise.EntityId, body.EntityId);
+        forms.Mod.Logger.Notification("Forms: {0} #{1} died; true body #{2} lies in its place", guise.Code.Path, guise.EntityId, body.EntityId);
         return body;
     }
 

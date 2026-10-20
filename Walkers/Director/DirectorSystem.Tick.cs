@@ -35,14 +35,27 @@ public partial class DirectorSystem
 
     private void OnSecond(float dt)
     {
-        TrackActivity();
-        TurnStandIns();
-        MaintainBodies();
+        // One failing step logs and leaves the others, and the server, running.
+        Guard("activity", TrackActivity);
+        Guard("stand-ins", TurnStandIns);
+        Guard("bodies", MaintainBodies);
         secondsSinceTick += dt;
         if (secondsSinceTick >= config.Director.TickSeconds)
         {
             secondsSinceTick = 0;
-            Tick();
+            Guard("tick", Tick);
+        }
+    }
+
+    private void Guard(string step, Action action)
+    {
+        try
+        {
+            action();
+        }
+        catch (Exception e)
+        {
+            Mod.Logger.Error("Director {0} failed: {1}", step, e);
         }
     }
 
@@ -58,16 +71,29 @@ public partial class DirectorSystem
             {
                 case WalkerState.Haunting:
                 case WalkerState.Paused:
-                    UpdateHaunt(walker, storm);
+                    Guard("haunt of walker " + walker.Id, () => UpdateHaunt(walker, storm));
                     break;
                 case WalkerState.Down:
-                    CheckDown(walker);
+                    Guard("check of walker " + walker.Id, () => CheckDown(walker));
                     break;
             }
+        }
+        // A slot freed later in the loop goes to a paused haunt that waits for one, ahead of any new roll.
+        foreach (var walker in walkers.Values.Where(w => w.State == WalkerState.Paused && WaitsForSlot(w)).OrderBy(w => w.Id).ToList())
+        {
+            if (ActiveCount() >= ActiveCap())
+            {
+                break;
+            }
+            Guard("haunt of walker " + walker.Id, () => UpdateHaunt(walker, storm));
         }
         StartHaunts(storm);
         ProcessRestore(false);
     }
+
+    private const string WaitingForSlot = "waiting for a free slot";
+
+    private bool WaitsForSlot(WalkerRecord walker) => pauseReasons.TryGetValue(walker.Id, out var reason) && reason == WaitingForSlot;
 
     // ---- Haunts ----
 
@@ -101,7 +127,7 @@ public partial class DirectorSystem
         }
 
         var pause = PauseReason(victim, storm);
-        if (pause == null && walker.State == WalkerState.Paused && victim != null && !FarFromOtherVictims(victim))
+        if (pause == null && victim != null && !FarFromOtherVictims(victim, walker))
         {
             pause = "another victim is nearby";
         }
@@ -125,7 +151,7 @@ public partial class DirectorSystem
             // A paused haunt holds no slot; it resumes as soon as there is one, ahead of any new roll.
             if (ActiveCount() >= ActiveCap())
             {
-                pauseReasons[walker.Id] = "waiting for a free slot";
+                pauseReasons[walker.Id] = WaitingForSlot;
                 KeepLadderClock(walker, memory, victim, nowHours);
                 walker.ClockUpdatedTotalHours = nowHours;
                 return;
@@ -164,6 +190,11 @@ public partial class DirectorSystem
                 outcome = LadderOutcome.None;
             }
             CheckStage(walker);
+            if (walker.State != WalkerState.Haunting)
+            {
+                // A handler of the ladder or of StageChanged ended or moved the haunt.
+                return;
+            }
             if (outcome == LadderOutcome.HuntEnded)
             {
                 EndHauntCore(walker, HauntEndReason.HuntTimeout);
@@ -321,14 +352,15 @@ public partial class DirectorSystem
         {
             return;
         }
+        var calendar = sapi.World.Calendar;
+        double now = calendar.TotalDays;
+        SendBackAbsentReturns(now);
         int cap = ActiveCap();
         int active = ActiveCount();
         if (active >= cap)
         {
             return;
         }
-        var calendar = sapi.World.Calendar;
-        double now = calendar.TotalDays;
         var free = candidates.Values.Where(c => CanBeChosen(c, storm, now)).ToList();
 
         // 1. Returns that are due, for their last victim.
@@ -349,17 +381,6 @@ public partial class DirectorSystem
                 StartHaunt(walker, victim, isReturn: true);
                 free.Remove(victim);
                 active++;
-            }
-            else if (now > entry.ReturnTotalDays + SeasonDays(config.Return.VictimAbsentSeasons) &&
-                !(walker.VictimUid != null && playerRecords.TryGetValue(walker.VictimUid, out var lastRecord) && lastRecord.LastSeenTotalDays >= entry.ReturnTotalDays))
-            {
-                // Its victim stayed away: it rests in the roster, and its next haunt, whoever it is for, is a return.
-                entry.Outcome = LedgerOutcome.Returned;
-                walker.State = WalkerState.Resting;
-                walker.VictimUid = null;
-                walker.ReturnPending = true;
-                SyncMemory(walker);
-                Mod.Logger.Notification("Walker {0} is back, but its last victim stayed away; it waits in the roster", walker.Id);
             }
         }
 
@@ -394,9 +415,39 @@ public partial class DirectorSystem
             {
                 continue;
             }
-            var walker = walkers.Values.Where(w => w.State == WalkerState.Resting).OrderBy(w => w.Id).FirstOrDefault() ?? CreateWalker();
+            // A walker a marked player is owed stays reserved for them.
+            var reserved = playerRecords.Values.Select(r => r.MarkedByWalker).Where(id => id != 0).ToHashSet();
+            var walker = walkers.Values.Where(w => w.State == WalkerState.Resting && !reserved.Contains(w.Id)).OrderBy(w => w.Id).FirstOrDefault() ?? CreateWalker();
             StartHaunt(walker, victim, walker.ReturnPending);
             active++;
+        }
+    }
+
+    /// <summary>
+    /// A due return whose victim has stayed away for return.victimAbsentSeasons, counted from the return
+    /// day or from when they were last seen, whichever is later, rests in the roster instead; its next
+    /// haunt, whoever it is for, is a return. Runs every tick, whether or not a slot is free.
+    /// </summary>
+    private void SendBackAbsentReturns(double now)
+    {
+        foreach (var walker in walkers.Values.Where(w => w.State == WalkerState.Waiting).ToList())
+        {
+            var entry = LatestEntry(walker.Id);
+            if (entry == null || entry.ReturnTotalDays > now)
+            {
+                continue;
+            }
+            double lastSeen = walker.VictimUid != null && playerRecords.TryGetValue(walker.VictimUid, out var record) ? record.LastSeenTotalDays : 0;
+            if (now <= Math.Max(entry.ReturnTotalDays, lastSeen) + SeasonDays(config.Return.VictimAbsentSeasons))
+            {
+                continue;
+            }
+            entry.Outcome = LedgerOutcome.Returned;
+            walker.State = WalkerState.Resting;
+            walker.VictimUid = null;
+            walker.ReturnPending = true;
+            SyncMemory(walker);
+            Mod.Logger.Notification("Walker {0} is back, but its last victim stayed away; it waits in the roster", walker.Id);
         }
     }
 
@@ -411,14 +462,23 @@ public partial class DirectorSystem
         now >= playerRecords[c.Uid].RestUntilTotalDays &&
         !walkers.Values.Any(w => w.VictimUid == c.Uid && w.State is WalkerState.Haunting or WalkerState.Paused or WalkerState.Down);
 
-    /// <summary>director.victimSeparation: no victim may be this close to another online victim.</summary>
-    private bool FarFromOtherVictims(Candidate c)
+    /// <summary>
+    /// director.victimSeparation: no victim may be this close to another online victim. For a running
+    /// haunt (<paramref name="self"/> haunting) only running haunts with a lower id count, so of two
+    /// victims who come together one haunt goes on and the other pauses.
+    /// </summary>
+    private bool FarFromOtherVictims(Candidate c, WalkerRecord? self = null)
     {
         double min = config.Director.VictimSeparation;
+        bool running = self?.State == WalkerState.Haunting;
         foreach (var walker in walkers.Values)
         {
-            if (walker.State is not (WalkerState.Haunting or WalkerState.Paused) || walker.VictimUid == null || walker.VictimUid == c.Uid ||
+            if (walker == self || walker.State is not (WalkerState.Haunting or WalkerState.Paused) || walker.VictimUid == null || walker.VictimUid == c.Uid ||
                 !candidates.TryGetValue(walker.VictimUid, out var other))
+            {
+                continue;
+            }
+            if (running && (walker.State != WalkerState.Haunting || walker.Id > self!.Id))
             {
                 continue;
             }
@@ -459,10 +519,13 @@ public partial class DirectorSystem
         return sapi.World.Calendar.TotalDays >= until;
     }
 
-    /// <summary>A temporal storm is on, and it matters: the world has temporal stability and director.pauseDuringStorms is on.</summary>
+    /// <summary>
+    /// A temporal storm is on and director.pauseDuringStorms is on. A world without storms never reports
+    /// one, so mundane mode needs no check here.
+    /// </summary>
     private bool StormActive()
     {
-        if (!config.Director.PauseDuringStorms || IsMundane())
+        if (!config.Director.PauseDuringStorms)
         {
             return false;
         }
@@ -540,7 +603,8 @@ public partial class DirectorSystem
         {
             return false;
         }
-        int range = config.Director.SpawnDistanceMax + FollowSlack;
+        // The stage bands reach 64 blocks whatever director.spawnDistanceMax says.
+        int range = Math.Max(config.Director.SpawnDistanceMax, 64) + FollowSlack;
         return victim.Pos.Dimension != body.Pos.Dimension || victim.Pos.SquareDistanceTo(body.Pos.XYZ) > range * range;
     }
 

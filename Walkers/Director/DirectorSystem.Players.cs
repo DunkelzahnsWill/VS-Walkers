@@ -224,7 +224,8 @@ public partial class DirectorSystem
         }
         foreach (var (uid, standIn) in standIns)
         {
-            if (sapi.World.GetEntityById(standIn.EntityId) is { Alive: true } entity)
+            // With debug.standInVictims off a stand-in is nobody: its haunt pauses as if it were offline, and ends after director.pausedHauntMaxDays.
+            if (config.Debug.StandInVictims && sapi.World.GetEntityById(standIn.EntityId) is { Alive: true } entity)
             {
                 PlayerRecordFor(uid, uid).LastSeenTotalDays = now;
                 candidates[uid] = new Candidate { Uid = uid, Name = uid, Entity = entity, IsStandIn = true, Counting = true };
@@ -451,6 +452,7 @@ public partial class DirectorSystem
         }
         data.StandIns.Remove(record);
         sapi.World.GetEntityById(record.EntityId)?.Die(EnumDespawnReason.Removed);
+        ReleaseLoadedAround(record);
         Mod.Logger.Notification("Stand-in victim {0} removed", uid);
         foreach (var walker in walkers.Values.Where(w => w.VictimUid == uid && w.State is WalkerState.Haunting or WalkerState.Paused).ToList())
         {
@@ -467,6 +469,31 @@ public partial class DirectorSystem
         int cx = (int)standIn.X / GlobalConstants.ChunkSize, cz = (int)standIn.Z / GlobalConstants.ChunkSize;
         sapi.WorldManager.LoadChunkColumnPriority(cx - StandInChunkRadius, cz - StandInChunkRadius, cx + StandInChunkRadius, cz + StandInChunkRadius,
             new ChunkLoadOptions { KeepLoaded = true });
+    }
+
+    /// <summary>
+    /// Lets go of the chunk columns <see cref="KeepLoadedAround"/> held for a removed stand-in: unloads each
+    /// one no other stand-in holds and no player is near, since an unload ignores players.
+    /// </summary>
+    private void ReleaseLoadedAround(StandInRecord removed)
+    {
+        int size = GlobalConstants.ChunkSize;
+        int playerRadius = sapi.Server.Config.MaxChunkRadius + 1;
+        var players = sapi.World.AllOnlinePlayers.Where(p => p.Entity != null)
+            .Select(p => ((int)p.Entity.Pos.X / size, (int)p.Entity.Pos.Z / size)).ToList();
+        int cx = (int)removed.X / size, cz = (int)removed.Z / size;
+        for (int x = cx - StandInChunkRadius; x <= cx + StandInChunkRadius; x++)
+        {
+            for (int z = cz - StandInChunkRadius; z <= cz + StandInChunkRadius; z++)
+            {
+                bool held = standIns.Values.Any(s => Math.Abs((int)s.X / size - x) <= StandInChunkRadius && Math.Abs((int)s.Z / size - z) <= StandInChunkRadius);
+                bool watched = players.Any(p => Math.Abs(p.Item1 - x) <= playerRadius && Math.Abs(p.Item2 - z) <= playerRadius);
+                if (!held && !watched)
+                {
+                    sapi.WorldManager.UnloadChunkColumn(x, z);
+                }
+            }
+        }
     }
 
     /// <summary>Once a second: each stand-in turns its head a little, and keeps its record's position.</summary>

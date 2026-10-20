@@ -1,11 +1,12 @@
 # Replies to tests/smoke/harass.commands.
   a context for the walker and its stand-in: pass
   break-in: a block behind the door keeps it out: pass
-  break-in: enraged, the unlocked door bursts open: pass
+  break-in: kept out once the haunt's wooden doors are spent: pass
+  break-in: not on a night the roll fails: pass
   break-in: not within 10 seconds of a wake: pass
   break-in: one entry a night: pass
-  break-in: the restore list closes the door: pass
   break-in: the way in opens for the stalker AI: pass
+  break-in: the wooden door comes off whole, as an item: pass
   broken sleep: nothing while the victim is awake: pass
   chest lids: not while the victim looks at it: pass
   chest lids: out of sight, the lid pops: pass
@@ -20,24 +21,28 @@
   eaten crops: not on unclaimed land by default \(dedicated server\): pass
   echoes: footsteps behind a stand-in: pass
   enraged: a hit alone does not enrage it \(onProvoked off\): pass
-  enraged: a walker that came back is enraged: pass
+  enraged: from Rage \(level 3\) it is enraged: pass
   enraged: never while creature hostility is off: pass
+  enraged: not below Rage: pass
   knocks: an enraged dusk ends in a long scrape: pass
+  knocks: none at Interloping \(level 1\): pass
   knocks: one knock a night: pass
   knocks: one rap on the door: pass
   knocks: the K1 page lies by the door: pass
   pages: Wat on lore paper, a chapter out of range refused: pass
   pages: a Maud letter carries what the journal needs: pass
+  pages: a Tallies of Loss page carries what the journal needs: pass
   pages: the fallback letter is a signed parchment: pass
+  rotting herd: at Rage it falls due once a haunt, three does: pass
+  rotting herd: none at Interloping \(level 1\): pass
   rotting herd: not while someone is within 32 blocks: pass
   rotting herd: removed when its time is up: pass
-  rotting herd: two does where nobody is: pass
+  rotting herd: the does lie where nobody is: pass
   test house built: pass
+  torches: from Hate \(level 4\) the torch is eaten: pass
   torches: it stays out until a player relights it: pass
   torches: the torch out of sight goes out: pass
-  torn door: from the second return it comes off whole, as an item: pass
   torn door: hung back at dawn while its item lies there: pass
-  torn door: not on the first return: pass
   whispers: W5 only with the name, W6 never, W2 not in stage 3: pass
   whispers: a line \(logged for a stand-in\): pass
   whispers: switched off, nothing happens: pass
@@ -45,4 +50,3 @@
   wrong calls: a call from where it is not: pass
 Harassment self-test: all checks passed
 Harassment kit, haunting walkers loaded: [0-9]+
-  pages: a Tallies of Loss page carries what the journal needs: pass

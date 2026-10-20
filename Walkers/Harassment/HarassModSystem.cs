@@ -274,7 +274,9 @@ public sealed class HarassModSystem : ModSystem
             return;
         }
         harass.SetDouble(HarassMemory.Haunt, began);
-        foreach (var key in new[] { HarassMemory.TitleWatching, HarassMemory.TitleForestSaw, HarassMemory.Offerings, HarassMemory.BreakIns, HarassMemory.Tears, HarassMemory.DrainTaken, HarassMemory.EntryUntilMs })
+        foreach (var key in new[] { HarassMemory.TitleWatching, HarassMemory.TitleForestSaw, HarassMemory.Offerings, HarassMemory.BreakIns, HarassMemory.Tears, HarassMemory.DrainTaken, HarassMemory.EntryUntilMs,
+                     HarassMemory.OtherTears, HarassMemory.BreakInNight, HarassMemory.BreakInTonight, HarassMemory.HerdDone, HarassMemory.HerdPending,
+                     HarassMemory.HerdCount, HarassMemory.CropsEaten, HarassMemory.LivestockDone })
         {
             harass.RemoveAttribute(key);
         }

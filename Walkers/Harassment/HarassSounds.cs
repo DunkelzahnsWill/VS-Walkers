@@ -21,6 +21,7 @@ public static class HarassSounds
     public static readonly AssetLocation Sniff = new("game", "sounds/creature/hooved/generic/sniff");
     public static readonly AssetLocation DoorSound = new("game", "sounds/block/door");
     public static readonly AssetLocation LargeDoorClose = new("game", "sounds/block/largedoor-close");
+    public static readonly AssetLocation Eat = new("game", "sounds/player/eat");
     public static readonly AssetLocation DeerCall = new("game", "sounds/creature/hooved/medium/deer-call");
     public static readonly AssetLocation SmallCall = new("game", "sounds/creature/hooved/small/smallscream");
     public static readonly AssetLocation ElkBellow = new("game", "sounds/creature/animal/mammal/hooved/deer/elk-bellow");

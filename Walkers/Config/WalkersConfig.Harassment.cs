@@ -15,11 +15,11 @@ public partial class WalkersConfig
     [JsonProperty(Order = 50)]
     public HarassConfig Harass { get; set; } = new();
 
-    [Description("When a walker is enraged, and what it does then: it comes inside, and from the second return it may tear a door off its hinges.")]
+    [Description("When a walker is enraged, and what it does then: it tears a door off its hinges and comes inside, within the escalation level's door budget.")]
     [JsonProperty(Order = 51)]
     public EnragedConfig Enraged { get; set; } = new();
 
-    [Description("The escalation list: what a victim finds after a walker comes back from an improper kill.")]
+    [Description("The escalation ladder, levels 1 to 5 (Interloping, Grudge, Rage, Hate, Wrath): what the kit may do at each level.")]
     [JsonProperty(Order = 52)]
     public EscalationConfig Escalation { get; set; } = new();
 }
@@ -57,7 +57,7 @@ public class HarassConfig
     [Description("Animals near it flee before players see it.")]
     public LivestockPanicConfig LivestockPanic { get; set; } = new();
 
-    [Description("Puts out torches near the victim at night; they stay out until a player relights them.")]
+    [Description("Puts out torches near the victim at night, at most the escalation level's torchesPerNight; they stay out until a player relights them. From Hate it eats them instead.")]
     public DouseTorchesConfig DouseTorches { get; set; } = new();
 
     [Description("Opens doors and trapdoors, or shuts a door, trapdoor or gate left open. It never opens a fence gate.")]
@@ -78,7 +78,7 @@ public class HarassConfig
     [Description("Stage 5: the true form opens and holds an unlocked door (the stalker AI's doorway task reads this switch).")]
     public HarassActConfig Doorway { get; set; } = new();
 
-    [Description("Enraged (see enraged), in stage 5 at night, it forces its way into the victim's home: a plain wooden door bursts open, lids and torches inside are disturbed, and it may come inside. A padlock, bar, reinforcement, anything behind the door, a metal, heavy, gate or double door, or a claim the victim neither owns nor shares keeps it out.")]
+    [Description("Enraged (see enraged), on a hunt night (stage 5), it tears a door off its hinges within the escalation level's budget and odds, disturbs lids and torches inside, and may come inside. A padlock, bar, reinforcement, anything behind the door, a gate or double door, or a claim the victim neither owns nor shares keeps it out.")]
     public BreakInConfig BreakIn { get; set; } = new();
 
     [Description("Small camera jolts for the victim with close knocks and scrapes.")]
@@ -296,24 +296,22 @@ public class MundaneWarpConfig : HarassActConfig
     public float Value { get; set; } = 0.4f;
 }
 
+
 public class EnragedConfig
 {
     [Description("Walkers may be enraged at all; never while the world's creatureHostility is off.")]
     public bool Enabled { get; set; } = true;
 
-    [Description("A walker that came back from an improper kill is enraged for the whole haunt.")]
-    public bool OnReturn { get; set; } = true;
+    [Description("The escalation level from which a walker is enraged for the whole haunt (3 is Rage).")]
+    [Range(1, 5)]
+    public int FromLevel { get; set; } = 3;
 
-    [Description("Hurting or burning a walker enrages it for the rest of the haunt. Off by default, so keeping the fire on it stays the right play.")]
+    [Description("Hurting or burning a walker enrages it for the rest of the haunt, with the break-in odds and door budgets of enraged.fromLevel. Off by default, so keeping the fire on it stays the right play.")]
     public bool OnProvoked { get; set; } = false;
 
     [Description("Most times per in-game night an enraged walker comes in, per victim.")]
     [Range(0, 3)]
     public int EntriesPerNight { get; set; } = 1;
-
-    [Description("Most times per haunt it comes in.")]
-    [Range(0, 6)]
-    public int EntriesPerHaunt { get; set; } = 2;
 
     [Description("Longest it stays inside, in real seconds.")]
     [Range(10, 120)]
@@ -322,14 +320,6 @@ public class EnragedConfig
     [Description("Farthest it goes inside, in blocks from the door.")]
     [Range(2, 16)]
     public int MaxIndoorBlocks { get; set; } = 8;
-
-    [Description("Doors it tears off their hinges per haunt (only a closed single wooden door: solid, sleek-windowed or crude).")]
-    [Range(0, 3)]
-    public int TearsPerHaunt { get; set; } = 1;
-
-    [Description("The return from which it may tear a door (1 is the first return).")]
-    [Range(1, 5)]
-    public int TearFromReturn { get; set; } = 2;
 
     [Description("A torn door is hung back at dawn if its item still lies within 6 blocks and the doorway is clear.")]
     public bool RehangAtDawn { get; set; } = true;
@@ -341,27 +331,102 @@ public class EnragedConfig
 
 public partial class EscalationConfig
 {
-    [Description("The escalation list after a return is on.")]
+    [Description("The escalation ladder is on. Off, the kit treats every walker as level 1 (Interloping), whatever its level.")]
     public bool Enabled { get; set; } = true;
 
-    [Description("The rotting herd (first return on) and, opt-in, the victim's own livestock (second return on).")]
+    [Description("What the kit may do at each escalation level. The level is the director's: 1 for a walker's first haunt, one more per improper death and per escalation.monthsPerLevel of active haunting, at most 5.")]
+    public EscalationLevelsConfig Levels { get; set; } = new();
+
+    [Description("The dead animals the levels' animalsPerHaunt budget spends.")]
     public EscalationHerdConfig Herd { get; set; } = new();
 
-    [Description("Eaten crops (first return on).")]
+    [Description("How the levels' cropsPerHaunt budget is eaten.")]
     public EscalationCropsConfig Crops { get; set; } = new();
+}
+
+public class EscalationLevelsConfig
+{
+    [Description("Interloping: a small crop budget, few torches, no knocks.")]
+    public EscalationLevelConfig Level1 { get; set; } = new() { CropsPerHaunt = 8, TorchesPerNight = 1 };
+
+    [Description("Grudge: the night knocks, a modest animal budget, a few more crops and torches.")]
+    public EscalationLevelConfig Level2 { get; set; } = new() { Knocks = true, CropsPerHaunt = 12, TorchesPerNight = 3, AnimalsPerHaunt = 1 };
+
+    [Description("Rage: enraged, more animals, now and then a break-in on a hunt night.")]
+    public EscalationLevelConfig Level3 { get; set; } = new()
+    {
+        Knocks = true, CropsPerHaunt = 12, TorchesPerNight = 3, AnimalsPerHaunt = 3,
+        BreakInChance = 0.25f, WoodenDoorsPerHaunt = 2, OtherDoorsPerHaunt = 1,
+    };
+
+    [Description("Hate: twice the doors, a break-in nearly every hunt night, torches eaten.")]
+    public EscalationLevelConfig Level4 { get; set; } = new()
+    {
+        Knocks = true, CropsPerHaunt = 12, TorchesPerNight = 3, EatTorches = true, AnimalsPerHaunt = 3,
+        BreakInChance = 0.9f, WoodenDoorsPerHaunt = 4, OtherDoorsPerHaunt = 2,
+    };
+
+    [Description("Wrath: company no longer keeps it away.")]
+    public EscalationLevelConfig Level5 { get; set; } = new()
+    {
+        Knocks = true, CropsPerHaunt = 12, TorchesPerNight = 3, EatTorches = true, AnimalsPerHaunt = 3,
+        BreakInChance = 1, WoodenDoorsPerHaunt = 4, OtherDoorsPerHaunt = 2, IgnoresCompany = true,
+    };
+
+    /// <summary>The settings of a level, clamped to 1-5.</summary>
+    public EscalationLevelConfig For(int level) => level switch
+    {
+        <= 1 => Level1,
+        2 => Level2,
+        3 => Level3,
+        4 => Level4,
+        _ => Level5,
+    };
+}
+
+public class EscalationLevelConfig
+{
+    [Description("The knocks (and their pages) happen at this level.")]
+    public bool Knocks { get; set; }
+
+    [Description("Most torches put out per in-game night, per victim (harass.douseTorches.perNight caps it too).")]
+    [Range(0, 20)]
+    public int TorchesPerNight { get; set; }
+
+    [Description("A torch it reaches is eaten: the block is gone, with nothing dropped, instead of put out.")]
+    public bool EatTorches { get; set; }
+
+    [Description("Most crop blocks it eats per haunt.")]
+    [Range(0, 64)]
+    public int CropsPerHaunt { get; set; }
+
+    [Description("Most dead animals per haunt: the rotting herd, plus one of the victim's own if escalation.herd.killLivestock is on.")]
+    [Range(0, 6)]
+    public int AnimalsPerHaunt { get; set; }
+
+    [Description("Chance, on each hunt night (stage 5), that an enraged walker tries to break in.")]
+    [Range(0, 1)]
+    public float BreakInChance { get; set; }
+
+    [Description("Plain single wooden doors (solid, sleek-windowed or crude) it may tear off per haunt.")]
+    [Range(0, 8)]
+    public int WoodenDoorsPerHaunt { get; set; }
+
+    [Description("Bare single iron or heavy doors it may tear off per haunt. A padlock, bar, reinforcement or anything behind a door always keeps it out; gates and double doors are never torn.")]
+    [Range(0, 4)]
+    public int OtherDoorsPerHaunt { get; set; }
+
+    [Description("Company no longer keeps it from breaking in (the stalker AI reads the level for its own attacks).")]
+    public bool IgnoresCompany { get; set; }
 }
 
 public class EscalationHerdConfig
 {
-    [Description("Dead does found 16 to 24 blocks from the victim's door at the first dawn of stage 2, once per return. A knife gets only rot from them.")]
-    [Range(0, 4)]
-    public int WildCarcasses { get; set; } = 2;
-
     [Description("In-game hours the rotting herd lies before it is removed, so no bones stay.")]
     [Range(6, 96)]
     public int DecayHours { get; set; } = 24;
 
-    [Description("Allows one of the victim's own farm animals to be found dead at dawn, once per return from the second, in a claim the victim owns. Never a named, tamed, rideable, pregnant or founder animal, never the last two of either sex.")]
+    [Description("One of the animal budget may be one of the victim's own farm animals found dead at dawn, in a claim the victim owns. Never a named, tamed, rideable, pregnant or founder animal, never the last two of either sex. Off by default.")]
     public bool KillLivestock { get; set; } = false;
 }
 
@@ -375,11 +440,7 @@ public class EscalationCropsConfig
     [Range(1, 3)]
     public int StagesBack { get; set; } = 2;
 
-    [Description("Most crop blocks per return.")]
-    [Range(0, 64)]
-    public int MaxPerReturn { get; set; } = 16;
-
-    [Description("Most share of the crops in range it may eat per return.")]
+    [Description("Most share of the crops in range it may eat per haunt.")]
     [Range(0, 1)]
     public float MaxShare { get; set; } = 0.25f;
 

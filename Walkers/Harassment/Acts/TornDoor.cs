@@ -11,9 +11,11 @@ using Walkers.Director;
 namespace Walkers.Harassment.Acts;
 
 /// <summary>
-/// The torn door (creature bible, section 7, "Enraged"): from enraged.tearFromReturn, once per haunt,
-/// after 3 seconds of heavy blows an enraged walker tears a closed single wooden door (solid,
-/// sleek-windowed or crude) out of its frame. The door block is set to air, never broken, and drops
+/// The torn door (creature bible, section 7, "Enraged"): within the escalation level's door budget
+/// (woodenDoorsPerHaunt, otherDoorsPerHaunt), after 3 seconds of heavy blows an enraged walker tears a
+/// closed single door out of its frame: a plain wooden one (solid, sleek-windowed or crude), or from
+/// the other budget a bare iron or 1x2 heavy door. Gates and double doors are never torn, and a lock
+/// always holds (the owner's choice, 2026-10-20). The door block is set to air, never broken, and drops
 /// intact as an item that lasts enraged.doorItemDespawnSeconds. At dawn the restore list hangs it back
 /// (kind <see cref="RestoreKind"/>) if its item still lies within 6 blocks and the doorway is clear; a
 /// door a player picked up is theirs.
@@ -28,23 +30,43 @@ public static class TornDoor
 
     private const double RehangItemRange = 6;
 
+    /// <summary>The self-test's switch: the door gives at once, without the blows.</summary>
+    internal static bool Immediate;
+
     private static readonly AssetLocation Splinter = new("game", "sounds/block/stickbreak");
 
     /// <summary>A plain single wooden door: solid, sleek-windowed or crude, one block wide, not half of a double door.</summary>
-    public static bool IsPlainWooden(BEBehaviorDoor door)
+    public static bool IsPlainWooden(BEBehaviorDoor door) => MaterialOf(door) == DoorMaterial.Wooden;
+
+    /// <summary>Which door budget a door spends, or <see cref="DoorMaterial.None"/> when it can never be torn.</summary>
+    public static DoorMaterial MaterialOf(BEBehaviorDoor door)
     {
         var code = door.Block.Code;
-        if (code == null || code.Domain != "game" || door.LeftDoor != null || door.RightDoor != null || door.doorBh == null || door.doorBh.width != 1)
+        if (code == null || code.Domain != "game" || door.LeftDoor != null || door.RightDoor != null || door.doorBh == null ||
+            door.doorBh.width != 1 || door.doorBh.height != 2)
         {
-            return false;
+            return DoorMaterial.None;
         }
         string path = code.Path;
-        return path == "door-crude" || path.StartsWith("door-solid-", StringComparison.Ordinal) || path.StartsWith("door-sleek-windowed-", StringComparison.Ordinal);
+        if (path == "door-crude" || path.StartsWith("door-solid-", StringComparison.Ordinal) || path.StartsWith("door-sleek-windowed-", StringComparison.Ordinal))
+        {
+            return DoorMaterial.Wooden;
+        }
+        if (path.StartsWith("metaldoor-", StringComparison.Ordinal) || path.StartsWith("door-1x2heavy-", StringComparison.Ordinal))
+        {
+            return DoorMaterial.Other;
+        }
+        return DoorMaterial.None;
     }
 
     /// <summary>Starts the blows; after <see cref="BlowsMs"/> the door gives unless the way in changed, and <paramref name="done"/> hears whether it did.</summary>
     public static void Tear(HarassContext ctx, BEBehaviorDoor door, Action<bool> done)
     {
+        if (Immediate)
+        {
+            done(TearNow(ctx, door.Pos.Copy()));
+            return;
+        }
         var world = ctx.Api.World;
         var pos = door.Pos.Copy();
         var center = new Vec3d(pos.X + 0.5, pos.Y + 1, pos.Z + 0.5);
@@ -66,7 +88,7 @@ public static class TornDoor
         var world = ctx.Api.World;
         var accessor = world.BlockAccessor;
         var door = accessor.GetBlockEntity(pos)?.GetBehavior<BEBehaviorDoor>();
-        if (door == null || door.Opened || !IsPlainWooden(door) || Doors.IsLockedShut(world, door))
+        if (door == null || door.Opened || MaterialOf(door) == DoorMaterial.None || Doors.IsLockedShut(world, door))
         {
             return false;
         }
@@ -153,4 +175,12 @@ public static class TornDoor
         item.Die(EnumDespawnReason.Removed);
         return RestoreResult.Done;
     }
+}
+
+/// <summary>The door budget a door belongs to.</summary>
+public enum DoorMaterial
+{
+    None,
+    Wooden,
+    Other,
 }

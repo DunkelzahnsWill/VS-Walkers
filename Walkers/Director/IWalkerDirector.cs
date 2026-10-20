@@ -202,9 +202,10 @@ public static class WalkerMemory
     public const string Guise = "guise";
 
     /// <summary>
-    /// int, 0 to 3: the walker's escalation level (creature bible, section 7, the escalation list): its
-    /// improper deaths plus one for every escalation.monthsPerLevel in-game months of live haunting
-    /// since the first. Set when a haunt starts or returns and when a body is placed; the harassment kit reads it.
+    /// int, 1 to 5: the walker's escalation level on the owner's ladder (1 Interloping, 2 Grudge, 3 Rage,
+    /// 4 Hate, 5 Wrath): 1, plus its improper deaths, plus one for every escalation.monthsPerLevel
+    /// in-game months of live haunting since the first; 0 once banished. Set when a haunt starts or
+    /// returns and when a body is placed; the harassment kit reads it. At 5 its return comes in half the time.
     /// </summary>
     public const string Escalation = "escalation";
 

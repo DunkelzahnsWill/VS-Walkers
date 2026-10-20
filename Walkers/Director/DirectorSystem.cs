@@ -440,7 +440,8 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
             Cause = cause,
             KillerName = killer,
             ReturnsBefore = walker.Returns,
-            ReturnTotalDays = now + SeasonDays(config.Return.AfterSeasons),
+            // At Wrath, the top of the ladder, it comes back in half the time.
+            ReturnTotalDays = now + SeasonDays(config.Return.AfterSeasons) * (EscalationLevel(walker) >= WrathLevel ? 0.5 : 1),
         };
         data.Ledger.Add(entry);
         downSinceMs[walker.Id] = sapi.World.ElapsedMilliseconds;

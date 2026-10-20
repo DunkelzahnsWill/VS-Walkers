@@ -192,9 +192,9 @@ their own. Every 10 seconds it looks at the online players. Each player in survi
   of sight.
 - **The return.** A walker killed without the ritual goes into the ledger and comes back
   `return.afterSeasons` later, for the player most marked by walker furs, else its last victim. It
-  comes back angrier, not stronger: its escalation level (improper deaths plus one per
-  `escalation.monthsPerLevel` months of haunting since, at most 3) drives the harassment kit's
-  escalation acts.
+  comes back angrier, not stronger: its escalation level, 1 (Interloping) to 5 (Wrath), is 1 plus
+  its improper deaths plus one per `escalation.monthsPerLevel` months of haunting since, and drives
+  the harassment kit's acts. At Wrath it returns in half the time.
 - **Unnatural furs.** Skinning the body gives furs that mark whoever carries them in their own
   inventories after `furs.markThresholdHours` of play. Burning the furs or waiting clears the mark;
   `furs.markTarget` off makes them trophies only.

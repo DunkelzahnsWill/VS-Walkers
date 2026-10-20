@@ -19,8 +19,11 @@ public partial class DirectorSystem
 {
     private const string FurCode = "walkerfur";
 
-    /// <summary>The top tier of the escalation list.</summary>
-    private const int MaxEscalation = 3;
+    /// <summary>The owner's five-level ladder (20 Oct): 1 Interloping, 2 Grudge, 3 Rage, 4 Hate, 5 Wrath.</summary>
+    private const int MaxEscalation = 5;
+
+    /// <summary>At Wrath a walker that dies improperly returns in half the time.</summary>
+    private const int WrathLevel = 5;
 
     /// <summary>A player's own inventories that count: hotbar, backpack with its bags, crafting grid and cursor. Never a chest.</summary>
     private static readonly string[] FurInventories =
@@ -192,8 +195,9 @@ public partial class DirectorSystem
         data.Ledger.Count(e => e.WalkerId == walkerId && e.Outcome is LedgerOutcome.Released or LedgerOutcome.Returned);
 
     /// <summary>
-    /// Improper deaths, plus one for every escalation.monthsPerLevel in-game months of live haunting since
-    /// the first, at most the top tier; 0 for a walker that never came back or is banished.
+    /// The owner's five-level ladder: 1 on its first haunt, plus its improper deaths, plus one for every
+    /// escalation.monthsPerLevel in-game months of live haunting since the first improper death, at most 5;
+    /// 0 for a banished walker.
     /// </summary>
     internal int EscalationLevel(WalkerRecord walker)
     {
@@ -201,9 +205,11 @@ public partial class DirectorSystem
         {
             return 0;
         }
-        int level = ImproperDeaths(walker.Id);
+        // A walker's first haunt is level 1 (Interloping).
+        int improper = ImproperDeaths(walker.Id);
+        int level = 1 + improper;
         float months = config.Escalation.MonthsPerLevel;
-        if (level > 0 && months > 0 && sapi.World.Calendar is { } calendar)
+        if (improper > 0 && months > 0 && sapi.World.Calendar is { } calendar)
         {
             level += (int)Math.Floor(walker.EscalationHauntHours / (months * calendar.DaysPerMonth * calendar.HoursPerDay));
         }

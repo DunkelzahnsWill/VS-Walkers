@@ -1,0 +1,17 @@
+{
+    "$schema": "https://moddbcdn.vintagestory.at/schema/modinfo.latest.json",
+    "type": "Code",
+    "modid": "walkers",
+    "name": "Walkers",
+    "authors": [
+        "Mr. Chrome"
+    ],
+    "description": "Something's moving out there. A forest stalker that wears an innocent face: the Skinwalker.",
+    "version": "0.1.0-dev.1",
+    "side": "Universal",
+    "requiredOnClient": true,
+    "requiredOnServer": true,
+    "dependencies": {
+        "game": "1.22.7"
+    }
+}

@@ -1,0 +1,6 @@
+<Project>
+  <Target Name="WalkersCheckGameFolder" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="!Exists('$(VINTAGE_STORY)/VintagestoryAPI.dll')"
+           Text="VintagestoryAPI.dll not found in '$(VINTAGE_STORY)'. In the cloud run scripts/setup.sh; on your PC set the VINTAGE_STORY environment variable to your Vintage Story install folder." />
+  </Target>
+</Project>

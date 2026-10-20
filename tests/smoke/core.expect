@@ -1,0 +1,3 @@
+# Extended regexes, one per line, that must each match a line of Logs/server-main.log.
+# Each feature can add its own <feature>.expect (and <feature>.commands) next to this file.
+Server side started, version [0-9]+\.[0-9]+\.[0-9]+[^,]*, assets loaded

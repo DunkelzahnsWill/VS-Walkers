@@ -266,7 +266,7 @@ brain picks the mode; the AI tasks in the entity JSON act on it.
 | `walkers-creep` | both | Keeps the stage's distance band, moves a little closer after every look, never into bright block light; stage 4 at night, the true form stands far off in the open |
 | `walkers-hunt` | true | Stage 5: closes in while unwatched, runs within 16 blocks, holds at doors and while the victim sleeps |
 | `walkers-lunge` | true | From within `gaze.lungeRange`: a dash and one hit, capped at `forms.maxHitFraction` of the target's health |
-| `walkers-retreat` | both | Into cover after a break-off, a withdraw or a hit on the guise; to water while burning |
+| `walkers-retreat` | both | Into cover after a break-off, a withdraw or a hit on the guise; a doe that bolted runs; a true form stood up by a hit walks off (walkers-lunge strikes back); to water while burning |
 | `walkers-doorway` | true | Stage 5: opens an unlocked door the victim is behind (where `harass.respectClaims` allows), holds the doorway, never walks in; off with `harass.doorway.enabled` |
 
 Without a director, a body picks the nearest counting player within 64 blocks and climbs the ladder
@@ -308,8 +308,14 @@ For feature code:
   and walks back out through the door before anything else. A body still inside 50 s after the
   entry began sets `walkers/withdraw` and vanishes (`Die(Expire)`).
 - **Freeze pose.** A true form plays its `freeze` animation while the gaze holds it.
+- **Gaze and the doe.** The freeze starts after `gaze.freezeAfterSeconds` (0.5) of unbroken watching
+  and ends after `gaze.freezeReleaseSeconds` (1.5) unwatched. A doe looked at from within
+  `gaze.stareRange` (48) holds eye contact for `stalk.eyeContactSeconds` (1.5), then bolts for cover at
+  deer speed (`stalk.guiseFleeSpeed`) for `stalk.fleeSeconds` (6); one within `stalk.vanishApproach`
+  bolts at once; from stage 2 it slips away once unseen. A true form a player hit (any stage, haunted
+  or not) strikes back in reach and otherwise walks off, unfrozen, for 20 s.
 - **Escalation level.** `walkers/escalation` (1 to 5 across returns; without it, returns + 1) changes
-  the true form. From 2, a victim's stare of 2 s no longer freezes it: it hunts the starer for 20 s.
+  the true form. From 2, a victim's unbroken stare of `gaze.stareAggroSeconds` (2) within `gaze.stareRange` no longer freezes it: it hunts the starer for 20 s.
   From 3, a victim alone for 30 s at night is hunted too, at any stage (doors stay a stage-5 act).
   At 5 it no longer breaks off for company, and the ladder's group cap stops holding it back. All of
   it only where creatureHostility is aggressive.

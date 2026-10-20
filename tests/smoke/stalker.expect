@@ -8,6 +8,7 @@
   view cone: ahead and 50 degrees in, 90 degrees and behind out: pass
   walk-in: past the door is inside; the step, the doorway and far off are not: pass
   escalation level: 1 at first, returns plus 1, walkers/escalation wins, at most 5: pass
+  freeze: starts on a steady look, holds through a blink, ends after a look away: pass
   standing spot at the world spawn: pass
   brains for both forms: pass
   guise tasks: pass
@@ -16,7 +17,7 @@
   gaze: looking away does not: pass
   gaze: rock in between blocks it: pass
 Stalker self-test: all synchronous checks passed
-Stalker self-test: slip-away, watched: frozen and marked: pass
+Stalker self-test: slip-away, approached: bolts and is marked: pass
 Stalker self-test: slip-away, unwatched: removed: pass
 Stalker self-test: slip-away passed
 Stalker AI, walkers loaded: [0-9]+

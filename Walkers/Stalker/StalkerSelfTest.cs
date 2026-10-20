@@ -7,6 +7,7 @@ using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
+using Walkers.Config;
 using Walkers.Director;
 using Walkers.Stalker.Tasks;
 
@@ -67,6 +68,7 @@ public sealed class StalkerSelfTest
             ConeChecks(Check);
             EntryChecks(Check);
             LevelChecks(Check);
+            FreezeChecks(Check);
             LiveChecks(Check);
         }
         catch (Exception e)
@@ -90,8 +92,9 @@ public sealed class StalkerSelfTest
         var brain = StalkerModSystem.BrainOf(guise);
         if (phase == 1 && nowMs - phaseAtMs >= 1500)
         {
-            bool ok = brain != null && brain.Mode == StalkerMode.Stalk && brain.Gaze.VictimWatching && brain.Frozen && brain.SlipAwayReason == "approached";
-            Report("slip-away, watched: frozen and marked", ok, brain == null
+            // Watched from close by, the doe bolts instead of holding still, and is marked to go.
+            bool ok = brain != null && brain.Fleeing && brain.Mode == StalkerMode.Retreat && !brain.Frozen && brain.SlipAwayReason == "bolted";
+            Report("slip-away, approached: bolts and is marked", ok, brain == null
                 ? "no brain"
                 : $"mode {WalkerBrain.ModeName(brain.Mode)}, watching {brain.Gaze.VictimWatching}, frozen {brain.Frozen}, mark {brain.SlipAwayReason ?? "none"}");
             if (!ok || standIn == null || guise == null)
@@ -222,6 +225,16 @@ public sealed class StalkerSelfTest
         written.SetInt(StalkerMemory.Escalation, 9);
         int a = StalkerMemory.Level(fresh), b = StalkerMemory.Level(returned), c = StalkerMemory.Level(written);
         check("escalation level: 1 at first, returns plus 1, walkers/escalation wins, at most 5", a == 1 && b == 3 && c == 5, $"{a} {b} {c}");
+    }
+
+    private static void FreezeChecks(Action<string, bool, string> check)
+    {
+        var gaze = new GazeConfig();
+        bool glance = WalkerBrain.FreezeHeld(false, 0, 0, gaze);
+        bool look = WalkerBrain.FreezeHeld(false, gaze.FreezeAfterSeconds, 0, gaze);
+        bool blink = WalkerBrain.FreezeHeld(true, 0, gaze.FreezeReleaseSeconds - 0.5, gaze);
+        bool away = WalkerBrain.FreezeHeld(true, 0, gaze.FreezeReleaseSeconds, gaze);
+        check("freeze: starts on a steady look, holds through a blink, ends after a look away", !glance && look && blink && !away, $"{glance} {look} {blink} {away}");
     }
 
     private static void EntryChecks(Action<string, bool, string> check)

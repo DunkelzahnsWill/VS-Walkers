@@ -97,6 +97,22 @@ public class GazeConfig
     [Description("During the hunt it may attack while watched inside this many blocks.")]
     [Range(0, 12)]
     public float LungeRange { get; set; } = 5;
+
+    [Description("The stare reactions (the doe's eye contact and bolt, the look-back, the true form's stare aggro) only within this many blocks; farther off it just holds still.")]
+    [Range(8, 96)]
+    public int StareRange { get; set; } = 48;
+
+    [Description("Watched this many real seconds without a break before it freezes.")]
+    [Range(0, 3)]
+    public float FreezeAfterSeconds { get; set; } = 0.5f;
+
+    [Description("Unwatched this many real seconds before a freeze ends, so flickering eye contact does not make it stop and start.")]
+    [Range(0, 5)]
+    public float FreezeReleaseSeconds { get; set; } = 1.5f;
+
+    [Description("From escalation 2 (grudge): an unbroken stare this many real seconds turns the true form on the one who stares.")]
+    [Range(1, 10)]
+    public float StareAggroSeconds { get; set; } = 2;
 }
 
 public class StalkConfig
@@ -105,7 +121,7 @@ public class StalkConfig
     [Range(3, 60)]
     public float VanishWatchedSeconds { get; set; } = 10;
 
-    [Description("Stages 1 to 4: a player this many blocks away or closer makes it slip away.")]
+    [Description("Stages 1 to 4: a player this many blocks away or closer makes it slip away; any doe bolts from them.")]
     [Range(4, 48)]
     public int VanishApproach { get; set; } = 16;
 
@@ -135,6 +151,18 @@ public class StalkConfig
     [Description("Guise walking speed, a deer's wander (about 0.8 blocks a second). Smaller deer types scale it down.")]
     [Range(0.002, 0.03)]
     public float GuiseSpeed { get; set; } = 0.006f;
+
+    [Description("The doe holds eye contact this many real seconds (long enough to see its eyes), then bolts.")]
+    [Range(0.5, 5)]
+    public float EyeContactSeconds { get; set; } = 1.5f;
+
+    [Description("The doe's bolt, a vanilla deer's flight (about 8 blocks a second). Smaller deer types scale it down.")]
+    [Range(0.02, 0.1)]
+    public float GuiseFleeSpeed { get; set; } = 0.08f;
+
+    [Description("Real seconds the doe keeps running once it bolts.")]
+    [Range(2, 20)]
+    public float FleeSeconds { get; set; } = 6;
 
     [Description("True-form stalking speed, about 2.7 blocks a second (a walking player makes 3.4).")]
     [Range(0.005, 0.05)]

@@ -57,7 +57,9 @@ jobs:
           name: smoke-test-logs
           path: |
             .cache/smoke/stdout.log
+            .cache/smoke/stdout-restart.log
             .cache/smoke/data/Logs/
+            .cache/smoke/data/Logs-restart/
           include-hidden-files: true
           if-no-files-found: ignore
           overwrite: true

@@ -166,17 +166,19 @@ public partial class DirectorSystem
         // The haunt clock runs only while the victim is eligible (not idle) or asleep, and the haunt is not
         // paused. A slept night can jump it by hours.
         double elapsed = Math.Max(0, nowHours - walker.ClockUpdatedTotalHours);
+        double hauntMaxHours = config.Director.HauntMaxDays * calendar.HoursPerDay;
+        // The escalation clock runs only during a live haunt, once the walker has died improperly. It never
+        // gains more than the haunt has left, so a long jump (/time add, a frozen calendar) cannot outlast it.
+        if (ImproperDeaths(walker.Id) > 0)
+        {
+            walker.EscalationHauntHours += Math.Min(elapsed, Math.Max(0, hauntMaxHours - walker.HauntClockHours));
+        }
         if (victim!.Eligible || victim.Asleep)
         {
             walker.HauntClockHours += elapsed;
         }
-        // The escalation clock runs only during a live haunt, once the walker has died improperly.
-        if (ImproperDeaths(walker.Id) > 0)
-        {
-            walker.EscalationHauntHours += elapsed;
-        }
         walker.ClockUpdatedTotalHours = nowHours;
-        if (walker.HauntClockHours >= config.Director.HauntMaxDays * calendar.HoursPerDay)
+        if (walker.HauntClockHours >= hauntMaxHours)
         {
             EndHauntCore(walker, HauntEndReason.Timeout);
             return;

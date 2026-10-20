@@ -9,8 +9,9 @@ on:
 permissions:
   contents: read
 
+# A new push to a pull request cancels its older run; every commit on main gets its own run.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
   cancel-in-progress: true
 
 jobs:
@@ -39,12 +40,15 @@ jobs:
       - name: Smoke test on a headless server
         run: scripts/smoke-test.sh
 
+      # Uploaded unwrapped, so the download is walkers_<version>.zip itself, ready for the Mods folder.
+      # Kept even when the smoke test fails, so a failing build can be looked at on a PC.
       - name: Upload the mod zip
+        if: ${{ !cancelled() && hashFiles('Releases/*.zip') != '' }}
         uses: actions/upload-artifact@v7
         with:
-          name: walkers-mod
           path: Releases/*.zip
-          if-no-files-found: error
+          archive: false
+          overwrite: true
 
       - name: Upload the smoke-test server logs
         if: always()
@@ -56,3 +60,4 @@ jobs:
             .cache/smoke/data/Logs/
           include-hidden-files: true
           if-no-files-found: ignore
+          overwrite: true

@@ -1,0 +1,22 @@
+# Replies to tests/smoke/stalker.commands. The slip-away lines come from the server log, not a reply.
+  ladder 1 to 2 needs hours and sightings: pass
+  ladder 2 to 3 after its hours: pass
+  ladder falls back to the group cap with company: pass
+  ladder harm bonus once per haunt: pass
+  ladder hunt ends after its quiet nights: pass
+  ladder driven off falls back and rests: pass
+  view cone: ahead and 50 degrees in, 90 degrees and behind out: pass
+  standing spot at the world spawn: pass
+  brains for both forms: pass
+  guise tasks: pass
+  true form tasks: pass
+  gaze: a stand-in looking at it sees it: pass
+  gaze: looking away does not: pass
+  gaze: rock in between blocks it: pass
+Stalker self-test: all synchronous checks passed
+Stalker self-test: slip-away, watched: frozen and marked: pass
+Stalker self-test: slip-away, unwatched: removed: pass
+Stalker self-test: slip-away passed
+Stalker AI, walkers loaded: [0-9]+
+Stalker AI: [0-9]+ walker\(s\) tracked
+Set the stage of [0-9]+ walker\(s\) to 3

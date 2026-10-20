@@ -3,9 +3,9 @@
 // Per-type numbers are copied from vanilla deer-adult.json (1.22.7, female). Vanilla assets need the "game:" prefix here.
 // Test-only for the JSON play-test: the spawn rules and the despawn behavior. The release build has neither; the Director
 // takes them over. Spawn chance is per deer type, so a region where several types live gets more guises.
-// stayinrange and lookatentity stand in for the Stalker AI's own tasks. Known limit: stayinrange keeps its first target and
-// skips its cooldown while out of its band, so terrain that blocks its step freezes the creature until the player comes
-// back into the band.
+// AI: the Stalker AI's walkers-retreat, walkers-creep and walkers-stare (Walkers/Stalker) run while it has a victim; the vanilla
+// idle, wander and look-around run while it has none. speedFactor scales stalk.guiseSpeed to each deer type's wander speed.
+// getoutofwater stays above them all: it never swims.
 {
     "code": "skinwalker-animal",
     "class": "EntityAgent",
@@ -216,25 +216,11 @@
                         "animationSpeed": 1
                     },
                     {
-                        "code": "stayinrange",
-                        "entityCodes": ["player"],
-                        "friendlyTarget": true,
-                        "priority": 1.35,
-                        "priorityForCancel": 1.38,
-                        "searchRange": 112,
-                        "targetRange": 20,
-                        "targetRangeTolerance": 4,
-                        "searchWaitMs": 4000,
-                        "movespeedByType": {
-                            "*-redbrocket": 0.005,
-                            "*-water": 0.005,
-                            "*-pudu": 0.0035,
-                            "*-elk": 0.0065,
-                            "*-pampas": 0.005,
-                            "*": 0.006
-                        },
-                        "animation": "Walk",
-                        "animationSpeedByType": {
+                        "code": "walkers-retreat",
+                        "priority": 1.37,
+                        "priorityForCancel": 1.39,
+                        "walkAnimation": "Walk",
+                        "walkAnimationSpeedByType": {
                             "*-whitetail": 1.24,
                             "*-redbrocket": 1.39,
                             "*-marsh": 1.22,
@@ -245,15 +231,43 @@
                             "*-pampas": 1.39,
                             "*": 1.38
                         },
-                        "mincooldown": 2000,
-                        "maxcooldown": 6000
+                        "runAnimation": "Walk",
+                        "speedFactorByType": {
+                            "*-redbrocket": 0.83,
+                            "*-water": 0.83,
+                            "*-pudu": 0.58,
+                            "*-elk": 1.08,
+                            "*-pampas": 0.83,
+                            "*": 1
+                        }
                     },
                     {
-                        "code": "lookatentity",
-                        "entityCodes": ["player"],
-                        "friendlyTarget": true,
-                        "priority": 1.3
+                        "code": "walkers-creep",
+                        "priority": 1.35,
+                        "priorityForCancel": 1.38,
+                        "walkAnimation": "Walk",
+                        "walkAnimationSpeedByType": {
+                            "*-whitetail": 1.24,
+                            "*-redbrocket": 1.39,
+                            "*-marsh": 1.22,
+                            "*-water": 1.39,
+                            "*-pudu": 1.4,
+                            "*-elk": 1.35,
+                            "*-chital": 1.4,
+                            "*-pampas": 1.39,
+                            "*": 1.38
+                        },
+                        "runAnimation": "Walk",
+                        "speedFactorByType": {
+                            "*-redbrocket": 0.83,
+                            "*-water": 0.83,
+                            "*-pudu": 0.58,
+                            "*-elk": 1.08,
+                            "*-pampas": 0.83,
+                            "*": 1
+                        }
                     },
+                    { "code": "walkers-stare", "slot": 1, "priority": 1.3 },
                     {
                         "code": "idle",
                         "animation": "Eat",

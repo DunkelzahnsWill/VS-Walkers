@@ -271,6 +271,11 @@ def main():
     else:
         note(f"killing walker {killed}'s body #{body} with no ritual")
         s.cmd(f"/entity cmd e[id={body}] kill")
+        # A doe refuses the death and stands up as the true form (Forms): kill that body too.
+        shifted = walker_bodies(s).get(killed)
+        if shifted is not None and shifted != body:
+            note(f"the guise refused it and stood up as #{shifted}; killing that body")
+            s.cmd(f"/entity cmd e[id={shifted}] kill")
         s.cmd("/walkers director tick")
         s.cmd(f"/walkers director status {killed}")
         # The husk's burn window (ritual.huskBurnWindowSeconds, 120 s) and the director's 60 s grace.

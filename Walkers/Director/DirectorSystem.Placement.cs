@@ -22,6 +22,9 @@ public partial class DirectorSystem
     /// <summary>A body counts as seen when any of these points, as fractions of its height, is in clear view (head, chest and feet).</summary>
     private static readonly float[] SightPoints = { 0.15f, 0.6f, 0.95f };
 
+    /// <summary>Nobody within this many blocks may see an appearance or a removal.</summary>
+    private const int SightRange = 96;
+
     private AABBIntersectionTest? sight;
     private readonly HashSet<string> missingTypes = new();
 
@@ -73,12 +76,14 @@ public partial class DirectorSystem
             return;
         }
 
-        var band = DistanceBand(stage, victim.Night, !placedThisHaunt.Contains(walker.Id));
+        var band = DistanceBand(stage, victim.Night, !walker.AppearedThisHaunt);
         float height = type.CollisionBoxSize.Y;
-        int lightLimit = stage >= 5 || config.Stalk.AvoidBlockLight >= 32 ? int.MaxValue : config.Stalk.AvoidBlockLight;
+        // Section 8's light rule holds for every appearance; only the Stalker AI's movement ignores light in the hunt.
+        int lightLimit = config.Stalk.AvoidBlockLight >= 32 ? int.MaxValue : config.Stalk.AvoidBlockLight;
         var victimPos = victim.Entity.Pos;
-        for (int i = 0; i < config.Director.SpawnTriesPerTick; i++)
+        while (placementTriesLeft > 0)
         {
+            placementTriesLeft--;
             var spot = CandidateSpot(victimPos, band, lightLimit);
             if (spot == null || !FarFromBystanders(spot, victimPos.Dimension, victim.Entity) || CanBeSeen(spot, height, victimPos.Dimension))
             {
@@ -101,7 +106,7 @@ public partial class DirectorSystem
         AttachBody(walker.Id, body);
         sapi.World.SpawnEntity(body);
 
-        placedThisHaunt.Add(walker.Id);
+        walker.AppearedThisHaunt = true;
         RememberPos(walker, body.Pos);
         Mod.Logger.Notification("Walker {0} appears as {1}, {2:0} blocks from {3}, at stage {4}",
             walker.Id, trueForm ? "the true form" : "a " + walker.GuiseType + " deer", spot.DistanceTo(victimPos.XYZ), victim.Name,
@@ -243,7 +248,9 @@ public partial class DirectorSystem
     /// </summary>
     private bool CanBeSeen(Vec3d feet, float height, int dimension)
     {
-        double maxSq = (double)config.Gaze.MaxDistance * config.Gaze.MaxDistance;
+        // At least 96 blocks (creature bible, section 8), whatever gaze.maxDistance says.
+        double range = Math.Max(SightRange, config.Gaze.MaxDistance);
+        double maxSq = range * range;
         double cosHalfCone = Math.Cos(config.Gaze.ConeDegrees * GameMath.DEG2RAD / 2);
         var chest = feet.AddCopy(0, height * SightPoints[1], 0);
         foreach (var viewer in Viewers())

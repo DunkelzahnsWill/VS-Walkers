@@ -48,8 +48,6 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
     private readonly HashSet<long> removing = new();
     /// <summary>Real time (ElapsedMilliseconds) before which the director places no new body for a walker.</summary>
     private readonly Dictionary<int, long> placeAfterMs = new();
-    /// <summary>Walkers placed at least once in their current haunt; the first appearance uses director.spawnDistance*.</summary>
-    private readonly HashSet<int> placedThisHaunt = new();
     /// <summary>Real time each walker went down, for the fallback release when nobody reports an outcome.</summary>
     private readonly Dictionary<int, long> downSinceMs = new();
     /// <summary>The stage last seen in each walker's memory, to notice the ladder's changes.</summary>
@@ -235,6 +233,11 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
         tree.SetInt(WalkerMemory.Id, walker.Id);
         tree.SetInt(WalkerMemory.Returns, walker.Returns);
         bool keepsVictim = walker.State is WalkerState.Haunting or WalkerState.Paused or WalkerState.Down;
+        if (!keepsVictim)
+        {
+            tree.SetInt(WalkerMemory.Stage, 0);
+            knownStage[walker.Id] = 0;
+        }
         if (keepsVictim && walker.VictimUid != null)
         {
             tree.SetString(WalkerMemory.Victim, walker.VictimUid);
@@ -265,6 +268,7 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
             return;
         }
         newBody.Attributes.SetAttribute(WalkerMemory.TreeKey, memories[walkerId]);
+        ForgetBody(walkerId);
         bodies[walkerId] = newBody;
         if (walker.State is WalkerState.Haunting && IsStandInUid(walker.VictimUid))
         {
@@ -280,6 +284,15 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
     /// <summary>The walker's current body, alive or dead, once it is spawned and while it is loaded.</summary>
     private Entity? BodyOf(WalkerRecord walker) =>
         bodies.TryGetValue(walker.Id, out var body) && body.EntityId != 0 && sapi.World.GetEntityById(body.EntityId) == body ? body : null;
+
+    /// <summary>Drops what the director tracked about a walker's current body, when that body is replaced or gone.</summary>
+    private void ForgetBody(int walkerId)
+    {
+        bodies.Remove(walkerId);
+        leftAloneBodies.Remove(walkerId);
+        hurtCounters.Remove(walkerId);
+        lastHitMs.Remove(walkerId);
+    }
 
     private bool IsCurrentBody(int walkerId, Entity entity) => bodies.TryGetValue(walkerId, out var body) && body == entity;
 
@@ -375,7 +388,9 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
             return;
         }
         // The current body, or one it just left: any body of a haunting walker that dies is the walker dying.
-        if (walker.State is not (WalkerState.Haunting or WalkerState.Paused) && !IsCurrentBody(walkerId, entity))
+        // A walker already in the ledger or banished does not die again.
+        if (walker.State is WalkerState.Waiting or WalkerState.Banished ||
+            (walker.State is not (WalkerState.Haunting or WalkerState.Paused) && !IsCurrentBody(walkerId, entity)))
         {
             return;
         }
@@ -389,12 +404,16 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
     /// <summary>The walker died: its haunt ends, and its return goes into the ledger at once (unless it is being banished).</summary>
     private void GoDown(WalkerRecord walker, EntityPos? pos, string cause, string? killer, bool banishing = false)
     {
-        var victimUid = walker.VictimUid;
-        if (walker.State is WalkerState.Haunting or WalkerState.Paused)
+        // A body that dies while withdrawing after its haunt ended still counts against its last victim.
+        var victimUid = walker.VictimUid ?? walker.LastVictimUid;
+        bool wasHaunting = walker.State is WalkerState.Haunting or WalkerState.Paused;
+        if (wasHaunting)
         {
-            EndHauntCore(walker, HauntEndReason.WalkerDied, WalkerState.Down);
+            // HauntEnded is raised below, once the ledger entry exists.
+            EndHauntCore(walker, HauntEndReason.WalkerDied, WalkerState.Down, raise: false);
         }
         walker.State = WalkerState.Down;
+        walker.VictimUid = victimUid;
         var at = pos?.AsBlockPos ?? LastPos(walker);
         var now = sapi.World.Calendar.TotalDays;
         var entry = new LedgerRecord
@@ -415,6 +434,10 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
         data.Ledger.Add(entry);
         downSinceMs[walker.Id] = sapi.World.ElapsedMilliseconds;
         SyncMemory(walker);
+        if (wasHaunting)
+        {
+            Raise(HauntEnded, Info(walker), HauntEndReason.WalkerDied);
+        }
         if (!banishing)
         {
             Mod.Logger.Notification("Walker {0} died ({1}){2}; it returns on day {3:0.#} unless it is banished",
@@ -428,7 +451,8 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
         {
             return;
         }
-        if (walker.State != WalkerState.Down)
+        // A walker that is down or already in the ledger is banished on that same death; any other dies now.
+        if (walker.State is not (WalkerState.Down or WalkerState.Waiting) || LatestEntry(walkerId) == null)
         {
             GoDown(walker, BodyOf(walker)?.Pos, cause, byPlayer?.PlayerName, banishing: true);
         }
@@ -580,7 +604,7 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
         }
         var walker = walkers[walkerId];
         var reason = despawn?.Reason ?? EnumDespawnReason.Removed;
-        bodies.Remove(walkerId);
+        ForgetBody(walkerId);
         RememberPos(walker, entity.Pos);
         if (walker.State == WalkerState.Down)
         {

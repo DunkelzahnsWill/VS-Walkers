@@ -63,6 +63,10 @@ public class PlayerRecord
     /// <summary>A walker they hurt while it haunted someone else: they are its next victim. 0 for none.</summary>
     [ProtoMember(6)]
     public int MarkedByWalker { get; set; }
+
+    /// <summary>Calendar.TotalDays when the director last saw them online.</summary>
+    [ProtoMember(7)]
+    public double LastSeenTotalDays { get; set; }
 }
 
 [ProtoContract]
@@ -121,6 +125,14 @@ public class WalkerRecord
     /// <summary>Calendar.TotalHours of the last director tick that ran its haunt clock.</summary>
     [ProtoMember(16)]
     public double ClockUpdatedTotalHours { get; set; }
+
+    /// <summary>Its victim when the last haunt ended, so a body that dies while withdrawing still counts against them.</summary>
+    [ProtoMember(17)]
+    public string? LastVictimUid { get; set; }
+
+    /// <summary>It has appeared at least once in its current haunt; the first appearance uses director.spawnDistance*.</summary>
+    [ProtoMember(18)]
+    public bool AppearedThisHaunt { get; set; }
 }
 
 /// <summary>One death. The ledger only grows; an entry's outcome changes as the walker moves on.</summary>

@@ -22,6 +22,10 @@ public partial class DirectorSystem
     private const int DownGraceSeconds = 60;
 
     private float secondsSinceTick;
+    /// <summary>The walker /walkers director return now brings back, skipping its victim's rest; 0 for none.</summary>
+    private int returnNow;
+    /// <summary>Candidate spots left in this director tick (director.spawnTriesPerTick, shared by every walker).</summary>
+    private int placementTriesLeft;
     /// <summary>Why each paused haunt is paused, for /walkers director status.</summary>
     private readonly Dictionary<int, string> pauseReasons = new();
     /// <summary>Dead bodies of walkers the director itself released as left alone, to remove unseen.</summary>
@@ -45,6 +49,7 @@ public partial class DirectorSystem
     /// <summary>One director update. /walkers director tick runs it at once.</summary>
     internal void Tick()
     {
+        placementTriesLeft = config.Director.SpawnTriesPerTick;
         UpdateCandidates();
         bool storm = StormActive();
         foreach (var walker in walkers.Values.OrderBy(w => w.Id).ToList())
@@ -87,9 +92,22 @@ public partial class DirectorSystem
             return;
         }
 
+        // A paused haunt ends after director.pausedHauntMaxDays, whether its victim is still away or back
+        // and waiting for a free slot.
+        if (walker.State == WalkerState.Paused && calendar.TotalDays - walker.PausedSinceTotalDays > config.Director.PausedHauntMaxDays)
+        {
+            EndHauntCore(walker, HauntEndReason.PausedTooLong);
+            return;
+        }
+
         var pause = PauseReason(victim, storm);
+        if (pause == null && walker.State == WalkerState.Paused && victim != null && !FarFromOtherVictims(victim))
+        {
+            pause = "another victim is nearby";
+        }
         if (pause != null)
         {
+            KeepLadderClock(walker, memory, victim, nowHours);
             walker.ClockUpdatedTotalHours = nowHours;
             pauseReasons[walker.Id] = pause;
             if (walker.State == WalkerState.Haunting)
@@ -99,10 +117,6 @@ public partial class DirectorSystem
                 SyncMemory(walker);
                 Mod.Logger.Notification("Walker {0}'s haunt on {1} pauses: {2}", walker.Id, NameOf(walker.VictimUid!), pause);
             }
-            else if (calendar.TotalDays - walker.PausedSinceTotalDays > config.Director.PausedHauntMaxDays)
-            {
-                EndHauntCore(walker, HauntEndReason.PausedTooLong);
-            }
             return;
         }
 
@@ -111,6 +125,8 @@ public partial class DirectorSystem
             // A paused haunt holds no slot; it resumes as soon as there is one, ahead of any new roll.
             if (ActiveCount() >= ActiveCap())
             {
+                pauseReasons[walker.Id] = "waiting for a free slot";
+                KeepLadderClock(walker, memory, victim, nowHours);
                 walker.ClockUpdatedTotalHours = nowHours;
                 return;
             }
@@ -161,6 +177,26 @@ public partial class DirectorSystem
         }
     }
 
+    /// <summary>
+    /// While a haunt is paused the ladder still hears from the director, with Exposed false, so its own
+    /// clock moves on and the paused time never counts toward a stage when the haunt resumes.
+    /// </summary>
+    private void KeepLadderClock(WalkerRecord walker, Vintagestory.API.Datastructures.ITreeAttribute memory, Candidate? victim, double nowHours)
+    {
+        if (ladder == null)
+        {
+            return;
+        }
+        try
+        {
+            ladder.Update(memory, new LadderInput(nowHours, victim?.Entity, false, victim?.Alone ?? false, victim?.Night ?? false, victim?.Asleep ?? false));
+        }
+        catch (Exception e)
+        {
+            Mod.Logger.Error("The ladder failed on walker {0}: {1}", walker.Id, e);
+        }
+    }
+
     /// <summary>Why the haunt must pause now, or null (creature bible, section 8, "Withdraw and pause").</summary>
     private string? PauseReason(Candidate? victim, bool storm)
     {
@@ -179,6 +215,11 @@ public partial class DirectorSystem
         if (victim.Player != null && victim.Player.WorldData.CurrentGameMode is not (EnumGameMode.Survival or EnumGameMode.Guest))
         {
             return "the victim is in creative or spectator mode";
+        }
+        if (victim.Player != null && !victim.Counting && !victim.Asleep)
+        {
+            // Idle for director.afkMinutes: the slot goes to someone who plays. A slept night does not pause.
+            return "the victim is idle";
         }
         if (!victim.Surface)
         {
@@ -227,7 +268,9 @@ public partial class DirectorSystem
         {
             Mod.Logger.Error("The ladder failed to begin walker {0}'s haunt: {1}", walker.Id, e);
         }
-        placedThisHaunt.Remove(walker.Id);
+        walker.AppearedThisHaunt = false;
+        walker.LastVictimUid = null;
+        pauseReasons.Remove(walker.Id);
         placeAfterMs[walker.Id] = 0;
         if (playerRecords.TryGetValue(victim.Uid, out var record) && record.MarkedByWalker == walker.Id)
         {
@@ -248,7 +291,7 @@ public partial class DirectorSystem
     /// Ends a haunt: the victim rests (twice as long when they died), and the walker goes to
     /// <paramref name="next"/>, normally back to the roster.
     /// </summary>
-    private void EndHauntCore(WalkerRecord walker, HauntEndReason reason, WalkerState next = WalkerState.Resting)
+    private void EndHauntCore(WalkerRecord walker, HauntEndReason reason, WalkerState next = WalkerState.Resting, bool raise = true)
     {
         var uid = walker.VictimUid;
         if (uid != null && playerRecords.TryGetValue(uid, out var record))
@@ -257,16 +300,19 @@ public partial class DirectorSystem
             record.RestUntilTotalDays = Math.Max(record.RestUntilTotalDays, sapi.World.Calendar.TotalDays + rest);
         }
         walker.State = next;
+        walker.LastVictimUid = uid;
         if (next != WalkerState.Down)
         {
             walker.VictimUid = null;
-            memories[walker.Id].SetInt(WalkerMemory.Stage, 0);
-            knownStage[walker.Id] = 0;
         }
-        placedThisHaunt.Remove(walker.Id);
+        walker.AppearedThisHaunt = false;
+        pauseReasons.Remove(walker.Id);
         SyncMemory(walker);
         Mod.Logger.Notification("Walker {0}'s haunt on {1} ends: {2}", walker.Id, uid == null ? "nobody" : NameOf(uid), reason);
-        Raise(HauntEnded, Info(walker), reason);
+        if (raise)
+        {
+            Raise(HauntEnded, Info(walker), reason);
+        }
     }
 
     private void StartHaunts(bool storm)
@@ -293,8 +339,10 @@ public partial class DirectorSystem
             {
                 continue;
             }
-            // A return skips its victim's rest: it comes back for them whenever it is due.
-            var victim = walker.VictimUid != null && candidates.TryGetValue(walker.VictimUid, out var last) && CanBeChosen(last, storm, double.MaxValue) ? last : null;
+            // Like any haunt, a return waits for its victim's rest; /walkers director return now skips it.
+            bool skipRest = returnNow == walker.Id;
+            var victim = walker.VictimUid != null && candidates.TryGetValue(walker.VictimUid, out var last) &&
+                CanBeChosen(last, storm, skipRest ? double.MaxValue : now) ? last : null;
             if (victim != null && active < cap && FarFromOtherVictims(victim))
             {
                 entry.Outcome = LedgerOutcome.Returned;
@@ -302,7 +350,8 @@ public partial class DirectorSystem
                 free.Remove(victim);
                 active++;
             }
-            else if (now > entry.ReturnTotalDays + SeasonDays(config.Return.VictimAbsentSeasons))
+            else if (now > entry.ReturnTotalDays + SeasonDays(config.Return.VictimAbsentSeasons) &&
+                !(walker.VictimUid != null && playerRecords.TryGetValue(walker.VictimUid, out var lastRecord) && lastRecord.LastSeenTotalDays >= entry.ReturnTotalDays))
             {
                 // Its victim stayed away: it rests in the roster, and its next haunt, whoever it is for, is a return.
                 entry.Outcome = LedgerOutcome.Returned;
@@ -448,7 +497,7 @@ public partial class DirectorSystem
             }
             if (sapi.World.GetEntityById(body.EntityId) != body)
             {
-                bodies.Remove(walkerId);
+                ForgetBody(walkerId);
                 continue;
             }
             if (!body.Alive)

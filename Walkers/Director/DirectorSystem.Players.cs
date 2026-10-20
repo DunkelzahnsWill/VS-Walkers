@@ -211,7 +211,7 @@ public partial class DirectorSystem
             {
                 continue;
             }
-            PlayerRecordFor(player.PlayerUID, player.PlayerName);
+            PlayerRecordFor(player.PlayerUID, player.PlayerName).LastSeenTotalDays = now;
             candidates[player.PlayerUID] = new Candidate
             {
                 Uid = player.PlayerUID,
@@ -226,7 +226,7 @@ public partial class DirectorSystem
         {
             if (sapi.World.GetEntityById(standIn.EntityId) is { Alive: true } entity)
             {
-                PlayerRecordFor(uid, uid);
+                PlayerRecordFor(uid, uid).LastSeenTotalDays = now;
                 candidates[uid] = new Candidate { Uid = uid, Name = uid, Entity = entity, IsStandIn = true, Counting = true };
             }
         }
@@ -452,6 +452,10 @@ public partial class DirectorSystem
         data.StandIns.Remove(record);
         sapi.World.GetEntityById(record.EntityId)?.Die(EnumDespawnReason.Removed);
         Mod.Logger.Notification("Stand-in victim {0} removed", uid);
+        foreach (var walker in walkers.Values.Where(w => w.VictimUid == uid && w.State is WalkerState.Haunting or WalkerState.Paused).ToList())
+        {
+            EndHauntCore(walker, HauntEndReason.Command);
+        }
         return true;
     }
 
@@ -490,7 +494,7 @@ public partial class DirectorSystem
             return;
         }
         var uid = standIns.FirstOrDefault(s => s.Value.EntityId == entity.EntityId).Key;
-        if (uid != null && despawn?.Reason != EnumDespawnReason.Death)
+        if (uid != null)
         {
             RemoveStandIn(uid);
         }

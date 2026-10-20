@@ -312,7 +312,15 @@ public partial class DirectorSystem
         }
         entry.ReturnTotalDays = Math.Min(entry.ReturnTotalDays, today);
         Audit(args, "brought walker {0}'s return forward to now", id);
-        Tick();
+        returnNow = id;
+        try
+        {
+            Tick();
+        }
+        finally
+        {
+            returnNow = 0;
+        }
         return walker.State == WalkerState.Haunting
             ? TextCommandResult.Success(L(args, "director-returned", id, NameOf(walker.VictimUid!), memories[id].GetInt(WalkerMemory.Stage)))
             : TextCommandResult.Success(L(args, "director-return-waits", id, entry.VictimUid == null ? L(args, "director-none") : NameOf(entry.VictimUid)));

@@ -216,6 +216,9 @@ public partial class DirectorSystem
         return Math.Min(MaxEscalation, level);
     }
 
+    /// <summary>At Wrath, the top of the ladder, groups no longer hold it back (the owner's ladder, 20 Oct).</summary>
+    private bool IsWrath(WalkerRecord walker) => EscalationLevel(walker) >= WrathLevel;
+
     // ---- /walkers furs ----
 
     private void RegisterFursCommands()

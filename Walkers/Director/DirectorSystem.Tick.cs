@@ -127,7 +127,7 @@ public partial class DirectorSystem
             // A travelling victim keeps the same doe; out of its country, the haunt waits for them to come back.
             pause = "the victim is out of the " + walker.GuiseType + " deer's country";
         }
-        if (pause == null && victim != null && !FarFromOtherVictims(victim, walker))
+        if (pause == null && victim != null && !IsWrath(walker) && !FarFromOtherVictims(victim, walker))
         {
             pause = "another victim is nearby";
         }
@@ -382,12 +382,14 @@ public partial class DirectorSystem
             // Its target is the most-marked fur carrier who has no walker of their own, else its last victim.
             bool skipRest = returnNow == walker.Id;
             double restBy = skipRest ? double.MaxValue : now;
-            var victim = MarkedCarriers().FirstOrDefault(c => CanBeChosen(c, storm, restBy) && FarFromOtherVictims(c));
+            // At Wrath groups no longer hold it back: a victim near another victim may still be its target.
+            bool wrath = IsWrath(walker);
+            var victim = MarkedCarriers().FirstOrDefault(c => CanBeChosen(c, storm, restBy) && (wrath || FarFromOtherVictims(c)));
             if (victim == null && walker.VictimUid != null && candidates.TryGetValue(walker.VictimUid, out var last) && CanBeChosen(last, storm, restBy))
             {
                 victim = last;
             }
-            if (victim != null && active < cap && FarFromOtherVictims(victim))
+            if (victim != null && active < cap && (wrath || FarFromOtherVictims(victim)))
             {
                 entry.Outcome = LedgerOutcome.Returned;
                 StartHaunt(walker, victim, isReturn: true);

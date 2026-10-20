@@ -30,7 +30,11 @@ public class AiTaskWalkerHunt : WalkerTaskBase
     /// <summary>It holds this long after walkers-doorway last saw a door between it and the victim.</summary>
     private const long DoorHoldMs = 1500;
 
+    /// <summary>A path search through an open door fails about a third of the time (AStar.cs:73): tries before a failure counts.</summary>
+    private const int PathTries = 3;
+
     private bool running;
+    private int failedSearches;
 
     public AiTaskWalkerHunt(EntityAgent entity, JsonObject taskConfig, JsonObject aiConfig) : base(entity, taskConfig, aiConfig)
     {
@@ -50,6 +54,17 @@ public class AiTaskWalkerHunt : WalkerTaskBase
             return false;
         }
         var victim = brain.Victim;
+        var entry = brain.Entry;
+        int maxIndoor = Config.Enraged.MaxIndoorBlocks;
+        if (entry.Door != null && !entry.Open && entry.IsInside(entity, maxIndoor) && !brain.Frozen)
+        {
+            // Leaving the house, whatever the victim does: out through the door before anything else.
+            if (!Moving || NavigationEnded)
+            {
+                GoTo(entry.Outside!, Speed(true), 0.8f, true);
+            }
+            return true;
+        }
         if (brain.Frozen || StalkerModSystem.IsAsleep(victim) || victim.Swimming ||
             WalkerSpots.TooDeep(world.BlockAccessor, victim.Pos.XYZ, Config.Director.MaxDepthBelowSurface))
         {
@@ -58,6 +73,12 @@ public class AiTaskWalkerHunt : WalkerTaskBase
         }
 
         long now = world.ElapsedMilliseconds;
+        if (entry.Open && entry.DoorCenter!.HorizontalSquareDistanceTo(victim.Pos.X, victim.Pos.Z) > maxIndoor * maxIndoor)
+        {
+            // The victim is deeper in than it may go: it waits.
+            Halt();
+            return true;
+        }
         if (now - brain.DoorAheadMs < DoorHoldMs)
         {
             // A door stands between it and the victim: walkers-doorway decides; it never walks in.
@@ -94,7 +115,22 @@ public class AiTaskWalkerHunt : WalkerTaskBase
         }
         if (NoPath)
         {
-            brain.NoPathToVictimMs = now;
+            if (failedSearches < PathTries - 1)
+            {
+                // Search again at once before the failure counts (GoTo clears NoPath).
+                failedSearches++;
+                GoTo(victim.Pos.XYZ, Speed(run), 1.5f, run, force: true);
+            }
+            else
+            {
+                // Given up: walkers-doorway looks for a door; the usual re-path every 2 s goes on.
+                failedSearches = PathTries;
+                brain.NoPathToVictimMs = now;
+            }
+        }
+        else if (Arrived || pathTraverser.Active)
+        {
+            failedSearches = 0;
         }
         return true;
     }
@@ -103,6 +139,7 @@ public class AiTaskWalkerHunt : WalkerTaskBase
     {
         base.FinishExecute(cancelled);
         running = false;
+        failedSearches = 0;
     }
 
     /// <summary>A standing spot about <paramref name="blocks"/> blocks from the victim, on the body's side.</summary>

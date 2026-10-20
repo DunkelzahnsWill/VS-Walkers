@@ -135,4 +135,14 @@ public static class StalkerMemory
 
     /// <summary>The stalker AI's subtree of a memory tree, created if missing.</summary>
     public static ITreeAttribute Ai(ITreeAttribute memory) => memory.GetOrAddTreeAttribute(WalkerMemory.Ai);
+
+    /// <summary>Top-level int: the walker's escalation level, 1 (its first haunt) to 5 (wrath), across returns (the owner's ladder, 09:22Z).</summary>
+    public const string Escalation = "escalation";
+
+    /// <summary>The escalation level: walkers/escalation when written, else the return count plus one; 1 to 5.</summary>
+    public static int Level(ITreeAttribute memory)
+    {
+        int level = memory.HasAttribute(Escalation) ? memory.GetInt(Escalation) : memory.GetInt(WalkerMemory.Returns) + 1;
+        return level < 1 ? 1 : level > 5 ? 5 : level;
+    }
 }

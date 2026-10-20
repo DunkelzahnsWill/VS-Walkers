@@ -85,6 +85,11 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
         {
             return false;
         }
+        if (brain.Stage < StalkerLadder.HuntStage)
+        {
+            // An aggro hunt before stage 5 leaves doors to stage 5.
+            return false;
+        }
         var victim = brain.Victim;
         long now = world.ElapsedMilliseconds;
         if (door != null && holding && now < holdUntilMs && StillWorthIt(brain, victim))
@@ -104,6 +109,11 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
         {
             nextAheadScanMs = now + AheadScanMs;
             found = FindDoor(entity.Pos.XYZ, AheadRadius, victim, includeRefused: true);
+            if (found != null && brain.Entry.IsDoor(found.Pos))
+            {
+                // The way in the harassment kit opened: the hunt may go through it.
+                found = null;
+            }
             if (found != null)
             {
                 // Even a door it refused keeps the hunt from walking through.
@@ -114,7 +124,7 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
                 }
             }
         }
-        if (!brain.Config.Harass.Doorway.Enabled || IsOnCooldown())
+        if (!brain.Config.Harass.Doorway.Enabled || brain.Entry.Door != null || IsOnCooldown())
         {
             // harass.doorway.enabled false: it still never walks through a door, but leaves doors alone.
             return false;
@@ -158,7 +168,7 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
         var brain = Brain;
         var d = door;
         var victim = brain?.Victim;
-        if (brain == null || d == null || outside == null || victim == null || brain.Mode != StalkerMode.Hunt || entity.Swimming || !StillWorthIt(brain, victim))
+        if (brain == null || d == null || outside == null || victim == null || brain.Mode != StalkerMode.Hunt || entity.Swimming || brain.Entry.Door != null || !StillWorthIt(brain, victim))
         {
             return false;
         }

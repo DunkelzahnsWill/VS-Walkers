@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
+using Vintagestory.API.Config;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 using Walkers.Commands;
@@ -89,6 +90,8 @@ public sealed class HarassModSystem : ModSystem
 
     public LivestockPanic Panic { get; } = new();
 
+    public Escalation Escalation { get; private set; } = null!;
+
     private readonly List<HarassAct> acts = new();
     private readonly Dictionary<string, VictimState> victims = new();
     private readonly Dictionary<string, EchoBuffer> echoes = new();
@@ -111,6 +114,7 @@ public sealed class HarassModSystem : ModSystem
         Stalker = api.ModLoader.GetModSystem<StalkerModSystem>();
         Restore = new HarassRestore(this);
         Pages = new PagesAct(this);
+        Escalation = new Escalation(this);
         acts.AddRange(new HarassAct[]
         {
             new EchoAct(), Knocks, new WrongCallAct(), new WhisperAct(), new DouseTorchAct(),
@@ -248,6 +252,10 @@ public sealed class HarassModSystem : ModSystem
         {
             return;
         }
+        foreach (var (code, result) in Escalation.Tick(ctx))
+        {
+            ReportEscalation(ctx, code, result);
+        }
         int bolted = Panic.Tick(ctx);
         if (bolted > 0)
         {
@@ -266,7 +274,7 @@ public sealed class HarassModSystem : ModSystem
             return;
         }
         harass.SetDouble(HarassMemory.Haunt, began);
-        foreach (var key in new[] { HarassMemory.TitleWatching, HarassMemory.TitleForestSaw, HarassMemory.Offerings, HarassMemory.BreakIns, HarassMemory.DrainTaken })
+        foreach (var key in new[] { HarassMemory.TitleWatching, HarassMemory.TitleForestSaw, HarassMemory.Offerings, HarassMemory.BreakIns, HarassMemory.Tears, HarassMemory.DrainTaken, HarassMemory.EntryUntilMs })
         {
             harass.RemoveAttribute(key);
         }
@@ -292,6 +300,10 @@ public sealed class HarassModSystem : ModSystem
             {
                 Report(ctx, KnockAct.ActCode, knock.Detail);
             }
+            if (ctx.Stage >= 5 && Enraged.Is(ctx) && Config.Harass.Whispers.Enabled && Lang.HasTranslation("game:ingamediscovery-" + WhisperAct.CodeOf(WhisperAct.IronLine)))
+            {
+                Log(ctx, WhisperAct.ActCode, WhisperAct.Say(ctx, WhisperAct.IronLine).Detail);
+            }
         }
         else if (!ctx.Night && wasNight)
         {
@@ -300,6 +312,22 @@ public sealed class HarassModSystem : ModSystem
             {
                 Report(ctx, OfferingAct.ActCode, offering.Detail);
             }
+            foreach (var (code, result) in Escalation.OnDawn(ctx))
+            {
+                ReportEscalation(ctx, code, result);
+            }
+        }
+    }
+
+    private void ReportEscalation(HarassContext ctx, string code, ActResult result)
+    {
+        if (result.Done)
+        {
+            Report(ctx, code, result.Detail);
+        }
+        else
+        {
+            Mod.Logger.Debug("Harassment: {0} skipped for {1}: {2}", code, VictimKey(ctx), result.Detail);
         }
     }
 
@@ -318,7 +346,12 @@ public sealed class HarassModSystem : ModSystem
         {
             state.TirednessAtBed = SleepDisturbAct.ReadTiredness(ctx.Victim);
         }
+        else if (!asleep && state.WasAsleep)
+        {
+            state.LastWakeMs = Api.World.ElapsedMilliseconds;
+        }
         state.WasAsleep = asleep;
+        ctx.Harass.SetBool(HarassMemory.Enraged, Enraged.Is(ctx));
     }
 
     /// <summary>S1 (first sighting, stage 1) and S2 (first slip-away when watched, stage 2), read from the stalker AI.</summary>

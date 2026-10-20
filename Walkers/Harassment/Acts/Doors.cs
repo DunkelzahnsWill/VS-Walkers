@@ -82,6 +82,28 @@ public static class Doors
         return !BlockRules.IsPadlocked(world, handle.Pos);
     }
 
+    /// <summary>
+    /// Locked shut against an enraged walker too: a door bar, a story lock, or a padlock or
+    /// plumb-and-square reinforcement on either cell of the door.
+    /// </summary>
+    public static bool IsLockedShut(IWorldAccessor world, BEBehaviorDoor door)
+    {
+        if (door.StoryLockedCode != null || door.Blockentity.GetBehavior<BEBehaviorDoorBarLock>()?.IsLocked == true)
+        {
+            return true;
+        }
+        var reinforcement = world.Api.ModLoader.GetModSystem<ModSystemBlockReinforcement>();
+        for (int dy = 0; dy < (door.doorBh?.height ?? 2); dy++)
+        {
+            var cell = door.Pos.UpCopy(dy);
+            if (reinforcement?.IsReinforced(cell) == true || BlockRules.IsPadlocked(world, cell))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /// <summary>A player or creature in or right next to the doorway (a walker counts only inside the door's own cell).</summary>
     public static bool SomeoneInDoorway(IWorldAccessor world, BlockPos pos)
     {

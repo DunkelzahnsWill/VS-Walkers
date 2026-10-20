@@ -28,13 +28,7 @@ public sealed class OfferingAct
         {
             return ActResult.Skip("this haunt's offerings are given");
         }
-        var world = ctx.Api.World;
-        string guise = ctx.Memory.GetString(WalkerMemory.Guise, "");
-        if (guise.Length == 0)
-        {
-            guise = "whitetail";
-        }
-        var type = world.GetEntityType(new AssetLocation("game", $"deer-{guise}-adult-female")) ?? world.GetEntityType(new AssetLocation("game", "deer-whitetail-adult-female"));
+        var type = DoeType(ctx);
         if (type == null)
         {
             return ActResult.Skip("no vanilla deer type");
@@ -44,21 +38,45 @@ public sealed class OfferingAct
         {
             return ActResult.Skip("no open ground near the victim's door");
         }
-        var deer = world.ClassRegistry.CreateEntity(type);
-        deer.Pos.SetPos(spot);
-        deer.Pos.Yaw = (float)(ctx.Rand.NextDouble() * GameMath.TWOPI);
-        deer.Attributes.SetBool("walkersOffering", true);
-        world.SpawnEntity(deer);
-        ctx.Api.Event.EnqueueMainThreadTask(() =>
-        {
-            if (deer.Alive)
-            {
-                deer.Die(EnumDespawnReason.Death, new DamageSource { Source = EnumDamageSource.Unknown, Type = EnumDamageType.Hunger });
-                deer.Properties.ResolvedSounds = null;
-            }
-        }, "walkers-offering");
+        SpawnDead(ctx, type, spot, "walkersOffering", null);
         ctx.Harass.SetInt(HarassMemory.Offerings, ctx.Harass.GetInt(HarassMemory.Offerings) + 1);
         return ActResult.Ok($"{type.Code} at {EchoAct.Fmt(spot)}");
+    }
+
+    /// <summary>The vanilla doe of the guise's own type (whitetail when the walker has none).</summary>
+    public static EntityProperties? DoeType(HarassContext ctx)
+    {
+        var world = ctx.Api.World;
+        string guise = ctx.Memory.GetString(WalkerMemory.Guise, "");
+        if (guise.Length == 0)
+        {
+            guise = "whitetail";
+        }
+        return world.GetEntityType(new AssetLocation("game", $"deer-{guise}-adult-female")) ?? world.GetEntityType(new AssetLocation("game", "deer-whitetail-adult-female"));
+    }
+
+    /// <summary>
+    /// Spawns a creature that dies on the next tick with no attacker, as vanilla's creature container
+    /// does; <paramref name="afterDeath"/> runs right after it died.
+    /// </summary>
+    public static Entity SpawnDead(HarassContext ctx, EntityProperties type, Vec3d spot, string markAttribute, Action<Entity>? afterDeath)
+    {
+        var world = ctx.Api.World;
+        var body = world.ClassRegistry.CreateEntity(type);
+        body.Pos.SetPos(spot);
+        body.Pos.Yaw = (float)(ctx.Rand.NextDouble() * GameMath.TWOPI);
+        body.Attributes.SetBool(markAttribute, true);
+        world.SpawnEntity(body);
+        ctx.Api.Event.EnqueueMainThreadTask(() =>
+        {
+            if (body.Alive)
+            {
+                body.Die(EnumDespawnReason.Death, new DamageSource { Source = EnumDamageSource.Unknown, Type = EnumDamageType.Hunger });
+                body.Properties.ResolvedSounds = null;
+                afterDeath?.Invoke(body);
+            }
+        }, "walkers-" + markAttribute);
+        return body;
     }
 
     /// <summary>Open ground two to four blocks out from the door nearest the victim; at most 4 blocks from the victim when there is no door.</summary>

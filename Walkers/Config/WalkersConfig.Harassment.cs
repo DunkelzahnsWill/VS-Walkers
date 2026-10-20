@@ -14,6 +14,14 @@ public partial class WalkersConfig
     [Description("The non-combat acts, each with its own switch and limits.")]
     [JsonProperty(Order = 50)]
     public HarassConfig Harass { get; set; } = new();
+
+    [Description("When a walker is enraged, and what it does then: it comes inside, and from the second return it may tear a door off its hinges.")]
+    [JsonProperty(Order = 51)]
+    public EnragedConfig Enraged { get; set; } = new();
+
+    [Description("The escalation list: what a victim finds after a walker comes back from an improper kill.")]
+    [JsonProperty(Order = 52)]
+    public EscalationConfig Escalation { get; set; } = new();
 }
 
 public class HarassConfig
@@ -70,7 +78,7 @@ public class HarassConfig
     [Description("Stage 5: the true form opens and holds an unlocked door (the stalker AI's doorway task reads this switch).")]
     public HarassActConfig Doorway { get; set; } = new();
 
-    [Description("Enraged in the hunt, it forces its way into the victim's home for a moment: an unlocked door bursts open, lids and torches inside are disturbed. A barred, padlocked or blocked door keeps it out.")]
+    [Description("Enraged (see enraged), in stage 5 at night, it forces its way into the victim's home: a plain wooden door bursts open, lids and torches inside are disturbed, and it may come inside. A padlock, bar, reinforcement, anything behind the door, a metal, heavy, gate or double door, or a claim the victim neither owns nor shares keeps it out.")]
     public BreakInConfig BreakIn { get; set; } = new();
 
     [Description("Small camera jolts for the victim with close knocks and scrapes.")]
@@ -276,14 +284,6 @@ public class OfferingsConfig : HarassActConfig
 
 public class BreakInConfig : HarassActConfig
 {
-    [Description("Most break-ins per in-game night, per victim.")]
-    [Range(0, 3)]
-    public int PerNight { get; set; } = 1;
-
-    [Description("Most break-ins per haunt.")]
-    [Range(0, 6)]
-    public int PerHaunt { get; set; } = 2;
-
     [Description("Radius, in blocks, around the door it forces in which it disturbs lids and torches inside.")]
     [Range(2, 12)]
     public int Reach { get; set; } = 6;
@@ -294,4 +294,101 @@ public class MundaneWarpConfig : HarassActConfig
     [Description("Psychedelic value written instead of the drain; the client shows about half of it.")]
     [Range(0, 1)]
     public float Value { get; set; } = 0.4f;
+}
+
+public class EnragedConfig
+{
+    [Description("Walkers may be enraged at all; never while the world's creatureHostility is off.")]
+    public bool Enabled { get; set; } = true;
+
+    [Description("A walker that came back from an improper kill is enraged for the whole haunt.")]
+    public bool OnReturn { get; set; } = true;
+
+    [Description("Hurting or burning a walker enrages it for the rest of the haunt. Off by default, so keeping the fire on it stays the right play.")]
+    public bool OnProvoked { get; set; } = false;
+
+    [Description("Most times per in-game night an enraged walker comes in, per victim.")]
+    [Range(0, 3)]
+    public int EntriesPerNight { get; set; } = 1;
+
+    [Description("Most times per haunt it comes in.")]
+    [Range(0, 6)]
+    public int EntriesPerHaunt { get; set; } = 2;
+
+    [Description("Longest it stays inside, in real seconds.")]
+    [Range(10, 120)]
+    public int MaxIndoorSeconds { get; set; } = 30;
+
+    [Description("Farthest it goes inside, in blocks from the door.")]
+    [Range(2, 16)]
+    public int MaxIndoorBlocks { get; set; } = 8;
+
+    [Description("Doors it tears off their hinges per haunt (only a closed single wooden door: solid, sleek-windowed or crude).")]
+    [Range(0, 3)]
+    public int TearsPerHaunt { get; set; } = 1;
+
+    [Description("The return from which it may tear a door (1 is the first return).")]
+    [Range(1, 5)]
+    public int TearFromReturn { get; set; } = 2;
+
+    [Description("A torn door is hung back at dawn if its item still lies within 6 blocks and the doorway is clear.")]
+    public bool RehangAtDawn { get; set; } = true;
+
+    [Description("How long the dropped door lasts as an item, in real seconds.")]
+    [Range(600, 604800)]
+    public int DoorItemDespawnSeconds { get; set; } = 86400;
+}
+
+public partial class EscalationConfig
+{
+    [Description("The escalation list after a return is on.")]
+    public bool Enabled { get; set; } = true;
+
+    [Description("The rotting herd (first return on) and, opt-in, the victim's own livestock (second return on).")]
+    public EscalationHerdConfig Herd { get; set; } = new();
+
+    [Description("Eaten crops (first return on).")]
+    public EscalationCropsConfig Crops { get; set; } = new();
+}
+
+public class EscalationHerdConfig
+{
+    [Description("Dead does found 16 to 24 blocks from the victim's door at the first dawn of stage 2, once per return. A knife gets only rot from them.")]
+    [Range(0, 4)]
+    public int WildCarcasses { get; set; } = 2;
+
+    [Description("In-game hours the rotting herd lies before it is removed, so no bones stay.")]
+    [Range(6, 96)]
+    public int DecayHours { get; set; } = 24;
+
+    [Description("Allows one of the victim's own farm animals to be found dead at dawn, once per return from the second, in a claim the victim owns. Never a named, tamed, rideable, pregnant or founder animal, never the last two of either sex.")]
+    public bool KillLivestock { get; set; } = false;
+}
+
+public class EscalationCropsConfig
+{
+    [Description("Ripe crops set back in one line, one act a night in stages 2 to 5.")]
+    [Range(1, 8)]
+    public int BlocksPerAct { get; set; } = 4;
+
+    [Description("Growth stages each eaten crop is set back.")]
+    [Range(1, 3)]
+    public int StagesBack { get; set; } = 2;
+
+    [Description("Most crop blocks per return.")]
+    [Range(0, 64)]
+    public int MaxPerReturn { get; set; } = 16;
+
+    [Description("Most share of the crops in range it may eat per return.")]
+    [Range(0, 1)]
+    public float MaxShare { get; set; } = 0.25f;
+
+    [Description("Where: ownOrShared only claims the victim owns or shares (and unclaimed land in single player); victimAccess adds unclaimed land.")]
+    public CropClaimRule ClaimRule { get; set; } = CropClaimRule.OwnOrShared;
+}
+
+public enum CropClaimRule
+{
+    OwnOrShared,
+    VictimAccess,
 }

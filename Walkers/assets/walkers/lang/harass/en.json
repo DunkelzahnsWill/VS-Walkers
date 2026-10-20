@@ -1,0 +1,16 @@
+{
+    "harass-desc": "Harassment kit: each walker's act budget, tonight's acts, one act on demand, and a self-test",
+    "harass-status-desc": "Shows each haunting walker's act budget, tonight's counts and the last five acts against its victim, or those within the given radius of you",
+    "harass-act-desc": "Runs one act now for every haunting walker (or those within the given radius), under the act's own rules: its switch, stage, time of day and nightly cap",
+    "harass-selftest-desc": "Checks every act with a playerbot stand-in and a small test house above the world spawn; for the headless smoke test",
+
+    "harass-night": "night",
+    "harass-day": "day",
+    "harass-status-line": "Harassment: {0} walker(s) haunting, {1} act(s) tonight, {2} change(s) on its own restore list",
+    "harass-status-header": "Harassment kit, haunting walkers loaded: {0}",
+    "harass-status-walker": "  {0} #{1} on {2}: stage {3}, {4}, budget {5} of {6}, next act in {7} s, held back by: {8}",
+    "harass-status-counts": "    tonight: {0}",
+    "harass-act-none": "No loaded walker haunts anyone",
+    "harass-act-done": "{0} by walker #{1}: {2}",
+    "harass-act-skipped": "{0} by walker #{1} skipped: {2}"
+}

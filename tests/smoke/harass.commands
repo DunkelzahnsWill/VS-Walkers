@@ -1,0 +1,5 @@
+# Harassment kit: the self-test (rules on numbers, then every act against a playerbot stand-in in a test
+# house high above the world spawn, with its switch, cap, sight, claim and restore checks), then the status
+# commands. The self-test removes everything it built and spawned.
+/walkers harass selftest
+/walkers harass status

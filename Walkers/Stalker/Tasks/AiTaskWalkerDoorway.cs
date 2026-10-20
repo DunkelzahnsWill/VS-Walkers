@@ -113,8 +113,9 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
                 }
             }
         }
-        if (IsOnCooldown())
+        if (!brain.Config.Harass.Doorway.Enabled || IsOnCooldown())
         {
+            // harass.doorway.enabled false: it still never walks through a door, but leaves doors alone.
             return false;
         }
         if (found == null && now - brain.NoPathToVictimMs < NoPathRecentMs && now >= nextVictimScanMs)
@@ -260,7 +261,7 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
     private bool StillWorthIt(WalkerBrain brain, Entity victim)
     {
         var d = door;
-        return d != null && world.BlockAccessor.GetBlockEntity(d.Pos)?.GetBehavior<BEBehaviorDoor>() == d &&
+        return d != null && brain.Config.Harass.Doorway.Enabled && world.BlockAccessor.GetBlockEntity(d.Pos)?.GetBehavior<BEBehaviorDoor>() == d &&
                victim.Pos.DistanceTo(Center(d)) <= VictimNearDoor && !StalkerModSystem.IsAsleep(victim);
     }
 
@@ -367,22 +368,37 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
         return animals.Length == 0;
     }
 
+    /// <summary>
+    /// harass.respectClaims, the same rule as the harassment kit's BlockRules.ClaimsAllow. victimAccess:
+    /// unclaimed land, or a claim the victim owns or shares through the claim's owning group; never a
+    /// claim where the victim is only a permitted player, nor one open to everyone. A stand-in owns
+    /// nothing, so only unclaimed land. anyClaim: unclaimed land only. off: anywhere.
+    /// </summary>
     private bool ClaimsAllow(ClaimRespect rule, BlockPos pos, Entity victim)
     {
-        switch (rule)
+        if (rule == ClaimRespect.Off)
         {
-            case ClaimRespect.Off:
-                return true;
-            case ClaimRespect.AnyClaim:
-                return world.Claims.Get(pos) is not { Length: > 0 };
-            default:
-                if (victim is EntityPlayer ep && ep.Player is IPlayer player)
-                {
-                    return world.Claims.TestAccess(player, pos, EnumBlockAccessFlags.Use) == EnumWorldAccessResponse.Granted;
-                }
-                // A stand-in has no rights of its own: only unclaimed land.
-                return world.Claims.Get(pos) is not { Length: > 0 };
+            return true;
         }
+        var claims = world.Claims.Get(pos);
+        if (claims == null || claims.Length == 0)
+        {
+            return true;
+        }
+        if (rule == ClaimRespect.AnyClaim || victim is not EntityPlayer { Player: IPlayer player })
+        {
+            return false;
+        }
+        foreach (var claim in claims)
+        {
+            bool owns = claim.OwnedByPlayerUid == player.PlayerUID;
+            bool sharesGroup = claim.OwnedByPlayerGroupUid != 0 && player.GetGroup((int)claim.OwnedByPlayerGroupUid) != null;
+            if (!owns && !sharesGroup)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void Open(WalkerBrain brain, BEBehaviorDoor d)

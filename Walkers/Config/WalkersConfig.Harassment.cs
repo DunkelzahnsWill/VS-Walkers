@@ -54,6 +54,9 @@ public class HarassConfig
 
     [Description("Leaves a dead animal at the victim's door.")]
     public OfferingsConfig Offerings { get; set; } = new();
+
+    [Description("Stage 5: the true form opens and holds an unlocked door (the stalker AI's doorway task reads this switch).")]
+    public HarassActConfig Doorway { get; set; } = new();
 }
 
 public enum ClaimRespect

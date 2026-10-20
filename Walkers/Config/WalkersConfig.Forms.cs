@@ -53,6 +53,10 @@ public class FormsConfig
     [Range(0, 500)]
     public int HurtShiftDelayMs { get; set; } = 400;
 
+    [Description("At escalation level 1 (Interloping) the walker rarely takes its true form unless attacked: the chance, rolled once per night, that it may shift at night at all. From level 2 it shifts whenever the night allows.")]
+    [Range(0, 1)]
+    public float InterlopingNightShiftChance { get; set; } = 0.2f;
+
     [Description("Least real seconds between two shifts.")]
     [Range(10, 600)]
     public float ShiftCooldownSeconds { get; set; } = 60;

@@ -416,7 +416,7 @@ public class EntityBehaviorWalkerForm : EntityBehavior
                 return;
             }
             if (forms.IsNight(entity) && victim != null && victim.Pos.DistanceTo(entity.Pos) <= NightShiftVictimRange &&
-                (stage == 5 || forms.SilhouetteAllowed(entity)) && !IsWatched())
+                (stage == 5 || forms.SilhouetteAllowed(entity)) && NightShiftAllowed() && !IsWatched())
             {
                 TryShift("night");
             }
@@ -440,6 +440,28 @@ public class EntityBehaviorWalkerForm : EntityBehavior
         {
             TryShift("its stage fell to " + stage);
         }
+    }
+
+    /// <summary>
+    /// Escalation level 1 (Interloping) shifts at night only on a night its roll allows
+    /// (forms.interlopingNightShiftChance, rolled once per night); from level 2 every night may.
+    /// A player's blow or fire stands it up at any level.
+    /// </summary>
+    private bool NightShiftAllowed()
+    {
+        if (FormMemory.Escalation(entity) >= 2)
+        {
+            return true;
+        }
+        var form = FormMemory.Form(entity);
+        // Counted from noon, so one night is one roll.
+        int day = (int)(entity.World.Calendar.TotalDays + 0.5);
+        if (form.GetInt(FormMemory.NightRollDay, -1) != day)
+        {
+            form.SetInt(FormMemory.NightRollDay, day);
+            form.SetBool(FormMemory.NightRollShifts, entity.World.Rand.NextDouble() < forms.Config.Forms.InterlopingNightShiftChance);
+        }
+        return form.GetBool(FormMemory.NightRollShifts);
     }
 
     private void TryShift(string why)

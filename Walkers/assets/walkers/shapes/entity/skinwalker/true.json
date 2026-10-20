@@ -5344,7 +5344,9 @@
      "frame": 0,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": -1.61,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -5445,7 +5447,9 @@
      "frame": 10,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": -0.1,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -5546,7 +5550,9 @@
      "frame": 20,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": -1.61,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -5647,7 +5653,9 @@
      "frame": 30,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": -0.1,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -5748,7 +5756,9 @@
      "frame": 40,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": -1.61,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -5858,7 +5868,9 @@
      "frame": 0,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": -2.09,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -5964,7 +5976,9 @@
      "frame": 6,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": 1.32,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -6070,7 +6084,9 @@
      "frame": 12,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": -2.09,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -6176,7 +6192,9 @@
      "frame": 18,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": 1.32,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -6282,7 +6300,9 @@
      "frame": 24,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": -2.09,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -6890,7 +6910,9 @@
      "frame": 0,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": -9.5,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -6991,7 +7013,9 @@
      "frame": 10,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": -9.0,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -7092,7 +7116,9 @@
      "frame": 22,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": -4.0,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -7193,7 +7219,9 @@
      "frame": 34,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": -0.6,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -7294,7 +7322,9 @@
      "frame": 45,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": 0,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -7404,7 +7434,9 @@
      "frame": 0,
      "elements": {
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": 0.35,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -7514,7 +7546,9 @@
        "rotationZ": 0
       },
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": 0,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -7650,7 +7684,9 @@
        "rotationZ": 0
       },
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": -3,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -7752,12 +7788,16 @@
      "elements": {
       "Origin": {
        "rotationX": 50,
+       "offsetX": 0,
+       "offsetY": 0,
        "offsetZ": -4.86,
        "rotationY": 0,
        "rotationZ": 0
       },
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": -6,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0
@@ -7859,12 +7899,16 @@
      "elements": {
       "Origin": {
        "rotationX": 86,
+       "offsetX": 0,
+       "offsetY": 0,
        "offsetZ": -4.19,
        "rotationY": 0,
        "rotationZ": 0
       },
       "Pelvis": {
+       "offsetX": 0,
        "offsetY": -6,
+       "offsetZ": 0,
        "rotationX": 0,
        "rotationY": 0,
        "rotationZ": 0

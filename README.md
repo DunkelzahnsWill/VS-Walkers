@@ -158,11 +158,14 @@ drafts from the creature bible until their features land.
   `/walkers config` and the client copy pick a new setting up on their own.
 - **A player's choices**: `player.GetWalkersPrefs()` before acting on that player, for example skip
   the drain when `NoScreenEffects` is set.
-- **Your own subcommand**: `api.ChatCommands.GetOrCreate("walkers").BeginSubCommand("ledger")…EndSubCommand()`
+- **Your own subcommand**: `api.ChatCommands.GetOrCreate(WalkersModSystem.ModId).BeginSubCommand("ledger")…EndSubCommand()`
   in your own system. It inherits the admin privilege. To add a line to `/walkers status`, subscribe
   to `WalkersCommandsSystem.Status`.
+- **Replies**: wrap your handler in `WalkersCommandsSystem.SafeReply(...)`, so a brace in a reply
+  (a JSON error, a player's argument) reaches the caller instead of breaking the server's formatting.
 - **Smoke tests**: `tests/smoke/config.expect` proves the file is written with every default in
-  range; `tests/smoke/commands.*` runs each command from the console.
+  range; `tests/smoke/commands.*` runs each command from the console. All `.commands` files share one
+  server run, in file-name order, so a test that changes a setting restores it at the end.
 
 ## Folder map
 

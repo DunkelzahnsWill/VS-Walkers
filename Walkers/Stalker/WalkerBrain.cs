@@ -49,6 +49,9 @@ public sealed class WalkerBrain
     /// <summary>Unwatched this long, a look has ended: the next look finds it a little closer.</summary>
     private const double LookEndsSeconds = 1.5;
 
+    /// <summary>The true form's still, stooped hold while the gaze stops it (its shape's animation code).</summary>
+    public const string FreezeAnimation = "freeze";
+
     /// <summary>Blocks the creep band's target moves closer after each look.</summary>
     public const float CreepStepBlocks = 3;
 
@@ -482,6 +485,14 @@ public sealed class WalkerBrain
         {
             Frozen = true;
             system.OnFreeze(this);
+            if (IsTrueForm)
+            {
+                Body.AnimManager?.StartAnimation(FreezeAnimation);
+            }
+        }
+        else if (!frozen && Frozen && IsTrueForm)
+        {
+            Body.AnimManager?.StopAnimation(FreezeAnimation);
         }
         Frozen = frozen;
     }

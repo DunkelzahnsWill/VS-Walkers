@@ -186,7 +186,7 @@ brain picks the mode; the AI tasks in the entity JSON act on it.
 | `walkers-hunt` | true | Stage 5: closes in while unwatched, runs within 16 blocks, holds at doors and while the victim sleeps |
 | `walkers-lunge` | true | From within `gaze.lungeRange`: a dash and one hit, capped at `forms.maxHitFraction` of the target's health |
 | `walkers-retreat` | both | Into cover after a break-off, a withdraw or a hit on the guise; to water while burning |
-| `walkers-doorway` | true | Stage 5: opens an unlocked door the victim is behind, holds the doorway, never walks in |
+| `walkers-doorway` | true | Stage 5: opens an unlocked door the victim is behind (where `harass.respectClaims` allows), holds the doorway, never walks in; off with `harass.doorway.enabled` |
 
 Without a director, a body picks the nearest counting player within 64 blocks and climbs the ladder
 on its own every 10 seconds (a guise starts at stage 1, a true form at 5). Admin commands:

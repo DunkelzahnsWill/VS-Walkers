@@ -26,6 +26,9 @@ public class AiTaskWalkerCreep : WalkerTaskBase
     /// <summary>Silhouettes stand this deep into their band.</summary>
     private const float SilhouetteBandWidth = 16;
 
+    /// <summary>A body standing in its band checks the light and the band again after this many milliseconds.</summary>
+    private const long LightCheckMs = 1000;
+
     [JsonProperty]
     public int SpotTries = 6;
 
@@ -91,6 +94,8 @@ public class AiTaskWalkerCreep : WalkerTaskBase
         bool needMove = lit || dist > max + BandSlack || dist < min - BandSlack || (closerEachLook && brain.Looks != looksAtSpot);
         if (!needMove)
         {
+            // Standing in its band is the common case: look again in a second, not on every tick.
+            nextPickMs = now + LightCheckMs;
             return true;
         }
         nextPickMs = now + RepathMs;

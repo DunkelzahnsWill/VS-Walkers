@@ -219,7 +219,14 @@ For feature code:
   breaks off with `withdraw`. Shift a true form with a non-empty `breakOff` back once nobody sees it.
 - **Removal.** The stalker AI removes a body itself only to slip away (`Die(Expire)`, logged at debug
   level), never while it burns or within 20 seconds of a player's hit. Withdrawing bodies are the
-  director's to remove.
+  director's to remove. The one exception is the enraged walk-in below.
+- **Enraged walk-in.** While `walkers/harass/entryUntilMs` lies ahead, the hunt follows the victim in
+  through the door at `entryX/Y/Z`, no farther than `enraged.maxIndoorBlocks` from it. It leaves on a
+  landed hit, at the timeout, when the victim lies down, with company, when it burns or breaks off,
+  when it goes too far in, or after 5 s without progress inside. On leaving it sets `entryUntilMs` to 0
+  and walks back out through the door before anything else. A body still inside 50 s after the
+  entry began sets `walkers/withdraw` and vanishes (`Die(Expire)`).
+- **Freeze pose.** A true form plays its `freeze` animation while the gaze holds it.
 - **Restore list.** A door opened by `walkers-doorway` is entered as kind `walkers-doorway`, with its
   own undo handler. The task also closes the door itself when it lets go of it (the hold ends, the
   hunt ends, or the body leaves), and tries again each second for ten minutes while someone stands in

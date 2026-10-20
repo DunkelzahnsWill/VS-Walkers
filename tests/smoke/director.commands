@@ -1,0 +1,19 @@
+# The director, first boot: a stand-in victim near the world spawn, a haunt on it, the walker placed
+# out of its sight, then a death that goes into the ledger. director.restart.commands checks the
+# ledger after a restart and puts every setting changed here back.
+# The smoke world's spawn is not forest, so the forest rule is off for the test.
+/walkers config debug.standInVictims true
+/walkers config director.minForestDensity 0
+/walkers director standin add
+/walkers director haunt standin-1
+/walkers director tick
+/walkers director tick
+/walkers director tick
+/walkers director tick
+/walkers director tick
+/walkers director status
+/walkers director status 1
+/walkers director end standin-1 ledger
+/walkers director ledger
+/walkers director return 1
+/walkers status

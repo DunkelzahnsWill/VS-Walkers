@@ -1,0 +1,12 @@
+# The director, second boot on the same world: the ledger and the stand-in came back from the save.
+# The walker returns at once for its last victim, is banished, and every setting goes back.
+/walkers director status
+/walkers director standin list
+/walkers director ledger
+/walkers director return 1 now
+/walkers director status 1
+/walkers director end 1 banish
+/walkers director ledger
+/walkers director standin remove standin-1
+/walkers config debug.standInVictims false
+/walkers config director.minForestDensity 0.25

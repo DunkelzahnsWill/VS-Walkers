@@ -1,0 +1,20 @@
+# Replies and log lines for tests/smoke/director.commands (first boot).
+Director loaded: 0 walker\(s\) \(none\), 0 ledger entries, 0 block\(s\) to restore
+Saved debug\.standInVictims = true
+Stand-in victim standin-1 placed at
+Stand-in standin-1 placed at -?[0-9]+, [0-9]+, -?[0-9]+
+A new walker joins the roster: walker 1
+Walker 1 begins haunting standin-1 at stage 1, wearing a [a-z]+ deer
+Walker 1 now haunts standin-1, at stage 1, wearing a [a-z]+ deer
+# placed 48 to 64 blocks out on its first appearance, unseen by the stand-in
+Walker 1 appears as a [a-z]+ deer, (4[89]|5[0-9]|6[0-4]) blocks from standin-1, at stage 1
+Walker 1: haunting standin-1 at stage 1, clock [0-9.]+ of 12 days, wearing a [a-z]+ deer, returns 0; body skinwalker-animal-[a-z]+ #[0-9]+
+standin-1: stand-in, eligible, on the surface, near forest, alone
+# the admin's ledger: the walker dies, its haunt ends, and it goes into the ledger
+Walker 1's haunt on standin-1 ends: WalkerDied
+Walker 1 died \(removed by an admin\), killed by the console; it returns on day [0-9.]+ unless it is banished
+Walker 1 is in the ledger \(LeftAlone\); it returns on day [0-9.]+
+Walker 1 is in the ledger and will return
+Walker 1 died on day [0-9.]+ at -?[0-9]+, [0-9]+, -?[0-9]+: removed by an admin by the console; victim standin-1; released \(LeftAlone\), returns on day [0-9.]+
+Walker 1 returns on day [0-9.]+ \(in [0-9.]+ days\), to standin-1
+Director: 1 waiting; haunting 0 of [0-9]+; ledger entries: 1; blocks to restore: 0

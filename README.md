@@ -3,11 +3,13 @@
 A code mod for Vintage Story 1.22.7. Its first creature is the Skinwalker: something that looks like
 an ordinary animal until it doesn't. *Something's moving out there.*
 
-Status: prototype, version `0.1.0-dev.1`. The mod builds, packs and loads cleanly on a dedicated
-server. The Skinwalker has a deer guise and a placeholder true form that spawn alone at night in
-forests (or with `/walkers spawn`), and the stalker AI drives both: it picks the nearest player, climbs
-the five-stage ladder, freezes while watched and hunts at stage 5. The director, form shifts, kill
-ritual and harassment are still to come.
+Version `1.0.0`, for Vintage Story 1.22.7. The Skinwalker wears the guise of a doe of the local
+deer type and shifts to its true form out of sight. The director chooses one lone player at a time
+and places it; the stalker AI climbs a five-stage ladder from a distant watcher to the hunt; the
+harassment kit works through the night without touching the victim; the forms system shifts it and
+judges how it dies; and over a five-level escalation ladder, from Interloping to Wrath, a wronged
+walker grows worse. The lore bible's texts arrive as pages, and every rule is a server setting.
+What changed in each version is in [CHANGELOG.md](CHANGELOG.md).
 
 | Field | Value |
 | --- | --- |
@@ -15,6 +17,24 @@ ritual and harassment are still to come.
 | Type and side | Code, Universal (required on client and server) |
 | Game | 1.22.7, .NET 10 (`net10.0`) |
 | Based on | the official `VintageStory.Mod.Templates` 1.22.0 |
+| License | [MIT](LICENSE) |
+
+## Installing
+
+Players and server owners: put `walkers_<version>.zip`, still zipped, into the `Mods` folder of the
+game (`%APPDATA%\VintagestoryData\Mods` on Windows) and of the server's data folder. The mod is
+required on both sides, and a client must have exactly the server's version; the game offers to
+download it from ModDB on joining. The server writes `ModConfig/walkers.json` on its first start;
+see [Config and commands](#config-and-commands).
+
+**Compatibility.** Built against and tested on 1.22.7: every change boots a headless 1.22.7
+dedicated server (the smoke test), and a 45-minute soak with three haunts showed zero errors and
+about 0.2 ms of server time per second. Other 1.22 versions may load it but are untested; a new game
+version gets a new mod version (see [Moving to a new game version](#moving-to-a-new-game-version)).
+It uses no Harmony patches and adds rather than replaces: vanilla deer, doors and torches are left as
+they are, and the mod acts on them only through the game's own block and entity calls. It has not yet
+been tested together with other mods.
+
 
 ## Build and test in the cloud (or any Linux x64 machine)
 
@@ -90,8 +110,8 @@ before merging. The layout lets branches stay out of each other's files:
 | JSON patches | `Walkers/assets/walkers/patches/<feature>-*.json` |
 | Smoke checks | `tests/smoke/<feature>.expect` and, if needed, `tests/smoke/<feature>.commands`; checks after a restart in `tests/smoke/<feature>.restart.commands` and `.restart.expect` |
 
-Feature folders: `Commands` (config and commands) and `Director` (director, spawns and the return) so
-far; planned are `Stalker` (stalker AI), `Forms` (forms and kill ritual) and `Harassment` (harassment kit).
+Feature folders: `Commands` (config and commands), `Director` (director, spawns and the return),
+`Stalker` (stalker AI), `Forms` (forms and kill ritual) and `Harassment` (harassment kit).
 
 The shared surfaces, and who changes them:
 
@@ -300,6 +320,42 @@ For feature code:
 - **Strikes.** `walkers-lunge` checks its reach with a physical line, so glass blocks a strike even
   though the gaze sees through it.
 
+## Forms and the kill ritual
+
+The forms system (`Walkers/Forms/`) runs on the server. It owns the two bodies, the shift between
+them, the rules of a walker's death and the items that come of it.
+
+- **The guise** wears a deer type that lives where its victim is (see the director's deer country).
+  With `forms.guiseShrugsDamage` on, nothing a player does kills it: it flinches with the hurt
+  animation and sound and is whole again soon after. From stage 3, a guise a player hurts or sets
+  alight stands up as the true form `forms.hurtShiftDelayMs` later.
+- **The shift.** A new body takes over the walker's memory (`AttachBody`, then the old body is
+  retired), at least `forms.shiftCooldownSeconds` apart: to the true form at night as the stalker AI
+  allows, back to the guise once a broken-off true form is out of sight. At escalation level 1 a
+  walker may shift at night only on about one night in five (`forms.interlopingNightShiftChance`). Once a
+  haunt, it may shift in plain sight while its victim watches from within `forms.revealDistance`.
+- **The ritual.** A true form killed with silver (`ritual.silverItems`, or any item with the
+  `walkersBane` attribute; silver hits do `ritual.silverDamageMultiplier` damage) or by fire is
+  banished for good: it leaves ash and bark, its eyes and a page, and the killer gets
+  `ritual.banishStabilityRecovery` temporal stability back. Any other death leaves the body for
+  `ritual.huskBurnWindowSeconds`: burning it banishes the walker; skinning it gives 2 to
+  `ritual.huskFurCount` unnatural furs, and the walker is released to the director, as it is when
+  the body is left alone. A lit torch sets it alight (`ritual.torchIgniteChance`).
+- **Items.** `walkers:walkerfur` (unnatural fur; burning it reports to the director, which clears the
+  dropper's mark), `walkers:walkereyes` (trophy), silver-only clay molds for a spear head, knife
+  blade and arrowhead, and `walkers:spear-silver`. Cast silver is weaker than copper on purpose.
+
+| Command | What it does |
+| --- | --- |
+| `/walkers forms shift [entity id]` | Shifts every loaded walker, or the one with that entity id, into its other body at once |
+| `/walkers forms test` | Spawns walkers at the world spawn, runs the shift, the guise's death and the silver and fire kills on them, and removes them (the smoke test runs it) |
+
+For feature code: Forms writes only `walkers/form` (`FormMemory.cs` lists the keys) and reads
+`walkers/stage` and `walkers/ai`. It reports deaths to the director with `Banish` or `Release`, and
+raises `FormsModSystem.FursBurned` when furs burn. The guise refuses a death through the director's
+`EntityWalker.RefuseDeath` hook, so a console kill on a doe stands it up as the true form; admins use
+`/walkers despawn`.
+
 ## Harassment kit
 
 The harassment kit (`Walkers/Harassment/`) runs on the server. For every walker the stalker AI tracks
@@ -381,6 +437,10 @@ CakeBuild/                    build steps (validation, build, package)
 scripts/versions.env          pinned game version, download URL and checksums
 scripts/setup.sh              SDK and game server setup
 scripts/smoke-test.sh         headless server test
+scripts/release.sh            release zip, checksum and notes (publishes nothing)
+CHANGELOG.md                  every release, player-facing
+LICENSE                       MIT
+docs/moddb.md                 the ModDB page's text
 tests/smoke/                  per-feature smoke expectations and console commands
 Walkers/                      the mod project
   modinfo.json
@@ -388,7 +448,8 @@ Walkers/                      the mod project
   Config/                     the shared config: walkers.json, its checks, player choices
   Commands/                   the /walkers command
   Stalker/                    the stalker AI: ladder, gaze, brain, AI tasks, /walkers stalker
-  Director/                   the director's interface (IWalkerDirector.cs)
+  Director/                   the director: haunts, placement, ledger, return, escalation, furs
+  Forms/                      the shift, the kill ritual, the body and its items, /walkers forms
   Harassment/                 the harassment kit: acts, scheduler, pages, /walkers harass
   assets/walkers/             entities, shapes, textures, sounds, itemtypes, patches, lang, config/lore
 ```
@@ -407,3 +468,15 @@ folder the server logs an error and the smoke test fails.
 3. Run `scripts/setup.sh`, `./build.sh` and `scripts/smoke-test.sh`.
 
 Never reuse a version number: a joining client must have exactly the server's version of the mod.
+
+## Releasing
+
+1. On `main`, set `"version"` in `Walkers/modinfo.json` (plain `x.y.z`) and add its section at the top
+   of `CHANGELOG.md`. The changelog is pasted into ModDB, so it never mentions the return.
+2. Run `scripts/release.sh`. It refuses a dev version, a missing changelog section or uncommitted
+   changes, then runs setup and the build, adds `LICENSE` and `CHANGELOG.md` to the zip, smoke-tests
+   that finished zip, and writes `Releases/walkers_<version>.zip.sha256` and
+   `Releases/walkers_<version>-notes.md` (the changelog section). `--allow-dirty` makes a trial run.
+3. The owner publishes: tag `v<version>` on that commit, create the GitHub release with the zip and
+   the notes, then upload the same zip on ModDB with the notes and the game version tag. The page's
+   text is in [docs/moddb.md](docs/moddb.md).

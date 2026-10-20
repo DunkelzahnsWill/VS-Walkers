@@ -227,6 +227,11 @@ For feature code:
   and walks back out through the door before anything else. A body still inside 50 s after the
   entry began sets `walkers/withdraw` and vanishes (`Die(Expire)`).
 - **Freeze pose.** A true form plays its `freeze` animation while the gaze holds it.
+- **Escalation level.** `walkers/escalation` (1 to 5 across returns; without it, returns + 1) changes
+  the true form. From 2, a victim's stare of 2 s no longer freezes it: it hunts the starer for 20 s.
+  From 3, a victim alone for 30 s at night is hunted too, at any stage (doors stay a stage-5 act).
+  At 5 it no longer breaks off for company, and the ladder's group cap stops holding it back. All of
+  it only where creatureHostility is aggressive.
 - **Restore list.** A door opened by `walkers-doorway` is entered as kind `walkers-doorway`, with its
   own undo handler. The task also closes the door itself when it lets go of it (the hold ends, the
   hunt ends, or the body leaves), and tries again each second for ten minutes while someone stands in

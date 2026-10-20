@@ -3,17 +3,18 @@
 Walkers [0-9]+\.[0-9]+\.[0-9]+[^:]*: on, mundane mode "auto"
 Config: ModConfig/walkers\.json, problems: 0
 Walkers loaded: 0
-# config: the full list, one setting, a value out of range, a value set and saved
+# config: the list, one setting, a bad value, a value set and saved, then restored
 Settings in ModConfig/walkers\.json
-^  director: [0-9]+ settings
-director\.tickSeconds = 10\.0 \(default 10\.0, 5 to 60\)\. How often the director updates
-Cannot set director\.tickSeconds: expected 5 to 60
-Saved harass\.doors\.enabled = false
-^  harass\.doors\.enabled true → false
-^  harass\.doors\.enabled = false \(default true\)
+^  enabled = true$
+mundaneMode = "auto" \(default "auto", "auto" \| "on" \| "off"\)\. Mundane mode drops
+Cannot set mundaneMode: expected one of auto, on, off
+Saved mundaneMode = "on"
+^  mundaneMode "auto" → "on"
 \[walkers\] Reloaded ModConfig/walkers\.json: 1 setting\(s\) changed, 0 problem\(s\)
 # reload of the file just saved: nothing changes
 Reloaded ModConfig/walkers\.json\. Settings changed: 0
+Saved mundaneMode = "auto"
+^  mundaneMode "on" → "auto"
 # spawn: until the creature's entity JSON lands no walker type exists; afterwards it spawns at the world spawn
 (Spawned skinwalker-true #[0-9]+ at|No walker entity types are loaded yet)
 Removed every loaded walker: [0-9]+

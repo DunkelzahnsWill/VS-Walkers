@@ -59,6 +59,21 @@ public static class WalkersConfigJson
     public static ReadResult Read(string json)
     {
         var result = new ReadResult();
+        try
+        {
+            ReadInto(json, result);
+        }
+        catch (Exception e)
+        {
+            // Whatever the file holds, nothing may escape into the game's startup or a command handler.
+            result.Config = null;
+            result.FatalError = e.Message;
+        }
+        return result;
+    }
+
+    private static void ReadInto(string json, ReadResult result)
+    {
         JToken token;
         try
         {
@@ -67,12 +82,12 @@ public static class WalkersConfigJson
         catch (JsonException e)
         {
             result.FatalError = e.Message;
-            return result;
+            return;
         }
         if (token is not JObject obj)
         {
             result.FatalError = "The file must hold one JSON object, { ... }.";
-            return result;
+            return;
         }
         try
         {
@@ -84,7 +99,7 @@ public static class WalkersConfigJson
             result.Errors.Add(e.Message);
         }
         result.HasComments = HasComments(json);
-        FindUnknownKeys(obj, typeof(WalkersConfig), "", result.UnknownKeys);
+        Inspect(obj, typeof(WalkersConfig), "", result);
 
         var serializer = JsonSerializer.Create(Settings);
         serializer.Error += (_, e) =>
@@ -92,24 +107,14 @@ public static class WalkersConfigJson
             // The event repeats for every parent object; record the innermost only.
             if (e.CurrentObject == e.ErrorContext.OriginalObject)
             {
-                result.Errors.Add(e.ErrorContext.Error.Message);
+                var message = e.ErrorContext.Error.Message;
+                result.Errors.Add(message.Contains("Path '", StringComparison.Ordinal) ? message : $"{e.ErrorContext.Path}: {message}");
             }
             e.ErrorContext.Handled = true;
         };
-        WalkersConfig? config;
-        try
-        {
-            config = obj.ToObject<WalkersConfig>(serializer);
-        }
-        catch (JsonException e)
-        {
-            result.FatalError = e.Message;
-            return result;
-        }
-        result.Config = config ?? new WalkersConfig();
+        result.Config = obj.ToObject<WalkersConfig>(serializer) ?? new WalkersConfig();
         Check(result.Config, "", result.Fixes);
         FindMissingKeys(ToJObject(result.Config), obj, "", result.MissingKeys);
-        return result;
     }
 
     public sealed class ReadResult
@@ -155,19 +160,34 @@ public static class WalkersConfigJson
                 property.ValueProvider.SetValue(section, value);
                 fixes.Add($"{propertyPath} was null; using the default");
             }
-            if (IsSection(property.PropertyType!))
+            var type = property.PropertyType!;
+            if (IsSection(type))
             {
                 Check(value!, propertyPath, fixes);
             }
-            else if (RangeOf(property) is { } range && IsNumber(property.PropertyType!))
+            else if (type.IsEnum && !Enum.IsDefined(type, value!))
+            {
+                defaults ??= Activator.CreateInstance(section.GetType())!;
+                property.ValueProvider.SetValue(section, property.ValueProvider.GetValue(defaults));
+                fixes.Add($"{propertyPath} is not one of {string.Join(", ", Enum.GetNames(type).Select(CamelCase))}; using the default");
+            }
+            else if (value is string[] list && list.Any(string.IsNullOrWhiteSpace))
+            {
+                property.ValueProvider.SetValue(section, list.Where(item => !string.IsNullOrWhiteSpace(item)).ToArray());
+                fixes.Add($"{propertyPath} has empty entries; dropped them");
+            }
+            else if (RangeOf(property) is { } range && IsNumber(type))
             {
                 double number = Convert.ToDouble(value, CultureInfo.InvariantCulture);
                 double min = Convert.ToDouble(range.Minimum, CultureInfo.InvariantCulture);
                 double max = Convert.ToDouble(range.Maximum, CultureInfo.InvariantCulture);
-                if (double.IsNaN(number) || number < min || number > max)
+                double clamped = double.IsNaN(number) ? min : Math.Clamp(number, min, max);
+                // Compared in the setting's own type: 0.13 as a float is a hair below the double 0.13
+                // of its range, and must not count as out of range.
+                var converted = Convert.ChangeType(clamped, type, CultureInfo.InvariantCulture);
+                if (double.IsNaN(number) || !Equals(converted, value))
                 {
-                    double clamped = double.IsNaN(number) ? min : Math.Clamp(number, min, max);
-                    property.ValueProvider.SetValue(section, Convert.ChangeType(clamped, property.PropertyType!, CultureInfo.InvariantCulture));
+                    property.ValueProvider.SetValue(section, converted);
                     fixes.Add($"{propertyPath} = {Format(number)} is outside {Format(min)} to {Format(max)}; using {Format(clamped)}");
                 }
             }
@@ -381,7 +401,13 @@ public static class WalkersConfigJson
             {
                 try
                 {
-                    return JArray.Parse(text).ToObject<string[]>() is { } array ? JArray.FromObject(array) : null;
+                    var array = JArray.Parse(text).ToObject<string[]>();
+                    if (array == null || array.Any(string.IsNullOrWhiteSpace))
+                    {
+                        error = "expected a list of names, none of them empty";
+                        return null;
+                    }
+                    return JArray.FromObject(array);
                 }
                 catch (JsonException e)
                 {
@@ -407,7 +433,11 @@ public static class WalkersConfigJson
             if (range != null)
             {
                 double min = Convert.ToDouble(range.Minimum, inv), max = Convert.ToDouble(range.Maximum, inv);
-                if (number < min || number > max)
+                // As in Check: a float setting compares in float, so its own bounds are accepted.
+                bool outside = type == typeof(float)
+                    ? (float)number < (float)min || (float)number > (float)max
+                    : number < min || number > max;
+                if (outside)
                 {
                     error = $"expected {Format(min)} to {Format(max)}";
                     return null;
@@ -423,13 +453,40 @@ public static class WalkersConfigJson
     public static string FormatValue(object? value) =>
         value == null ? "null" : FormatToken(JToken.FromObject(value, JsonSerializer.Create(Settings)));
 
-    /// <summary>Writes the file through a temporary file, so a crash mid-write cannot leave half a config.</summary>
+    /// <summary>
+    /// Writes the file through a temporary file, so a crash mid-write cannot leave half a config. A
+    /// symlinked file is written at its target. Where the file cannot be replaced, only written (a file
+    /// bind-mounted into a container, a file locked on Windows), it is written in place instead.
+    /// </summary>
     public static void WriteFile(string path, string json)
     {
-        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-        var temp = path + ".tmp";
-        File.WriteAllText(temp, json);
-        File.Move(temp, path, overwrite: true);
+        var info = new FileInfo(path);
+        var target = info.LinkTarget != null ? info.ResolveLinkTarget(returnFinalTarget: true)?.FullName ?? path : path;
+        Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+        var temp = target + ".tmp";
+        try
+        {
+            File.WriteAllText(temp, json);
+            try
+            {
+                File.Move(temp, target, overwrite: true);
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+            {
+                File.WriteAllText(target, json);
+            }
+        }
+        finally
+        {
+            try
+            {
+                File.Delete(temp);
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+            {
+                // Left behind; harmless, and replaced by the next write.
+            }
+        }
     }
 
     public static string Join(string path, string name) => path.Length == 0 ? name : path + "." + name;
@@ -451,20 +508,43 @@ public static class WalkersConfigJson
     private static RangeAttribute? RangeOf(JsonProperty property) =>
         property.AttributeProvider?.GetAttributes(typeof(RangeAttribute), true).OfType<RangeAttribute>().FirstOrDefault();
 
-    private static void FindUnknownKeys(JObject obj, Type type, string path, List<string> unknown)
+    /// <summary>
+    /// Finds what the deserializer would accept without a word: keys that match no setting, one key
+    /// spelled twice in different case, a fraction for a whole-number setting (it would be rounded),
+    /// and comma-joined enum names (they would be OR-ed together). The last two are removed from
+    /// <paramref name="obj"/>, so those settings keep their defaults.
+    /// </summary>
+    private static void Inspect(JObject obj, Type type, string path, ReadResult result)
     {
         var settings = ((JsonObjectContract)Resolver.ResolveContract(type)).Properties;
-        foreach (var property in obj.Properties())
+        foreach (var group in obj.Properties().GroupBy(p => p.Name, StringComparer.OrdinalIgnoreCase).Where(g => g.Count() > 1))
+        {
+            result.Errors.Add($"{Join(path, group.Key)} appears {group.Count()} times ({string.Join(", ", group.Select(p => p.Name))}); only the last one counts");
+        }
+        foreach (var property in obj.Properties().ToList())
         {
             var propertyPath = Join(path, property.Name);
             var match = settings.GetClosestMatchProperty(property.Name);
             if (match == null || match.Ignored || !match.Writable)
             {
-                unknown.Add(propertyPath);
+                result.UnknownKeys.Add(propertyPath);
+                continue;
             }
-            else if (property.Value is JObject child && IsSection(match.PropertyType!))
+            var settingType = match.PropertyType!;
+            if (property.Value is JObject child && IsSection(settingType))
             {
-                FindUnknownKeys(child, match.PropertyType!, propertyPath, unknown);
+                Inspect(child, settingType, propertyPath, result);
+            }
+            else if ((settingType == typeof(int) || settingType == typeof(long)) && property.Value.Type == JTokenType.Float &&
+                     property.Value.Value<double>() is var number && number != Math.Floor(number))
+            {
+                result.Errors.Add($"{propertyPath} = {Format(number)} is not a whole number; using the default");
+                property.Remove();
+            }
+            else if (settingType.IsEnum && property.Value.Type == JTokenType.String && property.Value.Value<string>()!.Contains(','))
+            {
+                result.Errors.Add($"{propertyPath} = \"{property.Value}\" names more than one value; expected one of {string.Join(", ", Enum.GetNames(settingType).Select(CamelCase))}");
+                property.Remove();
             }
         }
     }

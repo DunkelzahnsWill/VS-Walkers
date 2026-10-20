@@ -99,28 +99,35 @@ public class WalkersConfigSystem : ModSystem
     public string? SetInFile(WalkersConfigJson.Setting setting, JToken value, out ReloadOutcome? outcome)
     {
         outcome = null;
-        JObject file;
-        if (File.Exists(FilePath))
+        try
         {
-            var text = File.ReadAllText(FilePath);
-            var read = WalkersConfigJson.Read(text);
-            if (read.Config == null)
+            var text = File.Exists(FilePath) ? File.ReadAllText(FilePath) : null;
+            JObject file;
+            if (string.IsNullOrWhiteSpace(text))
             {
-                return "the file cannot be read (" + read.FatalError + "); fix it by hand, then /walkers reload";
+                // No file yet, or an empty one: start from the settings in use, as the loader would.
+                file = WalkersConfigJson.ToJObject(Config);
             }
-            if (read.HasComments)
+            else
             {
-                return "the file has comments, which a command would remove; edit it by hand, then /walkers reload";
+                var read = WalkersConfigJson.Read(text);
+                if (read.Config == null)
+                {
+                    return "the file cannot be read (" + read.FatalError + "); fix it by hand, then /walkers reload";
+                }
+                if (read.HasComments)
+                {
+                    return "the file has comments, which a command would remove; edit it by hand, then /walkers reload";
+                }
+                file = JObject.Parse(text);
             }
-            file = JObject.Parse(text);
+            WalkersConfigJson.SetPath(file, setting.Path, value);
+            WalkersConfigJson.WriteFile(FilePath, file.ToString());
         }
-        else
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
-            file = WalkersConfigJson.ToJObject(Config);
+            return "could not read or write ModConfig/" + WalkersConfig.FileName + ": " + e.Message;
         }
-
-        WalkersConfigJson.SetPath(file, setting.Path, value);
-        WalkersConfigJson.WriteFile(FilePath, file.ToString());
         outcome = Reload();
         return null;
     }
@@ -172,7 +179,7 @@ public class WalkersConfigSystem : ModSystem
     private List<string> Report(WalkersConfigJson.ReadResult result)
     {
         var problems = new List<string>();
-        problems.AddRange(result.Errors.Select(e => "Unreadable value, using its default: " + e));
+        problems.AddRange(result.Errors.Select(e => "Could not use a value, so the setting keeps its default: " + e));
         problems.AddRange(result.UnknownKeys.Select(k => "Unknown setting, ignored: " + k));
         problems.AddRange(result.Fixes);
         foreach (var problem in problems)
@@ -222,7 +229,7 @@ public class WalkersConfigSystem : ModSystem
         if (changes.Count > 0)
         {
             serverChannel?.BroadcastPacket(new ConfigPacket { Json = WalkersConfigJson.Serialize(Config) });
-            Changed?.Invoke(Config, changes);
+            RaiseChanged(changes);
         }
         return changes;
     }
@@ -238,7 +245,27 @@ public class WalkersConfigSystem : ModSystem
         var before = WalkersConfigJson.ToJObject(Config);
         var changes = WalkersConfigJson.Diff(before, WalkersConfigJson.ToJObject(result.Config));
         WalkersConfigJson.CopyInto(Config, result.Config);
-        Changed?.Invoke(Config, changes);
+        RaiseChanged(changes);
+    }
+
+    /// <summary>Calls each Changed handler on its own, so one that throws neither stops the others nor the caller.</summary>
+    private void RaiseChanged(IReadOnlyList<string> changes)
+    {
+        if (Changed == null)
+        {
+            return;
+        }
+        foreach (Action<WalkersConfig, IReadOnlyList<string>> handler in Changed.GetInvocationList())
+        {
+            try
+            {
+                handler(Config, changes);
+            }
+            catch (Exception e)
+            {
+                Mod.Logger.Error("A handler of WalkersConfigSystem.Changed failed: {0}", e);
+            }
+        }
     }
 
     /// <summary>The server's config as JSON, sent to clients. Public because protobuf-net builds it.</summary>

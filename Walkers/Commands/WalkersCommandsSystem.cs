@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json.Linq;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Config;
@@ -19,7 +20,7 @@ namespace Walkers.Commands;
 ///
 /// Other features add their own subcommands from their own ModSystem, without touching this file:
 /// <code>
-/// api.ChatCommands.GetOrCreate("walkers")
+/// api.ChatCommands.GetOrCreate(WalkersModSystem.ModId)
 ///     .BeginSubCommand("ledger").WithDescription("...").HandleWith(OnLedger).EndSubCommand();
 /// </code>
 /// A subcommand that sets no privilege inherits controlserver from the root. To add a line to
@@ -57,29 +58,29 @@ public class WalkersCommandsSystem : ModSystem
             .RequiresPrivilege(Privilege.controlserver)
             .BeginSubCommand("status")
                 .WithDescription(Lang.Get("walkers:commands-status-desc"))
-                .HandleWith(SafeForConsole(OnStatus))
+                .HandleWith(SafeReply(OnStatus))
             .EndSubCommand()
             .BeginSubCommand("spawn")
                 .WithDescription(Lang.Get("walkers:commands-spawn-desc"))
                 .WithExamples("/walkers spawn true", "/walkers spawn animal", "/walkers spawn animal-whitetail SomePlayer")
                 .WithArgs(parsers.Word("form", new[] { "animal", "true" }), parsers.OptionalWord("player"))
-                .HandleWith(SafeForConsole(OnSpawn))
+                .HandleWith(SafeReply(OnSpawn))
             .EndSubCommand()
             .BeginSubCommand("despawn")
                 .WithDescription(Lang.Get("walkers:commands-despawn-desc"))
                 .WithExamples("/walkers despawn", "/walkers despawn 32")
                 .WithArgs(parsers.OptionalIntRange("radius", 1, 4096))
-                .HandleWith(SafeForConsole(OnDespawn))
+                .HandleWith(SafeReply(OnDespawn))
             .EndSubCommand()
             .BeginSubCommand("reload")
                 .WithDescription(Lang.Get("walkers:commands-reload-desc"))
-                .HandleWith(SafeForConsole(OnReload))
+                .HandleWith(SafeReply(OnReload))
             .EndSubCommand()
             .BeginSubCommand("config")
                 .WithDescription(Lang.Get("walkers:commands-config-desc"))
                 .WithExamples("/walkers config", "/walkers config harass", "/walkers config harass.doors.enabled false")
                 .WithArgs(parsers.OptionalWord("setting"), parsers.OptionalAll("value"))
-                .HandleWith(SafeForConsole(OnConfig))
+                .HandleWith(SafeReply(OnConfig))
             .EndSubCommand()
             .BeginSubCommand("me")
                 .WithDescription(Lang.Get("walkers:commands-me-desc"))
@@ -87,7 +88,7 @@ public class WalkersCommandsSystem : ModSystem
                 .RequiresPrivilege(Privilege.chat)
                 .RequiresPlayer()
                 .WithArgs(parsers.OptionalWord("setting"), parsers.OptionalAll("value"))
-                .HandleWith(SafeForConsole(OnMe))
+                .HandleWith(SafeReply(OnMe))
             .EndSubCommand();
     }
 
@@ -203,17 +204,17 @@ public class WalkersCommandsSystem : ModSystem
         }
 
         var entity = api.World.ClassRegistry.CreateEntity(type);
-        entity.Pos.SetFrom(origin);
-        entity.Pos.X = spot.X + 0.5;
+        entity.Pos.Dimension = origin.Dimension;
+        entity.Pos.X = spot.X;
         entity.Pos.Y = spot.Y;
-        entity.Pos.Z = spot.Z + 0.5;
+        entity.Pos.Z = spot.Z;
         entity.Pos.Pitch = 0;
         // Face whoever it was spawned for (the game's yaw is atan2 of x over z).
         entity.Pos.Yaw = near?.Entity == null ? 0 : (float)Math.Atan2(origin.X - entity.Pos.X, origin.Z - entity.Pos.Z);
         api.World.SpawnEntity(entity);
 
-        var local = spot.ToLocalPosition(api);
-        Mod.Logger.Audit("{0} spawned {1} #{2} at {3}", CallerName(args), type.Code, entity.EntityId, spot);
+        var local = entity.Pos.AsBlockPos.ToLocalPosition(api);
+        Mod.Logger.Audit("{0} spawned {1} #{2} at {3}", CallerName(args), type.Code, entity.EntityId, entity.Pos.AsBlockPos);
         return TextCommandResult.Success(L(args, "commands-spawned", type.Code.Path, entity.EntityId, local.X, local.Y, local.Z));
     }
 
@@ -307,14 +308,16 @@ public class WalkersCommandsSystem : ModSystem
         {
             return TextCommandResult.Success(DescribeSetting(setting, WalkersConfigJson.Find(new WalkersPlayerPrefs(), setting.Path)));
         }
-        if (setting.MemberName == nameof(WalkersPlayerPrefs.NoHaunt) && !configSystem.Config.Director.AllowPlayerOptOut)
-        {
-            return TextCommandResult.Error(L(args, "commands-me-nohaunt-off"));
-        }
         var value = WalkersConfigJson.ParseValue(text, setting.Type, setting.Range, out var error);
         if (value == null)
         {
             return TextCommandResult.Error(L(args, "commands-config-bad-value", setting.Path, error ?? ""));
+        }
+        // Opting out needs the server's leave; opting back in never does.
+        if (setting.MemberName == nameof(WalkersPlayerPrefs.NoHaunt) && value.Type == JTokenType.Boolean && (bool)value &&
+            !configSystem.Config.Director.AllowPlayerOptOut)
+        {
+            return TextCommandResult.Error(L(args, "commands-me-nohaunt-off"));
         }
         setting.SetValue(value);
         player.SetWalkersPrefs(prefs);
@@ -327,10 +330,10 @@ public class WalkersCommandsSystem : ModSystem
             e is EntityAgent and not EntityPlayer && e.Alive && e.Code?.Domain == WalkersModSystem.ModId);
 
     /// <summary>
-    /// A block position near <paramref name="start"/> where a creature can stand: solid ground below,
-    /// two free blocks above it, no liquid. Searches up and down from the start.
+    /// Where a creature can stand in the column of <paramref name="start"/>, searching up and down from
+    /// it: the centre of the block at the height of the ground. Null when the column has no such place.
     /// </summary>
-    private BlockPos? FindStandingSpot(BlockPos start)
+    private Vec3d? FindStandingSpot(BlockPos start)
     {
         var accessor = api.World.BlockAccessor;
         for (int offset = 0; offset <= 16; offset++)
@@ -342,19 +345,60 @@ public class WalkersCommandsSystem : ModSystem
                 {
                     continue;
                 }
-                if (IsFree(accessor, pos) && IsFree(accessor, pos.UpCopy()) && accessor.GetBlock(pos.DownCopy()).SideSolid[BlockFacing.UP.Index])
+                if (StandingHeight(accessor, pos) is { } y)
                 {
-                    return pos;
+                    return new Vec3d(pos.X + 0.5, y, pos.Z + 0.5);
                 }
             }
         }
         return null;
     }
 
-    private static bool IsFree(IBlockAccessor accessor, BlockPos pos)
+    /// <summary>
+    /// The height at which a creature stands with its feet in this block, or null. Either the block is
+    /// open and the one below carries it (solid on top, or a slab or path at least half a block high),
+    /// or the block holds thin cover it stands on: snow layers, loose stones and sticks. The blocks it
+    /// would reach into above must be open.
+    /// </summary>
+    private static double? StandingHeight(IBlockAccessor accessor, BlockPos pos)
     {
         var block = accessor.GetBlock(pos);
-        return !block.IsLiquid() && (block.CollisionBoxes == null || block.CollisionBoxes.Length == 0);
+        if (block.IsLiquid())
+        {
+            return null;
+        }
+        float top = TopOf(accessor, block, pos);
+        if (top > ThinCover || !IsOpen(accessor, pos.UpCopy()) || (top > 0 && !IsOpen(accessor, pos.UpCopy(2))))
+        {
+            return null;
+        }
+        if (top > 0)
+        {
+            return pos.Y + top;
+        }
+        var belowPos = pos.DownCopy();
+        var below = accessor.GetBlock(belowPos);
+        if (below.SideSolid[BlockFacing.UP.Index])
+        {
+            return pos.Y;
+        }
+        float belowTop = TopOf(accessor, below, belowPos);
+        return belowTop >= ThinCover ? belowPos.Y + belowTop : null;
+    }
+
+    /// <summary>Blocks whose collision reaches no higher than this are cover to stand on.</summary>
+    private const float ThinCover = 0.5f;
+
+    private static float TopOf(IBlockAccessor accessor, Block block, BlockPos pos)
+    {
+        var boxes = block.GetCollisionBoxes(accessor, pos);
+        return boxes == null || boxes.Length == 0 ? 0 : boxes.Max(b => b.Y2);
+    }
+
+    private static bool IsOpen(IBlockAccessor accessor, BlockPos pos)
+    {
+        var block = accessor.GetBlock(pos);
+        return !block.IsLiquid() && TopOf(accessor, block, pos) == 0;
     }
 
     private TextCommandResult Outcome(TextCommandCallingArgs args, WalkersConfigSystem.ReloadOutcome outcome, string headline)
@@ -430,16 +474,28 @@ public class WalkersCommandsSystem : ModSystem
     }
 
     /// <summary>
-    /// The server writes a console command's reply to its log as a format string, so a brace in the
-    /// reply (from a JSON error message, say) would lose the line and log an error. Doubling the
-    /// braces for the console prints them as typed; players get the reply unchanged.
+    /// Wraps a command handler so its reply reaches the caller exactly as written. The server treats a
+    /// reply as a format string twice: it logs a console reply through string.Format, and it runs a
+    /// one-line player reply through Lang.GetL. A brace in the text (from a JSON error message, or a
+    /// player's own argument) would garble the reply and log an error. Feature subcommands can use it too.
     /// </summary>
-    private static OnCommandDelegate SafeForConsole(OnCommandDelegate handler) => args =>
+    public static OnCommandDelegate SafeReply(OnCommandDelegate handler) => args =>
     {
         var result = handler(args);
-        if (args.Caller.Type == EnumCallerType.Console && result.StatusMessage != null)
+        var message = result.StatusMessage;
+        if (string.IsNullOrEmpty(message) || result.MessageParams != null)
         {
-            result.StatusMessage = result.StatusMessage.Replace("{", "{{").Replace("}", "}}");
+            return result;
+        }
+        if (args.Caller.Type == EnumCallerType.Console)
+        {
+            result.StatusMessage = message.Replace("{", "{{").Replace("}", "}}");
+        }
+        else if (args.Caller.Player != null && !message.Contains('\n'))
+        {
+            // Multi-line player replies are sent as they are; one-liners go through Lang.GetL(text, params).
+            result.StatusMessage = "{0}";
+            result.MessageParams = new object[] { message };
         }
         return result;
     };

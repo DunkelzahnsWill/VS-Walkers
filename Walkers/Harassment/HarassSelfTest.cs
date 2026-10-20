@@ -104,6 +104,8 @@ public sealed class HarassSelfTest
         check("pages: a Maud letter carries what the journal needs", maudOk, maud == null ? "no stack" : maud.Attributes.ToJsonToken());
         check("pages: Wat on lore paper, a chapter out of range refused", wat?.Collectible.Code.Path == "lore-paper" && bad == null, "");
         check("pages: the fallback letter is a signed parchment", fallback?.Attributes.GetString("signedby") == "" && fallback.Attributes["textCodes"] is StringArrayAttribute, "");
+        var loss = system.Pages.MakeStack(new PagesAct.Page { Journal = PagesAct.Losses, Chapter = PagesAct.LossDoor, NameKey = "walkers:pagename-hearsay" });
+        check("pages: a Tallies of Loss page carries what the journal needs", loss?.Attributes.GetString("discoveryCode") == PagesAct.Losses && loss.Attributes.GetString("title") == "A folded hearsay sheet", loss == null ? "no stack" : "");
     }
 
     private void LiveChecks(Action<string, bool, string> check)

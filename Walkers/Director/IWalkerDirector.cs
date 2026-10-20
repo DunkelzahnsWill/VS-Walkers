@@ -118,11 +118,10 @@ public interface IWalkerDirector
     void Release(int walkerId, WalkerRelease reason, bool fursTaken);
 
     /// <summary>
-    /// Clears the mark a player carries from a walker's unnatural furs (creature bible, section 7): Forms
-    /// calls it when the player burns or drops furs into fire (furs.burnClearsMark). A
-    /// <paramref name="walkerId"/> of 0 clears the marks of every walker.
+    /// Clears the mark a player carries from walkers' unnatural furs (creature bible, section 7): Forms
+    /// calls it when the player burns furs or drops them into fire (furs.burnClearsMark).
     /// </summary>
-    void ClearFurMarks(string playerUid, int walkerId = 0);
+    void ClearFurMarks(string playerUid);
 
     /// <summary>The walker's latest death, with its return day; null if it never died.</summary>
     LedgerEntry? GetLedgerEntry(int walkerId);
@@ -387,11 +386,4 @@ public static class WalkersDirectorExtensions
     /// <summary>The director on the server; null on a client or when it is not loaded.</summary>
     public static IWalkerDirector? GetWalkersDirector(this ICoreAPI api) =>
         api.ObjectCache.TryGetValue(CacheKey, out var director) ? director as IWalkerDirector : null;
-}
-
-/// <summary>Unnatural furs: walkers:walkerfur stacks, skinned from a walker's body (creature bible, section 7).</summary>
-public static class WalkerFur
-{
-    /// <summary>int item-stack attribute: the walker whose body the furs came from. Forms stamps it when the body is skinned.</summary>
-    public const string WalkerIdKey = "walkersWalkerId";
 }

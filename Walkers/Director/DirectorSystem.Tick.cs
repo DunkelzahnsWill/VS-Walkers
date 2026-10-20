@@ -379,10 +379,10 @@ public partial class DirectorSystem
                 continue;
             }
             // Like any haunt, a return waits for its target's rest; /walkers director return now skips it.
-            // Its target is the player most marked by its furs who has no walker of their own, else its last victim.
+            // Its target is the most-marked fur carrier who has no walker of their own, else its last victim.
             bool skipRest = returnNow == walker.Id;
             double restBy = skipRest ? double.MaxValue : now;
-            var victim = MarkedCarriers(walker.Id).FirstOrDefault(c => CanBeChosen(c, storm, restBy) && FarFromOtherVictims(c));
+            var victim = MarkedCarriers().FirstOrDefault(c => CanBeChosen(c, storm, restBy) && FarFromOtherVictims(c));
             if (victim == null && walker.VictimUid != null && candidates.TryGetValue(walker.VictimUid, out var last) && CanBeChosen(last, storm, restBy))
             {
                 victim = last;
@@ -423,17 +423,15 @@ public partial class DirectorSystem
                 continue;
             }
             record.LastRollDay = today;
-            // While the walker whose furs mark them rests, a marked player rolls furs.restingRollMultiplier times as often.
-            var marker = RestingMarker(victim.Uid);
-            double chance = config.Director.HauntChancePerDay * (marker != null ? config.Furs.RestingRollMultiplier : 1);
+            // While a walker rests, a marked player rolls furs.restingRollMultiplier times as often.
+            double chance = config.Director.HauntChancePerDay * (MarkedWhileResting(victim.Uid) ? config.Furs.RestingRollMultiplier : 1);
             if (sapi.World.Rand.NextDouble() >= chance || !FarFromOtherVictims(victim))
             {
                 continue;
             }
             // A walker a player who hurt it is owed stays reserved for them.
             var reserved = playerRecords.Values.Select(r => r.MarkedByWalker).Where(id => id != 0).ToHashSet();
-            var walker = (marker != null && !reserved.Contains(marker.Id) ? marker : null) ??
-                walkers.Values.Where(w => w.State == WalkerState.Resting && !reserved.Contains(w.Id)).OrderBy(w => w.Id).FirstOrDefault() ?? CreateWalker();
+            var walker = walkers.Values.Where(w => w.State == WalkerState.Resting && !reserved.Contains(w.Id)).OrderBy(w => w.Id).FirstOrDefault() ?? CreateWalker();
             StartHaunt(walker, victim, walker.ReturnPending);
             active++;
         }

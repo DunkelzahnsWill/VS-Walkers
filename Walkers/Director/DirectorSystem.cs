@@ -474,7 +474,6 @@ public partial class DirectorSystem : ModSystem, IWalkerDirector
         {
             record.MarkedByWalker = 0;
         }
-        ClearMarksOf(walkerId);
         SyncMemory(walker);
         Mod.Logger.Notification("Walker {0} is banished ({1}{2}). Its id is retired.", walkerId, cause, byPlayer == null ? "" : ", by " + byPlayer.PlayerName);
         Raise(WalkerBanished, Info(walker), Snapshot(entry));

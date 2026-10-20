@@ -86,15 +86,15 @@
     "director-standin-header": "Stand-ins: {0}",
     "director-standin-entry": "{0} at {1}, {2}, {3}",
     "director-standin-entry-unloaded": "{0} at {1}, {2}, {3} (not loaded)",
-    "director-cmd-furs-desc": "Marks from unnatural furs: who carries a walker's furs and how strongly they are marked. Without a subcommand it shows them all",
+    "director-cmd-furs-desc": "Marks from unnatural furs: who carries walker furs and how strongly they are marked. Without a subcommand it shows them all",
     "director-cmd-furs-status-desc": "Shows every fur mark, or one player's",
     "director-cmd-furs-clear-desc": "Clears every fur mark, or one player's",
     "director-furs-header": "Fur marks (a mark takes after {0:0.#} hours of carrying):",
     "director-furs-header-off": "Fur marks are off (furs.markTarget); furs are trophies only. Kept marks:",
-    "director-furs-marked": "{0}: marked by walker {1}, {2:0.#} hours{3}",
-    "director-furs-carrying": "{0}: walker {1}'s furs, {2:0.#} hours, not marked yet{3}",
+    "director-furs-marked": "{0}: marked, {1:0.#} hours{2}",
+    "director-furs-carrying": "{0}: {1:0.#} hours, not marked yet{2}",
     "director-furs-now": ", carrying them now",
-    "director-furs-none": "Nobody carries a walker's furs",
+    "director-furs-none": "Nobody carries walker furs",
     "director-furs-cleared-all": "Every fur mark is cleared",
-    "director-furs-cleared": "{0}'s fur marks are cleared"
+    "director-furs-cleared": "{0}'s fur mark is cleared"
 }

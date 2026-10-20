@@ -8,10 +8,12 @@ using Walkers.Commands;
 
 namespace Walkers.Director;
 
-// Unnatural furs (creature bible, section 7): whoever carries a walker's furs in their own inventories
-// is marked as its target. The mark takes after furs.markThresholdHours of carrying while online,
-// eligible and not idle, grows to furs.markCapHours and fades by furs.decayPerHour once they stop.
-// A due return goes to the most-marked carrier, and a resting walker's marked player rolls more often.
+// Unnatural furs (creature bible, section 7): whoever carries walker furs in their own inventories is
+// marked. Furs carry no walker's identity (the owner's ruling, 20 Oct: players cannot tell one walker
+// from another), so a mark counts for every walker. Marks change only while some walker that is not
+// banished has had its furs taken. A mark takes after furs.markThresholdHours of carrying while online,
+// eligible and not idle, grows to furs.markCapHours and fades by furs.decayPerHour once they stop. Any
+// due return goes to the most-marked carrier, and a marked player rolls more often while a walker rests.
 // Also the escalation level (section 7, the escalation list), which the harassment kit reads.
 public partial class DirectorSystem
 {
@@ -28,9 +30,11 @@ public partial class DirectorSystem
 
     // ---- Marks ----
 
-    /// <summary>Some walker that is not banished has furs out: only then are inventories scanned.</summary>
-    private bool FursOut() =>
-        data.Ledger.Any(e => e.FursTaken && walkers.TryGetValue(e.WalkerId, out var w) && w.State != WalkerState.Banished);
+    /// <summary>This walker's furs were taken at one of its deaths.</summary>
+    private bool FursTakenFrom(int walkerId) => data.Ledger.Any(e => e.WalkerId == walkerId && e.FursTaken);
+
+    /// <summary>Some walker that is not banished has furs out: only then do furs mark anyone.</summary>
+    private bool FursOut() => walkers.Values.Any(w => w.State != WalkerState.Banished && FursTakenFrom(w.Id));
 
     /// <summary>On each director tick: scans online players for furs, and grows or fades their marks.</summary>
     private void UpdateFurs()
@@ -39,27 +43,23 @@ public partial class DirectorSystem
         // A long gap (a frozen calendar, a restart) never counts for more than two days.
         double dt = data.FursUpdatedTotalHours <= 0 ? 0 : Math.Clamp(now - data.FursUpdatedTotalHours, 0, 48);
         data.FursUpdatedTotalHours = now;
-        if (!config.Furs.MarkTarget)
+        if (!config.Furs.MarkTarget || !FursOut())
         {
-            return;
-        }
-        bool scan = FursOut();
-        if (!scan && !playerRecords.Values.Any(r => r.FurMarks.Count > 0))
-        {
+            // A banish does not cool the furs; marks only hold still until another walker is skinned.
             return;
         }
         // Offline players keep their marks as they are: they neither carry nor put the furs down.
         foreach (var candidate in candidates.Values.Where(c => c.Player != null))
         {
-            var carried = scan ? CarriedFurs(candidate.Player!) : new HashSet<int>();
             var record = playerRecords[candidate.Uid];
-            foreach (int walkerId in carried.Where(id => record.FurMarks.All(m => m.WalkerId != id)))
+            bool carrying = CarriesFurs(candidate.Player!);
+            if (carrying)
             {
-                record.FurMarks.Add(new FurMark { WalkerId = walkerId });
+                record.FurMark ??= new FurMark();
             }
-            foreach (var mark in record.FurMarks.ToList())
+            if (record.FurMark != null)
             {
-                UpdateMark(candidate, record, mark, carried.Contains(mark.WalkerId), now, dt);
+                UpdateMark(candidate, record, record.FurMark, carrying, now, dt);
             }
         }
     }
@@ -73,7 +73,7 @@ public partial class DirectorSystem
             mark.Hours -= furs.DecayPerHour * dt;
             if (mark.Hours <= 0)
             {
-                record.FurMarks.Remove(mark);
+                record.FurMark = null;
             }
             else if (mark.Hours < furs.MarkThresholdHours)
             {
@@ -82,17 +82,16 @@ public partial class DirectorSystem
             return;
         }
 
-        var walker = walkers[mark.WalkerId];
         if (!mark.Carrying)
         {
-            // Picked up. Furs someone else carried before do not count for a while.
-            if (walker.FurCarriers.Any(uid => uid != carrier.Uid))
+            // Picked up. Furs another player carried before do not count for a while.
+            if (data.FurCarriers.Any(uid => uid != carrier.Uid))
             {
                 mark.GraceUntilTotalHours = Math.Max(mark.GraceUntilTotalHours, now + furs.ForeignGraceHours);
             }
-            if (!walker.FurCarriers.Contains(carrier.Uid))
+            if (!data.FurCarriers.Contains(carrier.Uid))
             {
-                walker.FurCarriers.Add(carrier.Uid);
+                data.FurCarriers.Add(carrier.Uid);
             }
             if (!mark.ToldHeld)
             {
@@ -109,14 +108,13 @@ public partial class DirectorSystem
         {
             mark.ToldMarked = true;
             Tell(carrier.Player!, "walkers-fur-marked");
-            Mod.Logger.Notification("{0} is marked by walker {1}'s furs", carrier.Name, mark.WalkerId);
+            Mod.Logger.Notification("{0} is marked by the walker furs they carry", carrier.Name);
         }
     }
 
-    /// <summary>The walker ids of the furs in a player's own inventories, banished walkers' furs aside (they have gone cold).</summary>
-    private HashSet<int> CarriedFurs(IServerPlayer player)
+    /// <summary>Whether a player has walker furs in their own inventories.</summary>
+    private static bool CarriesFurs(IServerPlayer player)
     {
-        var found = new HashSet<int>();
         foreach (var name in FurInventories)
         {
             var inventory = player.InventoryManager.GetOwnInventory(name);
@@ -126,16 +124,13 @@ public partial class DirectorSystem
             }
             foreach (var slot in inventory)
             {
-                var stack = slot?.Itemstack;
-                if (stack?.Collectible?.Code is { } code && code.Domain == Core.WalkersModSystem.ModId && code.Path == FurCode &&
-                    stack.Attributes.GetInt(WalkerFur.WalkerIdKey) is var id and > 0 &&
-                    walkers.TryGetValue(id, out var walker) && walker.State != WalkerState.Banished)
+                if (slot?.Itemstack?.Collectible?.Code is { } code && code.Domain == Core.WalkersModSystem.ModId && code.Path == FurCode)
                 {
-                    found.Add(id);
+                    return true;
                 }
             }
         }
-        return found;
+        return false;
     }
 
     /// <summary>One of the lore bible's fur lines (game:ingamediscovery-{code}), shown once to the carrier.</summary>
@@ -151,42 +146,34 @@ public partial class DirectorSystem
         }
     }
 
-    private bool IsMarked(FurMark mark) => config.Furs.MarkTarget && mark.Hours > 0 && mark.Hours >= config.Furs.MarkThresholdHours;
+    private bool IsMarked(FurMark? mark) => mark != null && config.Furs.MarkTarget && mark.Hours > 0 && mark.Hours >= config.Furs.MarkThresholdHours;
 
-    /// <summary>Online players marked by this walker's furs, the most marked first.</summary>
-    private IEnumerable<Candidate> MarkedCarriers(int walkerId) =>
+    /// <summary>Online players marked by walker furs, the most marked first: the first targets of any return.</summary>
+    private IEnumerable<Candidate> MarkedCarriers() =>
         candidates.Values
-            .Where(c => c.Player != null)
-            .Select(c => (Candidate: c, Mark: playerRecords[c.Uid].FurMarks.FirstOrDefault(m => m.WalkerId == walkerId)))
-            .Where(t => t.Mark != null && IsMarked(t.Mark))
-            .OrderByDescending(t => t.Mark!.Hours)
-            .Select(t => t.Candidate);
+            .Where(c => c.Player != null && IsMarked(playerRecords[c.Uid].FurMark))
+            .OrderByDescending(c => playerRecords[c.Uid].FurMark!.Hours);
 
-    /// <summary>The resting walker whose furs mark this player most, or null.</summary>
-    private WalkerRecord? RestingMarker(string uid) =>
-        playerRecords[uid].FurMarks
-            .Where(IsMarked)
-            .OrderByDescending(m => m.Hours)
-            .Select(m => walkers.GetValueOrDefault(m.WalkerId))
-            .FirstOrDefault(w => w?.State == WalkerState.Resting);
+    /// <summary>A marked player whose roll a resting walker doubles (furs.restingRollMultiplier).</summary>
+    private bool MarkedWhileResting(string uid) =>
+        IsMarked(playerRecords[uid].FurMark) && walkers.Values.Any(w => w.State == WalkerState.Resting);
 
-    public void ClearFurMarks(string playerUid, int walkerId = 0)
+    public void ClearFurMarks(string playerUid)
     {
-        if (playerRecords.TryGetValue(playerUid, out var record) &&
-            record.FurMarks.RemoveAll(m => walkerId == 0 || m.WalkerId == walkerId) > 0)
+        if (playerRecords.TryGetValue(playerUid, out var record) && record.FurMark != null)
         {
-            Mod.Logger.Notification("{0}'s fur marks{1} are cleared", NameOf(playerUid), walkerId == 0 ? "" : " from walker " + walkerId);
+            record.FurMark = null;
+            Mod.Logger.Notification("{0}'s fur mark is cleared", NameOf(playerUid));
         }
     }
 
-    /// <summary>A banished walker's furs turn cold: every mark it made is gone.</summary>
-    private void ClearMarksOf(int walkerId)
+    private void ClearAllFurMarks()
     {
         foreach (var record in playerRecords.Values)
         {
-            record.FurMarks.RemoveAll(m => m.WalkerId == walkerId);
+            record.FurMark = null;
         }
-        walkers[walkerId].FurCarriers.Clear();
+        data.FurCarriers.Clear();
     }
 
     // ---- Escalation ----
@@ -252,13 +239,11 @@ public partial class DirectorSystem
             records = new[] { playerRecords[uid] };
         }
         var lines = new List<string> { L(args, config.Furs.MarkTarget ? "director-furs-header" : "director-furs-header-off", config.Furs.MarkThresholdHours) };
-        foreach (var record in records.OrderBy(r => r.Name))
+        foreach (var record in records.Where(r => r.FurMark != null).OrderByDescending(r => r.FurMark!.Hours))
         {
-            foreach (var mark in record.FurMarks.OrderByDescending(m => m.Hours))
-            {
-                lines.Add("  " + L(args, IsMarked(mark) ? "director-furs-marked" : "director-furs-carrying",
-                    record.Name, mark.WalkerId, mark.Hours, mark.Carrying ? L(args, "director-furs-now") : ""));
-            }
+            var mark = record.FurMark!;
+            lines.Add("  " + L(args, IsMarked(mark) ? "director-furs-marked" : "director-furs-carrying",
+                record.Name, mark.Hours, mark.Carrying ? L(args, "director-furs-now") : ""));
         }
         if (lines.Count == 1)
         {
@@ -272,10 +257,7 @@ public partial class DirectorSystem
         var target = args.Parsers.Count > 0 && !args.Parsers[0].IsMissing ? (string)args[0] : null;
         if (target == null)
         {
-            foreach (var record in playerRecords.Values)
-            {
-                record.FurMarks.Clear();
-            }
+            ClearAllFurMarks();
             Audit(args, "cleared every fur mark");
             return TextCommandResult.Success(L(args, "director-furs-cleared-all"));
         }

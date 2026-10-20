@@ -191,7 +191,7 @@ their own. Every 10 seconds it looks at the online players. Each player in survi
   out of the doe's country, in another game mode or in a temporal storm, and the walker withdraws out
   of sight.
 - **The return.** A walker killed without the ritual goes into the ledger and comes back
-  `return.afterSeasons` later, for the player most marked by its furs, else its last victim. It
+  `return.afterSeasons` later, for the player most marked by walker furs, else its last victim. It
   comes back angrier, not stronger: its escalation level (improper deaths plus one per
   `escalation.monthsPerLevel` months of haunting since, at most 3) drives the harassment kit's
   escalation acts.
@@ -210,7 +210,7 @@ Everything is saved in the world's save game.
 | `/walkers director ledger` | Every walker death, how it died and what came of it |
 | `/walkers director tick` | Runs one director update now |
 | `/walkers director standin add [position]`, `remove <name>`, `list` | Debug stand-in victims for servers with nobody online; needs `debug.standInVictims` |
-| `/walkers furs [status\|clear] [player]` | Who carries a walker's furs and how marked they are; clears every mark or one player's |
+| `/walkers furs [status\|clear] [player]` | Who carries walker furs and how marked they are; clears every mark or one player's |
 
 ### For feature code
 
@@ -226,7 +226,9 @@ Everything is saved in the world's save game.
   `Banish`, `Release`, `ClearFurMarks` for burned furs, and `AddRestore` for every block a walker
   changes, with a handler for your kind from `RegisterRestoreHandler`. The stage ladder plugs in with
   `RegisterLadder`.
-- Furs carry the walker's id as the item-stack attribute `walkersWalkerId` (`WalkerFur.WalkerIdKey`).
+- Furs carry no walker's identity: any `walkers:walkerfur` in a player's own inventories marks them
+  for every walker, while some walker that is not banished has had its furs taken
+  (`Release(..., fursTaken: true)`).
 - Smoke tests: `tests/smoke/director.*` haunts a stand-in, places the walker, puts it in the ledger,
   and `director.restart.*` checks after a restart that the ledger came back and the return works.
 

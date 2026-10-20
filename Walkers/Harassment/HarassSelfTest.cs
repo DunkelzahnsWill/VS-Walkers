@@ -364,7 +364,8 @@ public sealed class HarassSelfTest
         standIn.Pos.SetPos(origin.X + 0.5, ground + 1, origin.Z + 0.5);
         var watched = escalation.LayHerd(ctx);
         check("rotting herd: not while someone is within 32 blocks", !watched.Done, watched.Detail);
-        standIn.Pos.SetPos(victimAt.X + 80, victimAt.Y, victimAt.Z);
+        // Far from every candidate home below, so only the director's stand-ins could count as near.
+        standIn.Pos.SetPos(victimAt.X + 400, victimAt.Y, victimAt.Z + 400);
         // A home far enough from anyone else counting (the director's smoke stand-ins stand at the spawn).
         foreach (var (hx, hz) in new[] { (64, 0), (-64, 0), (0, 64), (0, -64), (48, 48), (-48, -48) })
         {
@@ -377,7 +378,12 @@ public sealed class HarassSelfTest
                 break;
             }
         }
+        // Each try draws six random spots; uneven ground can refuse all of them.
         var herd = escalation.LayHerd(ctx);
+        for (int i = 0; i < 4 && !herd.Done; i++)
+        {
+            herd = escalation.LayHerd(ctx);
+        }
         standIn.Pos.SetPos(victimAt);
         var ids = (harass["herdIds"] as LongArrayAttribute)?.value ?? Array.Empty<long>();
         check("rotting herd: the does lie where nobody is", herd.Done && ids.Length == levels.Level3.AnimalsPerHaunt, herd.Detail);

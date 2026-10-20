@@ -21,7 +21,7 @@
   pages: a Maud letter carries what the journal needs: pass
   pages: the fallback letter is a signed parchment: pass
   test house built: pass
-  torches: the restore list relights it: pass
+  torches: it stays out until a player relights it: pass
   torches: the torch out of sight goes out: pass
   whispers: W5 only with the name, W6 never, W2 not in stage 3: pass
   whispers: a line \(logged for a stand-in\): pass

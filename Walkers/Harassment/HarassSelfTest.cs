@@ -25,7 +25,7 @@ namespace Walkers.Harassment;
 /// <item>Each act fires under its trigger: echoes (footsteps), wrong calls, whispers, a knock (with its
 /// page), torches, doors, chest lids, and the enraged break-in.</item>
 /// <item>Each respects its switch, its nightly cap, the victim's sight, the claim rule and a barred
-/// way in; torches and doors are put back by the restore list.</item>
+/// way in; doors are put back by the restore list, torches stay out.</item>
 /// </list>
 /// Everything it builds and spawns is removed again, and every setting it touches is put back.
 /// </summary>
@@ -191,7 +191,9 @@ public sealed class HarassSelfTest
         bool extinct = accessor.GetBlock(torchPos) is BlockTorch t && t.IsExtinct;
         check("torches: the torch out of sight goes out", torch.Done && extinct, torch.Detail);
         system.Restore.UndoAllLocal(world);
-        check("torches: the restore list relights it", accessor.GetBlock(torchPos) is BlockTorch lit && DouseTorchAct.IsLit(lit), accessor.GetBlock(torchPos).Code?.ToShortString() ?? "");
+        check("torches: it stays out until a player relights it", accessor.GetBlock(torchPos) is BlockTorch still && still.IsExtinct, accessor.GetBlock(torchPos).Code?.ToShortString() ?? "");
+        // Relit by hand, so the claim check below has a lit torch to refuse.
+        accessor.ExchangeBlock(world.GetBlock(new AssetLocation("game", "torch-basic-lit-up"))!.Id, torchPos);
 
         // Stage 4 at night: doors, the claim rule, chest lids and the victim's sight.
         ctx = Ctx(4)!;

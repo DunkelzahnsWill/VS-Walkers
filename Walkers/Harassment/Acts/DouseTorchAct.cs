@@ -10,8 +10,8 @@ namespace Walkers.Harassment.Acts;
 /// <summary>
 /// Torches, stages 3 to 5, at night: a lit basic torch within 16 blocks of the victim, out of their
 /// sight and where the claim rule allows, goes out with the hiss of a doused flame. It becomes the
-/// torch's extinct variant, which a player can relight, never the burnt-out one. The restore list
-/// relights it at dawn and when the walker withdraws, unless a player has changed it since.
+/// torch's extinct variant, which a player can relight, never the burnt-out one. It stays out until a
+/// player relights it (the owner's call, to keep it cheap for servers): nothing tracks or relights it.
 /// </summary>
 public sealed class DouseTorchAct : HarassAct
 {
@@ -51,7 +51,7 @@ public sealed class DouseTorchAct : HarassAct
 
     public static bool IsLit(BlockTorch torch) => torch.Variant["state"] == "lit" && torch.ExtinctVariant != null && !torch.IsExtinct;
 
-    /// <summary>Swaps the torch for its extinct variant, keeping its block entity, and enters it on the restore list.</summary>
+    /// <summary>Swaps the torch for its extinct variant, keeping its block entity. Not put back.</summary>
     public static ActResult Douse(HarassContext ctx, BlockPos pos, BlockTorch torch)
     {
         var world = ctx.Api.World;
@@ -59,8 +59,6 @@ public sealed class DouseTorchAct : HarassAct
         world.BlockAccessor.ExchangeBlock(extinct.Id, pos);
         world.BlockAccessor.MarkBlockDirty(pos);
         world.PlaySoundAt(HarassSounds.Extinguish, pos.X + 0.5, pos.Y + 0.5, pos.Z + 0.5, null, 0.9f + (float)ctx.Rand.NextDouble() * 0.2f, 16, 1f);
-        ctx.System.Restore.Add(ctx, new RestoreEntry(RestoreEntry.KindBlock, pos.Copy(), torch.Code.ToString(), extinct.Code.ToString(),
-            ctx.System.WalkerIdOf(ctx), 0, UndoOnWithdraw: true, UndoAtDawn: true));
         return ActResult.Ok($"{torch.Code.ToShortString()} at {pos} put out");
     }
 }

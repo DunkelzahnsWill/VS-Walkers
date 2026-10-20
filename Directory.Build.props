@@ -1,0 +1,11 @@
+<Project>
+  <!-- Shared by the mod and CakeBuild projects. -->
+  <PropertyGroup>
+    <!--
+      The game folder holding VintagestoryAPI.dll and Mods/*.dll. On your PC set the VINTAGE_STORY
+      environment variable to your game install; in the cloud scripts/setup.sh unpacks the dedicated
+      server into the default below, so a plain `dotnet build` works there.
+    -->
+    <VINTAGE_STORY Condition="'$(VINTAGE_STORY)' == ''">$(MSBuildThisFileDirectory).cache/vintagestory/server</VINTAGE_STORY>
+  </PropertyGroup>
+</Project>

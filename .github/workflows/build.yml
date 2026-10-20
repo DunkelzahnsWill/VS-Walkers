@@ -1,0 +1,58 @@
+name: Build and smoke test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Cache the game server download
+        uses: actions/cache@v6
+        with:
+          path: .cache/vintagestory/downloads
+          key: vs-server-${{ hashFiles('scripts/versions.env') }}
+
+      - name: Set up the game server (checksum-verified)
+        run: scripts/setup.sh
+
+      - name: Validate, build and package
+        run: ./build.sh
+
+      - name: Smoke test on a headless server
+        run: scripts/smoke-test.sh
+
+      - name: Upload the mod zip
+        uses: actions/upload-artifact@v7
+        with:
+          name: walkers-mod
+          path: Releases/*.zip
+          if-no-files-found: error
+
+      - name: Upload the smoke-test server logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: smoke-test-logs
+          path: |
+            .cache/smoke/stdout.log
+            .cache/smoke/data/Logs/
+          include-hidden-files: true
+          if-no-files-found: ignore

@@ -72,7 +72,7 @@ public class AiTaskWalkerLunge : WalkerTaskBase
 
     public AiTaskWalkerLunge(EntityAgent entity, JsonObject taskConfig, JsonObject aiConfig) : base(entity, taskConfig, aiConfig)
     {
-        sight = new GazeSight(entity.World);
+        sight = new GazeSight(entity.World, physical: true);
     }
 
     public override bool ShouldExecute()
@@ -214,7 +214,7 @@ public class AiTaskWalkerLunge : WalkerTaskBase
         return true;
     }
 
-    /// <summary>One ray from its eyes to the target's chest, blocked by anything with a collision box but glass.</summary>
+    /// <summary>One ray from its eyes to the target's chest, blocked by anything with a collision box, windows included.</summary>
     private bool ClearLine(Entity candidate)
     {
         var from = WalkerGaze.EyePos(entity);

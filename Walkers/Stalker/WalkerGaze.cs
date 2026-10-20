@@ -197,17 +197,20 @@ public struct GazeResult
 /// <summary>
 /// What the gaze rays hit: blocks with a collision box, except glass, and leaves, which have none. So
 /// a walker is seen through tall grass, flowers and windows but hides behind leaves and walls.
-/// Entities never block the view.
+/// Entities never block the view. The <c>physical</c> variant is for a reach, not a look: every block
+/// with a collision box blocks it, glass included, and leaves do not.
 /// </summary>
 public sealed class GazeSight : IWorldIntersectionSupplier
 {
     private static readonly Cuboidf[] FullBlock = { new Cuboidf(0, 0, 0, 1, 1, 1) };
 
     private readonly IWorldAccessor world;
+    private readonly bool physical;
 
-    public GazeSight(IWorldAccessor world)
+    public GazeSight(IWorldAccessor world, bool physical = false)
     {
         this.world = world;
+        this.physical = physical;
     }
 
     public IBlockAccessor blockAccessor => world.BlockAccessor;
@@ -219,6 +222,10 @@ public sealed class GazeSight : IWorldIntersectionSupplier
     public Cuboidf[]? GetBlockIntersectionBoxes(BlockPos pos)
     {
         var block = world.BlockAccessor.GetBlock(pos);
+        if (physical)
+        {
+            return block.GetCollisionBoxes(world.BlockAccessor, pos);
+        }
         switch (block.BlockMaterial)
         {
             case EnumBlockMaterial.Glass:

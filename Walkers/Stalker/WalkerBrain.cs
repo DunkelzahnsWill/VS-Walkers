@@ -8,6 +8,7 @@ using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 using Walkers.Config;
 using Walkers.Director;
+using Walkers.Stalker.Tasks;
 
 namespace Walkers.Stalker;
 
@@ -111,6 +112,9 @@ public sealed class WalkerBrain
 
     /// <summary>The body holds a doorway (walkers-doorway): a lunge from there carries it one step in at most.</summary>
     public bool HoldingDoorway { get; set; }
+
+    /// <summary>The body's walkers-doorway task while it has a door in hand; the mod system lets go of a stale one.</summary>
+    public AiTaskWalkerDoorway? Doorway { get; set; }
 
     /// <summary>Real milliseconds since the victim was last seen asleep in a bed; long.MaxValue if never.</summary>
     public long MsSinceVictimAsleep => lastVictimAsleepMs == 0 ? long.MaxValue : api.World.ElapsedMilliseconds - lastVictimAsleepMs;
@@ -468,8 +472,8 @@ public sealed class WalkerBrain
 
     private void UpdateFreeze(long nowMs)
     {
-        // A burning body runs for water whoever watches.
-        bool frozen = Config.Gaze.Freeze && Gaze.AnyWatched && MsSincePlayerHit >= HitBreaksFreezeMs && !Body.IsOnFire;
+        // A burning body runs for water whoever watches, and a swimming one keeps swimming for the shore.
+        bool frozen = Config.Gaze.Freeze && Gaze.AnyWatched && MsSincePlayerHit >= HitBreaksFreezeMs && !Body.IsOnFire && !Body.Swimming;
         if (frozen && Mode == StalkerMode.Hunt && VictimDistance <= Config.Gaze.LungeRange)
         {
             frozen = false;

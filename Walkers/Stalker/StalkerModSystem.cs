@@ -44,6 +44,13 @@ public sealed class StalkerModSystem : ModSystem
     private ICoreServerAPI api = null!;
     private readonly Dictionary<long, WalkerBrain> brains = new();
     private readonly List<WalkerBrain> tickBuffer = new();
+
+    /// <summary>Doors a walker opened and could not close because someone stood in them, with when to give up.</summary>
+    private readonly List<(BlockPos Pos, long UntilMs)> doorsToClose = new();
+    private long nextDoorCloseMs;
+
+    /// <summary>Doors queued by <see cref="QueueDoorClose"/> are tried this often, for this long.</summary>
+    private const long DoorCloseEveryMs = 1000, DoorCloseForMs = 600000;
     private bool directorChecked;
     private StalkerSelfTest? selfTest;
 
@@ -290,14 +297,23 @@ public sealed class StalkerModSystem : ModSystem
             return;
         }
         var active = taskAi.TaskManager.ActiveTasksBySlot;
+        bool ownsPath = true;
         for (int slot = 0; slot < active.Length; slot++)
         {
             if (active[slot] is AiTaskWander or AiTaskLookAround)
             {
                 taskAi.TaskManager.StopTask(slot);
             }
+            else if (active[slot] is AiTaskGetOutOfWater)
+            {
+                // Its path ends only through the traverser's callbacks, which Stop never fires.
+                ownsPath = false;
+            }
         }
-        taskAi.PathTraverser?.Stop();
+        if (ownsPath)
+        {
+            taskAi.PathTraverser?.Stop();
+        }
     }
 
     /// <summary>
@@ -351,12 +367,34 @@ public sealed class StalkerModSystem : ModSystem
     {
         if (brains.TryGetValue(entity.EntityId, out var brain) && ReferenceEquals(brain.Body, entity))
         {
+            // Let go of a held door first, while the body still has its brain.
+            brain.Doorway?.Release();
             brains.Remove(entity.EntityId);
         }
     }
 
+    /// <summary>Closes the door at <paramref name="pos"/> once nobody stands in it, trying each second for ten minutes.</summary>
+    public void QueueDoorClose(BlockPos pos)
+    {
+        if (!doorsToClose.Exists(d => d.Pos.Equals(pos)))
+        {
+            doorsToClose.Add((pos.Copy(), api.World.ElapsedMilliseconds + DoorCloseForMs));
+        }
+    }
+
+    private void CloseQueuedDoors(long now)
+    {
+        if (doorsToClose.Count == 0 || now < nextDoorCloseMs)
+        {
+            return;
+        }
+        nextDoorCloseMs = now + DoorCloseEveryMs;
+        doorsToClose.RemoveAll(d => now >= d.UntilMs || AiTaskWalkerDoorway.TryClose(api.World, d.Pos) != RestoreResult.Later);
+    }
+
     private void OnTick(float dt)
     {
+        CloseQueuedDoors(api.World.ElapsedMilliseconds);
         if (brains.Count == 0)
         {
             return;
@@ -373,6 +411,7 @@ public sealed class StalkerModSystem : ModSystem
             try
             {
                 brain.Tick(now);
+                brain.Doorway?.ReleaseIfStale(now);
             }
             catch (Exception e)
             {

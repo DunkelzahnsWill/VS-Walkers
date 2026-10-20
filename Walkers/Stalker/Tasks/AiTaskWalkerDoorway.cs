@@ -50,6 +50,9 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
     /// <summary>A door it may not open is left alone this long.</summary>
     private const long RefusedDoorMs = 60000;
 
+    /// <summary>A walker's feet this close to the door's centre stand in the door's cell.</summary>
+    private const double InDoorCell = 0.8;
+
     /// <summary>No animals within this many blocks of a door it opens.</summary>
     private const float AnimalRadius = 6;
 
@@ -68,6 +71,7 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
     private long nextVictimScanMs;
     private BlockPos? refusedDoor;
     private long refusedUntilMs;
+    private bool active;
 
     public AiTaskWalkerDoorway(EntityAgent entity, JsonObject taskConfig, JsonObject aiConfig) : base(entity, taskConfig, aiConfig)
     {
@@ -136,6 +140,11 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
     public override void StartExecute()
     {
         base.StartExecute();
+        active = true;
+        if (Brain != null)
+        {
+            Brain.Doorway = this;
+        }
         if (!holding && outside != null)
         {
             GoTo(outside, Speed(false), 0.6f, false, force: true);
@@ -206,6 +215,7 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
     public override void FinishExecute(bool cancelled)
     {
         base.FinishExecute(cancelled);
+        active = false;
         var brain = Brain;
         bool lunging = cancelled && brain != null && brain.Mode == StalkerMode.Hunt && holding && world.ElapsedMilliseconds < holdUntilMs;
         if (lunging)
@@ -213,6 +223,31 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
             // A lunge took over; the hold resumes after it.
             return;
         }
+        Release();
+    }
+
+    /// <summary>
+    /// Called on the brain's tick. A hold that a lunge interrupted resumes only while the hunt goes on,
+    /// and the task manager may not ask this task again (walkers-retreat outranks it), so a door left
+    /// over from a hunt that ended is let go of here: closed if it opened it.
+    /// </summary>
+    public void ReleaseIfStale(long nowMs)
+    {
+        if (door == null || active)
+        {
+            return;
+        }
+        var brain = Brain;
+        if (brain != null && entity.Alive && brain.Mode == StalkerMode.Hunt && holding && nowMs < holdUntilMs)
+        {
+            return;
+        }
+        Release();
+    }
+
+    /// <summary>Lets go of the door: leaves it alone for a while, closes it if it opened it, and forgets it.</summary>
+    public void Release()
+    {
         if (door != null)
         {
             // Done with this door for a while; the hunt still never walks through it.
@@ -371,7 +406,8 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
         }
         if (SomeoneInDoorway(world, d.Pos))
         {
-            // The restore list (with the director) closes it later.
+            // Tried again until nobody stands in it (and, with the director, by the restore list).
+            Brain?.Owner.QueueDoorClose(d.Pos);
             return;
         }
         d.ToggleDoorState(null, false);
@@ -382,18 +418,21 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
     /// the director. Waits while the chunk is not loaded or anyone stands in the doorway; drops the
     /// entry if the door is gone or already closed.
     /// </summary>
-    public static RestoreResult UndoRestore(IWorldAccessor world, RestoreEntry entry)
+    public static RestoreResult UndoRestore(IWorldAccessor world, RestoreEntry entry) => TryClose(world, entry.Pos);
+
+    /// <summary>Closes the door at <paramref name="pos"/> if it is open and nobody stands in it; see <see cref="UndoRestore"/>.</summary>
+    public static RestoreResult TryClose(IWorldAccessor world, BlockPos pos)
     {
-        if (world.BlockAccessor.GetChunkAtBlockPos(entry.Pos) == null)
+        if (world.BlockAccessor.GetChunkAtBlockPos(pos) == null)
         {
             return RestoreResult.Later;
         }
-        var d = world.BlockAccessor.GetBlockEntity(entry.Pos)?.GetBehavior<BEBehaviorDoor>();
+        var d = world.BlockAccessor.GetBlockEntity(pos)?.GetBehavior<BEBehaviorDoor>();
         if (d == null || !d.Opened)
         {
             return RestoreResult.Dropped;
         }
-        if (SomeoneInDoorway(world, entry.Pos))
+        if (SomeoneInDoorway(world, pos))
         {
             return RestoreResult.Later;
         }
@@ -401,8 +440,23 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
         return RestoreResult.Done;
     }
 
-    private static bool SomeoneInDoorway(IWorldAccessor world, BlockPos pos) =>
-        world.GetEntitiesAround(new Vec3d(pos.X + 0.5, pos.Y + 1, pos.Z + 0.5), 1.2f, 1.5f, e => e.Alive && e is EntityAgent).Length > 0;
+    /// <summary>
+    /// A player or creature in or next to the doorway. A walker body counts only inside the door's own
+    /// cell, so a walker standing in front of the door it held does not keep it open.
+    /// </summary>
+    private static bool SomeoneInDoorway(IWorldAccessor world, BlockPos pos)
+    {
+        double cx = pos.X + 0.5, cz = pos.Z + 0.5;
+        return world.GetEntitiesAround(new Vec3d(cx, pos.Y + 1, cz), 1.2f, 1.5f, e =>
+        {
+            if (!e.Alive || e is not EntityAgent)
+            {
+                return false;
+            }
+            double dx = e.Pos.X - cx, dz = e.Pos.Z - cz;
+            return !StalkerModSystem.IsWalkerBody(e) || dx * dx + dz * dz < InDoorCell * InDoorCell;
+        }).Length > 0;
+    }
 
     private bool IsRefused(BEBehaviorDoor d) => refusedDoor != null && d.Pos.Equals(refusedDoor) && world.ElapsedMilliseconds < refusedUntilMs;
 
@@ -421,6 +475,10 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
         if (Brain != null)
         {
             Brain.HoldingDoorway = false;
+            if (ReferenceEquals(Brain.Doorway, this))
+            {
+                Brain.Doorway = null;
+            }
         }
     }
 

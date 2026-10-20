@@ -1,0 +1,10 @@
+{
+	"code": "walkers-wat",
+	"title": "walkers:lore-wat-title",
+	"category": "walkers-wat",
+	"pieces": [
+		"walkers:lore-wat-piece1",
+		"walkers:lore-wat-piece2",
+		"walkers:lore-wat-piece3"
+	]
+}

@@ -8,6 +8,7 @@ using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 using Walkers.Config;
 using Walkers.Director;
+using Walkers.Harassment;
 
 namespace Walkers.Stalker.Tasks;
 
@@ -113,8 +114,9 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
                 }
             }
         }
-        if (IsOnCooldown())
+        if (!brain.Config.Harass.Doorway.Enabled || IsOnCooldown())
         {
+            // harass.doorway.enabled false: it still never walks through a door, but leaves doors alone.
             return false;
         }
         if (found == null && now - brain.NoPathToVictimMs < NoPathRecentMs && now >= nextVictimScanMs)
@@ -260,7 +262,7 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
     private bool StillWorthIt(WalkerBrain brain, Entity victim)
     {
         var d = door;
-        return d != null && world.BlockAccessor.GetBlockEntity(d.Pos)?.GetBehavior<BEBehaviorDoor>() == d &&
+        return d != null && brain.Config.Harass.Doorway.Enabled && world.BlockAccessor.GetBlockEntity(d.Pos)?.GetBehavior<BEBehaviorDoor>() == d &&
                victim.Pos.DistanceTo(Center(d)) <= VictimNearDoor && !StalkerModSystem.IsAsleep(victim);
     }
 
@@ -367,23 +369,8 @@ public class AiTaskWalkerDoorway : WalkerTaskBase
         return animals.Length == 0;
     }
 
-    private bool ClaimsAllow(ClaimRespect rule, BlockPos pos, Entity victim)
-    {
-        switch (rule)
-        {
-            case ClaimRespect.Off:
-                return true;
-            case ClaimRespect.AnyClaim:
-                return world.Claims.Get(pos) is not { Length: > 0 };
-            default:
-                if (victim is EntityPlayer ep && ep.Player is IPlayer player)
-                {
-                    return world.Claims.TestAccess(player, pos, EnumBlockAccessFlags.Use) == EnumWorldAccessResponse.Granted;
-                }
-                // A stand-in has no rights of its own: only unclaimed land.
-                return world.Claims.Get(pos) is not { Length: > 0 };
-        }
-    }
+    /// <summary>harass.respectClaims, by the harassment kit's rule (<see cref="BlockRules.ClaimsAllow"/>), so both agree on whose doors it may touch.</summary>
+    private bool ClaimsAllow(ClaimRespect rule, BlockPos pos, Entity victim) => BlockRules.ClaimsAllow(world, rule, pos, victim);
 
     private void Open(WalkerBrain brain, BEBehaviorDoor d)
     {

@@ -297,14 +297,14 @@ storm, while the walker withdraws, and from stage 4 while another player is with
 | Act | Stages | What it does |
 | --- | --- | --- |
 | `echoes` | 3-5 | Plays back one of the victim's own recent block sounds behind them, or footsteps on their ground |
-| `knocks` | 3-5 | Raps on the outer face of the nearest door (one rap, two in stage 4, three at dusk in stage 5) and leaves a page |
+| `knocks` | 3-5, level 2+ | Raps on the outer face of the nearest door (one rap, two in stage 4, three at dusk in stage 5) and leaves a page |
 | `wrongCalls` | 2-5 | A deer, small-deer or elk call from 20-40 blocks off, at a lowered pitch; sometimes another answers |
 | `whispers` | 3-5 | A line from the lore bible's whisper table; W5 uses the player's name only when their prefs allow it |
-| `douseTorches` | 3-5 | A lit torch out of the victim's sight goes out and stays out until a player relights it |
+| `douseTorches` | 3-5 | A lit torch out of the victim's sight goes out and stays out until a player relights it (the level's `torchesPerNight`); from level 4 it is eaten |
 | `doors` | 4-5 | Shuts an open door or gate, or swings a closed one open out of sight; closed again after `harass.doors.maxOpenHours` |
 | `chestLids` | 4-5 | A chest lid out of sight lifts and drops; never one a player has open |
 | `sleepDisturb` | 4-5 | A scrape at the wall wakes the victim and leaves them too tired to sleep again at once |
-| `breakIn` | 5, enraged | Forces a plain wooden door near the awake, lone victim (or, from the second escalation level, tears it off its hinges), pops lids and douses torches within `harass.breakIn.reach`, then opens the way in for the stalker AI. A padlock, bar, reinforcement, anything behind the door, a metal, heavy, gate or double door, or a foreign claim keeps it out; then it scrapes at the boards |
+| `breakIn` | 5, enraged | On a night the level's `breakInChance` comes up, tears the nearest closed single door off its hinges near the awake victim (alone, below level 5), within the level's wooden and iron-or-heavy door budgets; pops lids and douses torches within `harass.breakIn.reach`, then opens the way in for the stalker AI. A padlock, bar, reinforcement, anything behind the door, a gate or double door, a spent budget or a foreign claim keeps it out; then it scrapes at the boards |
 
 Beside the drawn acts: the stability drain (toward `harass.stabilityDrain.targets` per stage, never
 below `floor`, faster while watched, handed back while paused, the warp of `harass.mundaneWarp` in
@@ -315,17 +315,28 @@ Every act has its own `harass.<act>.enabled` switch and a nightly cap. Doors, tr
 and torches are touched only within 16 blocks of the victim, never under a padlock, and only where
 `harass.respectClaims` allows (`victimAccess`: unclaimed land or a claim the victim owns or shares).
 
-**Enraged and the escalation list** (creature bible, section 7). A walker is enraged for the whole
-haunt once its escalation level is 1 or more (`enraged.onReturn`), or after a hit if
-`enraged.onProvoked` is on (off by default), and never while creatureHostility is off. The level is the
-director's `walkers/escalation`, else `walkers/returns`. Enraged, its dusk knocks end in a long scrape
-and an iron-and-stone whisper, and it may break in (`enraged.entriesPerNight`, `entriesPerHaunt`); the
-stalker AI then comes in for at most `enraged.maxIndoorSeconds` and `maxIndoorBlocks`. From level 2 it
-tears one plain wooden door per haunt off its hinges: the door drops whole as an item and is hung back
-at dawn if it still lies there. Level 1 also brings the rotting herd (dead does 16 to 24 blocks from
-the door, rot only, gone after `escalation.herd.decayHours`) and eaten crops (a line of ripe crops set
-back, capped per return, only on the victim's own or shared claims by default); level 2 the opt-in
-livestock death (`escalation.herd.killLivestock`, off).
+**The escalation ladder** (creature bible, section 7; the owner's ladder). The level is the
+director's `walkers/escalation`, 1 to 5 (else 1 + `walkers/returns`; always 1 while
+`escalation.enabled` is off), and `escalation.levels.level1` to `level5` set what the kit may do at
+each, per haunt unless named per night:
+
+| Level | Kit defaults |
+| --- | --- |
+| 1 Interloping | 8 crops, 1 torch a night, no knocks |
+| 2 Grudge | knocks, 12 crops, 3 torches a night, 1 dead animal |
+| 3 Rage | enraged; 3 dead animals; break-in on 1 hunt night in 4, 2 wooden and 1 iron or heavy door |
+| 4 Hate | break-in on 9 hunt nights in 10, 4 wooden and 2 other doors, torches eaten |
+| 5 Wrath | a break-in every hunt night, company no longer keeps it out |
+
+A walker is enraged from `enraged.fromLevel` (3), or after a hit if `enraged.onProvoked` is on (off by
+default), and never while creatureHostility is off. Enraged, its dusk knocks end in a long scrape and
+an iron-and-stone whisper, and it may break in (`enraged.entriesPerNight`); the stalker AI then comes
+in for at most `enraged.maxIndoorSeconds` and `maxIndoorBlocks`. A torn door drops whole as an item
+and is hung back at dawn if it still lies there. The dead animals are the rotting herd (does 16 to 24
+blocks from the door, rot only, gone after `escalation.herd.decayHours`), one of which may be the
+victim's own farm animal (`escalation.herd.killLivestock`, off); eaten crops are lines of ripe crops
+set back, only on the victim's own or shared claims by default. Stalking, stare and isolation aggro
+are the stalker AI's, shifting is Forms', and the halved return at level 5 is the director's.
 
 | Command | What it does |
 | --- | --- |

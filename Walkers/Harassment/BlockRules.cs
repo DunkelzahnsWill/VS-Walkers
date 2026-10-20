@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
@@ -26,14 +27,14 @@ public static class BlockRules
     private static readonly float CosHalfSightCone = MathF.Cos(SightConeDegrees * GameMath.DEG2RAD / 2);
 
     /// <summary>
-    /// The claim rule. victimAccess: unclaimed land, or a claim the victim owns or shares through the
-    /// claim's owning group; never a claim where the victim is only a permitted player, nor one open
-    /// to everyone. A stand-in victim owns nothing, so only unclaimed land. anyClaim: unclaimed land
-    /// only. off: anywhere.
+    /// The claim rule. With harass.checkClaims off: anywhere. victimAccess: unclaimed land, or a claim
+    /// the victim owns, shares through the claim's owning group, or was granted access to (as a player
+    /// or through a group; the owner's call, 2026-10-20); never one only open to everyone. A stand-in
+    /// victim owns nothing, so only unclaimed land. anyClaim: unclaimed land only. off: anywhere.
     /// </summary>
     public static bool ClaimsAllow(IWorldAccessor world, ClaimRespect rule, BlockPos pos, Entity victim)
     {
-        if (rule == ClaimRespect.Off)
+        if (rule == ClaimRespect.Off || !ChecksClaims(world))
         {
             return true;
         }
@@ -50,13 +51,18 @@ public static class BlockRules
         {
             bool owns = claim.OwnedByPlayerUid == player.PlayerUID;
             bool sharesGroup = claim.OwnedByPlayerGroupUid != 0 && player.GetGroup((int)claim.OwnedByPlayerGroupUid) != null;
-            if (!owns && !sharesGroup)
+            bool granted = claim.PermittedPlayerUids?.ContainsKey(player.PlayerUID) == true ||
+                           claim.PermittedPlayerGroupIds?.Keys.Any(id => player.GetGroup(id) != null) == true;
+            if (!owns && !sharesGroup && !granted)
             {
                 return false;
             }
         }
         return true;
     }
+
+    /// <summary>harass.checkClaims: off, no feature checks claims.</summary>
+    public static bool ChecksClaims(IWorldAccessor world) => world.Api.GetWalkersConfig().Harass.CheckClaims;
 
     /// <summary>A padlock on the block, whoever holds the key (not IsLockedForInteract, which lets the owner through).</summary>
     public static bool IsPadlocked(IWorldAccessor world, BlockPos pos) =>

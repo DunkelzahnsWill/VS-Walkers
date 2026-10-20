@@ -326,6 +326,10 @@ public sealed class Escalation
 
     private bool CropClaimAllows(HarassContext ctx, BlockPos pos)
     {
+        if (!BlockRules.ChecksClaims(ctx.Api.World))
+        {
+            return true;
+        }
         var claims = ctx.Api.World.Claims.Get(pos);
         if (claims == null || claims.Length == 0)
         {

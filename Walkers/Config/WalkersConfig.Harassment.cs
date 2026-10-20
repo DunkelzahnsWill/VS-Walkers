@@ -26,7 +26,11 @@ public partial class WalkersConfig
 
 public class HarassConfig
 {
-    [Description("Which blocks the acts may touch: victimAccess only unclaimed land and claims the victim owns or shares through the claim's group, anyClaim never on claimed land, off ignores claims. Padlocks and barred doors are always respected.")]
+    [Description("Walkers check land claims before they touch, eat, tear or enter anything (the rules below). Off, every act, the break-in, the eaten crops and the stalker AI's doorway ignore claims; padlocks and barred doors still hold.")]
+    [JsonProperty(Order = -3)]
+    public bool CheckClaims { get; set; } = true;
+
+    [Description("Which blocks the acts may touch: victimAccess only unclaimed land and claims the victim owns, shares through the claim's group, or was granted access to; anyClaim never on claimed land; off ignores claims. Padlocks and barred doors are always respected.")]
     public ClaimRespect RespectClaims { get; set; } = ClaimRespect.VictimAccess;
 
     [Description("How many acts it may spend on its victim each night, by stage, not counting the dusk knocks. The budget resets at dusk; acts that also run by day spend from the same budget.")]
@@ -78,7 +82,7 @@ public class HarassConfig
     [Description("Stage 5: the true form opens and holds an unlocked door (the stalker AI's doorway task reads this switch).")]
     public HarassActConfig Doorway { get; set; } = new();
 
-    [Description("Enraged (see enraged), on a hunt night (stage 5), it tears a door off its hinges within the escalation level's budget and odds, disturbs lids and torches inside, and may come inside. A padlock, bar, reinforcement, anything behind the door, a gate or double door, or a claim the victim neither owns nor shares keeps it out.")]
+    [Description("Enraged (see enraged), on a hunt night (stage 5), it tears a door off its hinges within the escalation level's budget and odds, disturbs lids and torches inside, and may come inside. A padlock, bar, reinforcement, anything behind the door, a gate or double door, or (while checkClaims is on) a claim the victim neither owns, shares nor was granted access to keeps it out.")]
     public BreakInConfig BreakIn { get; set; } = new();
 
     [Description("Small camera jolts for the victim with close knocks and scrapes.")]
@@ -444,7 +448,7 @@ public class EscalationCropsConfig
     [Range(0, 1)]
     public float MaxShare { get; set; } = 0.25f;
 
-    [Description("Where: ownOrShared only claims the victim owns or shares (and unclaimed land in single player); victimAccess adds unclaimed land.")]
+    [Description("Where: ownOrShared only claims the victim owns, shares or was granted access to (and unclaimed land in single player); victimAccess adds unclaimed land. harass.checkClaims off allows anywhere.")]
     public CropClaimRule ClaimRule { get; set; } = CropClaimRule.OwnOrShared;
 }
 

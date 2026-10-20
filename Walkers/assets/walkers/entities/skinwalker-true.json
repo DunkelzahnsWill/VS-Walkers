@@ -1,5 +1,7 @@
 // Skinwalker, true form. Placeholder body: the vanilla bowtorn shape without its rib crossbow, a dark bark texture and glowing eyes.
-// It keeps 5 to 13 blocks from a player and stares, strikes only within reach, and below 30% health flees for 20 seconds.
+// AI: the Stalker AI's tasks (Walkers/Stalker): walkers-retreat, -lunge, -doorway, -hunt, -creep and -stare. It stands far off
+// as a silhouette in stage 4, hunts its victim at night in stage 5, and walks into cover when it breaks off. getoutofwater
+// stays above them all: it never swims. The emotion states are left for the other features; no task here reads them.
 // Test-only for the JSON play-test: the spawn rules and the despawn behavior. The release build has neither; the Director
 // takes them over.
 {
@@ -109,35 +111,6 @@
                 "aiCreatureType": "LandCreature",
                 "aitasks": [
                     {
-                        "code": "meleeattack",
-                        "entityCodes": ["player"],
-                        "priority": 3,
-                        "damage": 6,
-                        "damageTier": 3,
-                        "damageType": "SlashingAttack",
-                        "mincooldown": 1500,
-                        "maxcooldown": 2500,
-                        "attackDurationMs": 1000,
-                        "damagePlayerAtMs": 400,
-                        "animation": "stab",
-                        "animationSpeed": 1.5,
-                        "sound": "game:creature/drifter-hit",
-                        "soundStartMs": 400
-                    },
-                    {
-                        "code": "fleeentity",
-                        "entityCodes": ["player"],
-                        "priority": 2.8,
-                        "movespeed": 0.04,
-                        "seekingRange": 40,
-                        "fleeingDistance": 50,
-                        "cancelOnHurt": false,
-                        "intelligentFlee": true,
-                        "animation": "run",
-                        "animationSpeed": 1,
-                        "whenInEmotionState": "fleeondamage"
-                    },
-                    {
                         "code": "getoutofwater",
                         "priority": 2.5,
                         "movespeed": 0.015,
@@ -145,40 +118,50 @@
                         "animationSpeed": 1.55
                     },
                     {
-                        "code": "stayinrange",
-                        "entityCodes": ["player"],
-                        "friendlyTarget": true,
-                        "priority": 2,
-                        "searchRange": 112,
-                        "targetRange": 9,
-                        "targetRangeTolerance": 4,
-                        "searchWaitMs": 2000,
-                        "movespeed": 0.03,
-                        "animation": "walk",
-                        "animationSpeed": 2.4,
-                        "mincooldown": 1000,
-                        "maxcooldown": 3000,
-                        "whenNotInEmotionState": "fleeondamage"
+                        "code": "walkers-lunge",
+                        "priority": 2.46,
+                        "priorityForCancel": 2.48,
+                        "animation": "stab",
+                        "animationSpeed": 1.5,
+                        "runAnimation": "run",
+                        "sound": "game:creature/drifter-hit",
+                        "soundStartMs": 400
                     },
                     {
-                        "code": "idle",
-                        "priority": 1.6,
-                        "priorityForCancel": 1.9,
-                        "minduration": 8000,
-                        "maxduration": 8000,
-                        "mincooldown": 60000,
-                        "maxcooldown": 180000,
-                        "animation": "contort",
-                        "animationSpeed": 1,
-                        "whenNotInEmotionState": "fleeondamage"
+                        "code": "walkers-retreat",
+                        "priority": 2.4,
+                        "priorityForCancel": 2.45,
+                        "walkAnimation": "walk",
+                        "walkAnimationSpeed": 1.8,
+                        "runAnimation": "run",
+                        "runAnimationSpeed": 1
                     },
                     {
-                        "code": "lookatentity",
-                        "entityCodes": ["player"],
-                        "friendlyTarget": true,
-                        "priority": 1.5,
-                        "whenNotInEmotionState": "fleeondamage"
+                        "code": "walkers-doorway",
+                        "priority": 2.25,
+                        "priorityForCancel": 2.27,
+                        "walkAnimation": "walk",
+                        "walkAnimationSpeed": 1.8,
+                        "mincooldown": 2000,
+                        "maxcooldown": 4000
                     },
+                    {
+                        "code": "walkers-hunt",
+                        "priority": 2.2,
+                        "priorityForCancel": 2.22,
+                        "walkAnimation": "walk",
+                        "walkAnimationSpeed": 1.8,
+                        "runAnimation": "run",
+                        "runAnimationSpeed": 1
+                    },
+                    {
+                        "code": "walkers-creep",
+                        "priority": 2.0,
+                        "priorityForCancel": 2.1,
+                        "walkAnimation": "walk",
+                        "walkAnimationSpeed": 1.8
+                    },
+                    { "code": "walkers-stare", "slot": 1, "priority": 1.5 },
                     {
                         "code": "wander",
                         "priority": 1.0,

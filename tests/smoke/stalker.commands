@@ -1,0 +1,8 @@
+# Stalker AI: the self-test (ladder cases, the view cone, the gaze with a playerbot stand-in, both forms' task
+# entries, a standing spot), then the slip-away, which ends about three seconds later on its own; the status
+# commands after it give it that time. The self-test removes the bodies it spawned.
+/walkers stalker selftest
+/walkers stalker status
+/walkers status
+/walkers stalker status
+/walkers stalker stage 3

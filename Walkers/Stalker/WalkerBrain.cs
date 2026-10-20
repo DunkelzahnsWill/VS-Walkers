@@ -23,7 +23,7 @@ public enum StalkerMode
     Silhouette,
     /// <summary>Stage 5: the true form closes in while unobserved and lunges.</summary>
     Hunt,
-    /// <summary>Stages 3 and 4, just stood up after a player's hit: strikes back and backs into cover.</summary>
+    /// <summary>Just stood up after a player's hit, at any stage: strikes back at whoever closes in and walks off into cover.</summary>
     Defend,
     /// <summary>Walks or runs into cover (a break-off, a withdraw, a hurt guise walking off); runs for water while burning.</summary>
     Retreat,
@@ -61,9 +61,6 @@ public sealed class WalkerBrain
     /// <summary>At this level it no longer avoids groups (wrath).</summary>
     public const int WrathLevel = 5;
 
-    /// <summary>The victim's stare of this long turns a true form on them, from <see cref="StareAggroLevel"/>.</summary>
-    private const double StareAggroSeconds = 2;
-
     /// <summary>A stare's aggro lasts this long after the stare.</summary>
     private const long StareAggroMs = 20000;
 
@@ -92,6 +89,10 @@ public sealed class WalkerBrain
     private bool companyNow;
     private double aloneSeconds;
     private long stareAggroUntilMs;
+    private double watchedRunSeconds;
+    private double victimStareSeconds;
+    private double contactSeconds;
+    private long fleeUntilMs;
 
     /// <summary>The latest gaze check.</summary>
     public GazeResult Gaze;
@@ -175,6 +176,12 @@ public sealed class WalkerBrain
     /// <summary>Its victim stared it down lately and it turned on them (true form, from escalation 2).</summary>
     public bool StareAggro => api.World.ElapsedMilliseconds < stareAggroUntilMs;
 
+    /// <summary>The doe bolted after eye contact or a close approach and is running for cover.</summary>
+    public bool Fleeing => !IsTrueForm && api.World.ElapsedMilliseconds < fleeUntilMs;
+
+    /// <summary>A player hit it lately and is still around: a true form strikes back and disengages.</summary>
+    public bool Defending => IsTrueForm && MsSincePlayerHit < NoRemovalAfterHitMs && LastAttacker is { Alive: true };
+
     /// <summary>
     /// A true form hunts outside stage 5: stared down from escalation 2, or, from escalation 3, its
     /// victim alone at night. Only in worlds where creatures are aggressive.
@@ -248,6 +255,7 @@ public sealed class WalkerBrain
         Night = StalkerModSystem.IsNight(api.World, Body.Pos.XYZ);
         UpdateCompany(dt);
 
+        watchedRunSeconds = Gaze.AnyWatched ? watchedRunSeconds + dt : 0;
         if (Gaze.AnyWatched)
         {
             WatchedSeconds += dt;
@@ -265,23 +273,26 @@ public sealed class WalkerBrain
             }
         }
 
+        var gaze = Config.Gaze;
         if (Gaze.VictimWatching)
         {
             victimLookSeconds += dt;
+            victimStareSeconds += dt;
             victimUnseenSeconds = 0;
             if (!sightingCounted && victimLookSeconds >= SightingSeconds && Stage > 0)
             {
                 sightingCounted = true;
                 StalkerLadder.OnSighting(Memory);
             }
-            if (victimLookSeconds >= StareAggroSeconds && IsTrueForm && Stage > 0 && Level >= StareAggroLevel)
+            if (victimStareSeconds >= gaze.StareAggroSeconds && VictimDistance <= gaze.StareRange && IsTrueForm && Stage > 0 && Level >= StareAggroLevel)
             {
-                // Grudge: staring at the true form no longer holds it; it comes for the one who stares.
+                // Grudge: an unbroken stare at the true form no longer holds it; it comes for the one who stares.
                 stareAggroUntilMs = now + StareAggroMs;
             }
         }
         else
         {
+            victimStareSeconds = 0;
             victimUnseenSeconds += dt;
             if (victimUnseenSeconds >= LookEndsSeconds)
             {
@@ -290,11 +301,47 @@ public sealed class WalkerBrain
             }
         }
 
+        UpdateBolt(now, dt);
+
         var ai = Ai;
         ai.SetBool(StalkerMemory.Watched, Gaze.AnyWatched);
         ai.SetBool(StalkerMemory.VictimWatching, Gaze.VictimWatching);
         ai.SetInt(StalkerMemory.Watchers, Gaze.Watchers);
     }
+
+    /// <summary>
+    /// The doe is human-shy: looked at from within gaze.stareRange it holds eye contact for
+    /// stalk.eyeContactSeconds (time enough to see its eyes), then bolts for cover like a deer; a
+    /// player within stalk.vanishApproach makes it bolt at once. From stage 2 it is gone once unseen.
+    /// </summary>
+    private void UpdateBolt(long now, double dt)
+    {
+        if (IsTrueForm || !Config.Enabled)
+        {
+            contactSeconds = 0;
+            return;
+        }
+        var stalk = Config.Stalk;
+        bool close = Gaze.AnyWatched && Gaze.NearestSeenDistance <= Config.Gaze.StareRange;
+        contactSeconds = close && !Fleeing ? contactSeconds + dt : 0;
+        if (!Fleeing && (contactSeconds >= stalk.EyeContactSeconds || Gaze.NearestWatcherDistance <= stalk.VanishApproach))
+        {
+            contactSeconds = 0;
+            fleeUntilMs = now + (long)(stalk.FleeSeconds * 1000);
+        }
+        if (Fleeing && Stage >= 2)
+        {
+            SlipAwayReason ??= "bolted";
+        }
+    }
+
+    /// <summary>
+    /// The freeze with a grace either way: it starts after <paramref name="watchedRun"/> seconds of
+    /// unbroken watching reach gaze.freezeAfterSeconds and ends only after gaze.freezeReleaseSeconds
+    /// unwatched, so flickering eye contact does not make it stop and start.
+    /// </summary>
+    public static bool FreezeHeld(bool frozenNow, double watchedRun, double unwatched, GazeConfig gaze) =>
+        frozenNow ? unwatched < gaze.FreezeReleaseSeconds : watchedRun > 0 && watchedRun >= gaze.FreezeAfterSeconds;
 
     /// <summary>A hit reached the body; every walkers task forwards it, so the same source is counted once.</summary>
     public void OnHurt(DamageSource source, float damage)
@@ -372,9 +419,14 @@ public sealed class WalkerBrain
         {
             mode = StalkerMode.Retreat;
         }
+        else if (Fleeing)
+        {
+            mode = StalkerMode.Retreat;
+        }
         else if (Victim == null || stage <= 0)
         {
-            mode = StalkerMode.Idle;
+            // Unhaunted (a spawned body): a true form a player hit still strikes back and disengages.
+            mode = Defending ? StalkerMode.Defend : StalkerMode.Idle;
         }
         else if (!IsTrueForm)
         {
@@ -450,8 +502,9 @@ public sealed class WalkerBrain
             }
             return breakOff.Length > 0 ? StalkerMode.Retreat : StalkerMode.Hunt;
         }
-        if (hurtLately && stage >= 3)
+        if (hurtLately)
         {
+            // Stood up by a hit, at any stage: it strikes back at whoever closes in and otherwise walks off.
             SetBreakOff(ai, ref breakOff, "stoodup");
             return StalkerMode.Defend;
         }
@@ -533,7 +586,9 @@ public sealed class WalkerBrain
     private void UpdateFreeze(long nowMs)
     {
         // A burning body runs for water whoever watches, and a swimming one keeps swimming for the shore.
-        bool frozen = Config.Gaze.Freeze && Gaze.AnyWatched && MsSincePlayerHit >= HitBreaksFreezeMs && !Body.IsOnFire && !Body.Swimming && !StareAggro;
+        // Neither the bolting doe nor a true form defending itself holds still for a gaze.
+        bool frozen = Config.Gaze.Freeze && FreezeHeld(Frozen, watchedRunSeconds, unwatchedSeconds, Config.Gaze) && MsSincePlayerHit >= HitBreaksFreezeMs &&
+                      !Body.IsOnFire && !Body.Swimming && !StareAggro && !Fleeing && Mode != StalkerMode.Defend;
         if (frozen && Mode == StalkerMode.Hunt && VictimDistance <= Config.Gaze.LungeRange)
         {
             frozen = false;

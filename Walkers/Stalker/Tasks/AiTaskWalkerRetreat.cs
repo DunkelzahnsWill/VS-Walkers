@@ -12,9 +12,9 @@ namespace Walkers.Stalker.Tasks;
 /// once nobody sees it. It walks into cover away from the players who count, under a canopy where it
 /// can, and out of block light. The true form runs after a hit that broke off the hunt (health) or
 /// while burning, when it heads for water within 16 blocks first. A hurt guise only ever walks
-/// (creature bible, section 4). In the defence (stages 3 and 4, just stood up) it backs away slowly,
-/// facing whoever hit it, and walkers-lunge strikes back when they close in. It obeys the freeze,
-/// except while burning.
+/// (creature bible, section 4); a doe that bolted from a look runs like a deer. In the defence (just
+/// stood up by a hit, at any stage) it walks off into cover, and walkers-lunge strikes back when
+/// whoever hit it closes in. It obeys the freeze, except while burning, bolting or defending.
 ///
 /// JSON: the shared fields of <see cref="WalkerTaskBase"/>, <c>coverDistance</c> (24) blocks from the
 /// nearest watcher, <c>spotTries</c> (6).
@@ -67,7 +67,7 @@ public class AiTaskWalkerRetreat : WalkerTaskBase
         }
         long now = world.ElapsedMilliseconds;
         bool burning = entity.IsOnFire;
-        bool run = brain.IsTrueForm && (burning || brain.Ai.GetString(StalkerMemory.BreakOff, "") == "health");
+        bool run = brain.Fleeing || brain.IsTrueForm && (burning || brain.Ai.GetString(StalkerMemory.BreakOff, "") == "health");
         bool defend = brain.Mode == StalkerMode.Defend;
 
         var entry = brain.Entry;
@@ -99,7 +99,7 @@ public class AiTaskWalkerRetreat : WalkerTaskBase
 
         Vec3d? spot = burning ? FindWater() : null;
         var threat = defend ? brain.LastAttacker ?? brain.Victim : NearestThreat(brain);
-        spot ??= CoverFrom(brain, threat?.Pos.XYZ ?? brain.Victim?.Pos.XYZ, defend ? 6 : CoverDistance);
+        spot ??= CoverFrom(brain, threat?.Pos.XYZ ?? brain.Victim?.Pos.XYZ, CoverDistance);
         if (spot != null)
         {
             GoTo(spot, Speed(run), 1.2f, run, force: true);

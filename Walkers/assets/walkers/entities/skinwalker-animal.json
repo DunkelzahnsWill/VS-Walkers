@@ -230,7 +230,8 @@
                             "*-pampas": 1.39,
                             "*": 1.38
                         },
-                        "runAnimation": "Walk",
+                        "runAnimation": "Run",
+                        "runAnimationSpeed": 2,
                         "speedFactorByType": {
                             "*-redbrocket": 0.83,
                             "*-water": 0.83,

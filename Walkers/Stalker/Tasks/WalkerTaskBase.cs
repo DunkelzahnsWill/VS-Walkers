@@ -74,7 +74,7 @@ public abstract class WalkerTaskBase : AiTaskBase
     protected float Speed(bool run)
     {
         var stalk = Config.Stalk;
-        float speed = Brain!.IsTrueForm ? (run ? stalk.ChaseSpeed : stalk.StalkSpeed) : stalk.GuiseSpeed;
+        float speed = Brain!.IsTrueForm ? (run ? stalk.ChaseSpeed : stalk.StalkSpeed) : (run ? stalk.GuiseFleeSpeed : stalk.GuiseSpeed);
         return speed * SpeedFactor;
     }
 

@@ -8,9 +8,9 @@ namespace Walkers.Stalker.Tasks;
 /// <summary>
 /// walkers-stare: keeps the body facing its victim, turning the whole body in small steps (the server
 /// cannot turn an animal's head on its own). It runs in its own slot beside the task that walks, and
-/// turns only while the body stands still. A frozen body does not turn, except a stage 1 doe, which
-/// stands and looks back like a deer would (creature bible, section 5). In the defence it faces
-/// whoever hit it.
+/// turns only while the body stands still. A frozen body does not turn, except a stage 1 doe within
+/// gaze.stareRange, which stands and looks back like a deer would (creature bible, section 5). In the
+/// defence it faces whoever hit it.
 ///
 /// JSON: <c>stepDegrees</c> (12) per step, <c>stepIntervalMs</c> (600) between steps.
 /// </summary>
@@ -51,7 +51,7 @@ public class AiTaskWalkerStare : WalkerTaskBase
             return false;
         }
         long now = world.ElapsedMilliseconds;
-        if (now < nextStepMs || pathTraverser.Active || (brain!.Frozen && brain.Stage != 1))
+        if (now < nextStepMs || pathTraverser.Active || (brain!.Frozen && (brain.Stage != 1 || brain.VictimDistance > Config.Gaze.StareRange)))
         {
             return true;
         }

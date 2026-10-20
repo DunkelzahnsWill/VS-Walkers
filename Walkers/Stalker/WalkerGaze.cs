@@ -58,7 +58,7 @@ public static class WalkerGaze
     /// </summary>
     public static GazeResult Check(Entity walker, Entity? victim, IReadOnlyList<Entity> watchers, GazeConfig gaze, IWorldIntersectionSupplier sight)
     {
-        var result = new GazeResult { NearestWatcherDistance = double.MaxValue };
+        var result = new GazeResult { NearestWatcherDistance = double.MaxValue, NearestSeenDistance = double.MaxValue };
         float cosHalf = MathF.Cos(gaze.ConeDegrees * GameMath.DEG2RAD / 2);
         double maxDistSq = (double)gaze.MaxDistance * gaze.MaxDistance;
         int raysLeft = MaxRaysPerCheck;
@@ -90,6 +90,7 @@ public static class WalkerGaze
             }
             if (sees)
             {
+                result.NearestSeenDistance = Math.Min(result.NearestSeenDistance, dist);
                 result.AnyWatched = true;
                 result.Watchers++;
             }
@@ -192,6 +193,9 @@ public struct GazeResult
 
     /// <summary>Distance to the nearest counting watcher, whether or not they look; MaxValue for none.</summary>
     public double NearestWatcherDistance;
+
+    /// <summary>Distance to the nearest watcher found looking at it (the check stops early, so a closer one may be missed); MaxValue for none.</summary>
+    public double NearestSeenDistance;
 }
 
 /// <summary>

@@ -153,7 +153,10 @@ public partial class DirectorSystem
             {
                 return null;
             }
-            return new Vec3d(pos.X + 0.5, standY, pos.Z + 0.5);
+            var spot = new Vec3d(pos.X + 0.5, standY, pos.Z + 0.5);
+            // The band holds for the real distance: a slope or the block centre can carry a spot past it.
+            double real = spot.DistanceTo(victimPos.X, victimPos.Y, victimPos.Z);
+            return real >= band.Min && real <= band.Max ? spot : null;
         }
         return null;
     }

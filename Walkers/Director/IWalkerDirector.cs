@@ -280,8 +280,6 @@ public enum HauntEndReason
     WalkerDied,
     /// <summary>The haunt stayed paused for director.pausedHauntMaxDays.</summary>
     PausedTooLong,
-    /// <summary>The victim opted out, or the master switch went off.</summary>
-    NotAllowed,
     /// <summary>An admin command.</summary>
     Command,
 }

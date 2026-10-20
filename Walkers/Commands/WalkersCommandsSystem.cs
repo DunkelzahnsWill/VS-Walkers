@@ -313,12 +313,6 @@ public class WalkersCommandsSystem : ModSystem
         {
             return TextCommandResult.Error(L(args, "commands-config-bad-value", setting.Path, error ?? ""));
         }
-        // Opting out needs the server's leave; opting back in never does.
-        if (setting.MemberName == nameof(WalkersPlayerPrefs.NoHaunt) && value.Type == JTokenType.Boolean && (bool)value &&
-            !configSystem.Config.Director.AllowPlayerOptOut)
-        {
-            return TextCommandResult.Error(L(args, "commands-me-nohaunt-off"));
-        }
         setting.SetValue(value);
         player.SetWalkersPrefs(prefs);
         return TextCommandResult.Success(L(args, "commands-me-saved", setting.Path, WalkersConfigJson.FormatValue(setting.Value)));

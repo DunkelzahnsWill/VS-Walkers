@@ -5,7 +5,7 @@
     "commands-despawn-desc": "Removes every loaded walker, or those within the given radius of you. A removal is not a death: no drops, and it does not count as a kill",
     "commands-reload-desc": "Reads ModConfig/walkers.json again and applies it without a restart",
     "commands-config-desc": "Shows the settings, one section or one setting, or sets a setting and saves it to ModConfig/walkers.json",
-    "commands-me-desc": "Shows or changes your own choices: noName, noScreenEffects, noTitles, scareVolume, noHaunt",
+    "commands-me-desc": "Shows or changes your own choices: noName, noScreenEffects, noTitles, scareVolume",
 
     "commands-on": "on",
     "commands-off": "off",
@@ -40,6 +40,5 @@
 
     "commands-me-header": "Your choices about what the Walker may do to you. Change one with /walkers me setting value:",
     "commands-me-unknown": "No choice called {0}. You can set: {1}",
-    "commands-me-nohaunt-off": "This server does not let players opt out of being haunted.",
     "commands-me-saved": "Saved: {0} = {1}"
 }

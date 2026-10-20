@@ -112,12 +112,6 @@ public partial class DirectorSystem
             memory.RemoveAttribute(WalkerMemory.VictimEntity);
         }
 
-        if (victim?.Player != null && config.Director.AllowPlayerOptOut && victim.Player.GetWalkersPrefs().NoHaunt)
-        {
-            EndHauntCore(walker, HauntEndReason.NotAllowed);
-            return;
-        }
-
         // A paused haunt ends after director.pausedHauntMaxDays, whether its victim is still away or back
         // and waiting for a free slot.
         if (walker.State == WalkerState.Paused && calendar.TotalDays - walker.PausedSinceTotalDays > config.Director.PausedHauntMaxDays)

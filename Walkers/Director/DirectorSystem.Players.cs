@@ -259,8 +259,7 @@ public partial class DirectorSystem
             var record = playerRecords[candidate.Uid];
             candidate.Eligible = candidate.Counting &&
                 pos.Dimension == Dimensions.NormalWorld &&
-                now >= record.FirstSeenTotalDays + config.Director.NewPlayerGraceDays &&
-                !(config.Director.AllowPlayerOptOut && candidate.Player!.GetWalkersPrefs().NoHaunt);
+                now >= record.FirstSeenTotalDays + config.Director.NewPlayerGraceDays;
         }
     }
 

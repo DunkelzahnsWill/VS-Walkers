@@ -142,7 +142,7 @@ as they were (on startup, the defaults) until it is fixed.
 | `/walkers despawn [radius]` | admins | Removes every loaded walker, or those within the radius of you. A removal is not a death: no drops, and it does not count as a kill |
 | `/walkers reload` | admins | Reads the file again and lists what changed |
 | `/walkers config [setting] [value]` | admins | Without arguments lists the sections; with a section or setting shows its values, default, range and meaning; with a value sets it |
-| `/walkers me [choice] [value]` | every player | Shows or sets the player's own choices: `noName`, `noScreenEffects`, `noTitles`, `scareVolume` (0 to 1), and `noHaunt` where `director.allowPlayerOptOut` is on |
+| `/walkers me [choice] [value]` | every player | Shows or sets the player's own choices: `noName`, `noScreenEffects`, `noTitles`, and `scareVolume` (0 to 1). These change only how scares reach the player; nobody can opt out of being haunted |
 
 Admin commands need the `controlserver` privilege. Settings use the paths the file shows, such as
 `harass.doors.enabled`; case does not matter. Times ending in Seconds, Minutes or Ms are real time;

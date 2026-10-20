@@ -1,0 +1,14 @@
+// The silver spear head, smithed like vanilla's copper one (survival recipes/smithing/spear-copper.json).
+{
+	ingredient: { type: "item", code: "game:ingot-*", name: "metal", allowedVariants: ["silver"] },
+	pattern: [[
+		"_____###__",
+		"__########",
+		"##########",
+		"__########",
+		"_____###__"
+	]],
+	name: "Spear",
+	code: "walkers-spearhead-{metal}",
+	output: { type: "item", code: "walkers:spearhead-{metal}" }
+}

@@ -33,7 +33,7 @@
 			rotation: { x: 16, y: 1, z: 90 },
 			scale: 0.85
 		},
-		// Weaker than a copper spear on purpose: soft cast silver (owner, 2026-10-20). Silver hits on a walker
+		// Weaker than a copper spear on purpose: soft silver (owner, 2026-10-20). Silver hits on a walker
 		// still deal ritual.silverDamageMultiplier times this.
 		damage: 4,
 		damageTier: 0,

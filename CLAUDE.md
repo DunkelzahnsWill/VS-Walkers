@@ -10,4 +10,8 @@ Read README.md first; it is the source of truth for building, testing and the pa
   clearly described commit.
 - Never commit game DLLs, the server, or anything under `.cache/` or `Releases/`.
 - Prefix every registered code with `walkers` (`WalkersModSystem.ModId`). No Harmony.
+- Chat commands hang off the one shared root: `api.ChatCommands.GetOrCreate(WalkersModSystem.ModId)`
+  plus your own `.BeginSubCommand("<feature>")`; never `Create` the root.
+- Small fixes may go straight to `main`; anything larger goes through a pull request. The owner
+  merges pull requests.
 - Target game 1.22.7. Use legacy AI task codes in JSON; the `-r` refactored tasks have known bugs.

@@ -1,6 +1,5 @@
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
-using Vintagestory.API.Config;
 using Vintagestory.API.Server;
 
 namespace Walkers.Core;
@@ -16,8 +15,9 @@ public class WalkersModSystem : ModSystem
 
     public override void StartServerSide(ICoreServerAPI api)
     {
-        // scripts/smoke-test.sh checks for this line (tests/smoke/core.expect).
-        bool assetsLoaded = Lang.HasTranslation(ModId + ":mod-name", findWildcarded: false, logErrors: false);
+        // scripts/smoke-test.sh checks for this line (tests/smoke/core.expect). The check looks for the
+        // file rather than a translation, which would be missing whenever the server language is not English.
+        bool assetsLoaded = api.Assets.Exists(new AssetLocation(ModId, "lang/en.json"));
         Mod.Logger.Notification("Server side started, version {0}, assets {1}", Mod.Info.Version, assetsLoaded ? "loaded" : "missing");
         if (!assetsLoaded)
         {

@@ -49,7 +49,11 @@ public class FormsConfig
     [Description("The guise shrugs off what players do to it: no blow or burn of theirs kills it, and it is whole again soon after. Off, players can kill the guise like a deer; the true body then lies in its place.")]
     public bool GuiseShrugsDamage { get; set; } = true;
 
-    [Description("From stage 3, a guise a player hurts or sets alight stands up as the true form this many real milliseconds later.")]
+    [Description("A player's blows stand the guise up only once they bring it to this share of its health or less; until then it bolts like a deer. Fire stands it up at once.")]
+    [Range(0, 1)]
+    public float HurtShiftHealthFraction { get; set; } = 0.5f;
+
+    [Description("From stage 3, a guise a player hurts enough or sets alight stands up as the true form this many real milliseconds later.")]
     [Range(0, 500)]
     public int HurtShiftDelayMs { get; set; } = 400;
 

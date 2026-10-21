@@ -11,7 +11,9 @@ meets, not how every rule works. Server owners find the details in the README.
 ### The creature
 
 - **The doe meets your eyes.** Look at her and she holds your gaze a moment, then bolts for the trees
-  like any startled deer. Come too close and she runs at once.
+  like any startled deer. Come too close, or hit her, and she runs at once.
+- **Harder to unmask.** A stray arrow or spear no longer brings out what hides in the doe: she runs
+  like a deer until she is badly hurt.
 - **The true form defends itself.** Strike it and it strikes back if you are within reach; otherwise
   it walks away.
 - **Its stillness lingers.** It takes a moment of watching to hold it still, and it stays still a
@@ -21,8 +23,9 @@ meets, not how every rule works. Server owners find the details in the README.
 ### For server owners
 
 - New settings: `gaze.freezeAfterSeconds`, `gaze.freezeReleaseSeconds`, `gaze.stareRange` (20),
-  `gaze.stareAggroSeconds`, `stalk.eyeContactSeconds`, `stalk.guiseFleeSpeed`, `stalk.fleeSeconds`
-  and `stalk.vanishApproach`. A server's existing `walkers.json` gains them with their defaults.
+  `gaze.stareAggroSeconds`, `stalk.eyeContactSeconds`, `stalk.guiseFleeSpeed`, `stalk.fleeSeconds`,
+  `stalk.vanishApproach` and `forms.hurtShiftHealthFraction` (0.5). A server's existing
+  `walkers.json` gains them with their defaults.
 
 ## 1.0.2 (for Vintage Story 1.22.7)
 

@@ -310,7 +310,7 @@ For feature code:
 - **Freeze pose.** A true form plays its `freeze` animation while the gaze holds it.
 - **Gaze and the doe.** The freeze starts after `gaze.freezeAfterSeconds` (0.5) of unbroken watching
   and ends after `gaze.freezeReleaseSeconds` (1.5) unwatched. A doe looked at from within
-  `gaze.stareRange` (48) holds eye contact for `stalk.eyeContactSeconds` (1.5), then bolts for cover at
+  `gaze.stareRange` (20) holds eye contact for `stalk.eyeContactSeconds` (1.5), then bolts for cover at
   deer speed (`stalk.guiseFleeSpeed`) for `stalk.fleeSeconds` (6); one within `stalk.vanishApproach`
   bolts at once; from stage 2 it slips away once unseen. A true form a player hit (any stage, haunted
   or not) strikes back in reach and otherwise walks off, unfrozen, for 20 s.

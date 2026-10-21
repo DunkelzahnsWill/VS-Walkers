@@ -6,6 +6,13 @@ release, because a joining client must have exactly the server's version of the 
 This file is shown to players (it is pasted into the ModDB file notes), so it says what a player
 meets, not how every rule works. Server owners find the details in the README.
 
+## Unreleased
+
+### Changes
+
+- A stray arrow or spear no longer brings out what hides in the doe at once: it runs like a deer
+  until it is badly hurt.
+
 ## 1.0.2 (for Vintage Story 1.22.7)
 
 ### Fixes

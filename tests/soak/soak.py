@@ -330,6 +330,9 @@ def main():
     # Config and commands, on a busy server.
     for command in [
         "/walkers status",
+        "/walkers config gaze",
+        "/walkers config stalk",
+        "/walkers config forms.hurtShiftHealthFraction",
         "/walkers config harass.doorway.enabled false",
         "/walkers config harass.minGapSeconds 5",
         "/walkers reload",

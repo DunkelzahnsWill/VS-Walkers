@@ -119,7 +119,7 @@ public class EntityBehaviorWalkerForm : EntityBehavior
 
         if (!isTrue)
         {
-            if (player == null)
+            if (player == null && source is not WalkersTestDamageSource { ByPlayer: true })
             {
                 // A fall, drowning or another creature can kill the guise; the true body then lies in its place.
                 return damage;
@@ -316,6 +316,19 @@ public class EntityBehaviorWalkerForm : EntityBehavior
         else
         {
             TickDead();
+        }
+    }
+
+    /// <summary>True while a stand-up waits for forms.hurtShiftDelayMs to pass.</summary>
+    internal bool StandUpPending => standUpAtMs > 0;
+
+    /// <summary>Lets a pending stand-up happen now (the self-test does not wait for the delay).</summary>
+    internal void StandUpNow()
+    {
+        if (standUpAtMs > 0)
+        {
+            standUpAtMs = entity.World.ElapsedMilliseconds;
+            OnGameTick(0);
         }
     }
 

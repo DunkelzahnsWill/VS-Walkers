@@ -40,8 +40,8 @@ public class FormsSelfTest
         {
             return TextCommandResult.Error("Forms self-test: the world spawn is not loaded");
         }
-        var spots = FindSpots(origin, 7);
-        if (spots.Count < 7)
+        var spots = FindSpots(origin, 8);
+        if (spots.Count < 8)
         {
             return TextCommandResult.Error("Forms self-test: found only " + spots.Count + " open spots near the world spawn");
         }
@@ -55,6 +55,7 @@ public class FormsSelfTest
             TestSilverItems();
             TestRefusedDeath(spots[5]);
             TestFurBurns(spots[6]);
+            TestHurtStandUp(spots[7]);
         }
         catch (Exception e)
         {
@@ -189,6 +190,45 @@ public class FormsSelfTest
             return;
         }
         Pass("the guise refuses a player-caused death, and takes one an admin command allows");
+    }
+
+    /// <summary>
+    /// A running stage 3 doe: a player's light blow leaves it a doe; blows that bring it to
+    /// forms.hurtShiftHealthFraction or less stand it up as the true form.
+    /// </summary>
+    private void TestHurtStandUp(Vec3d at)
+    {
+        var guise = Spawn(FormMemory.GuiseCode("whitetail"), at);
+        FormMemory.Tree(guise).SetInt(WalkerMemory.Stage, 3);
+        guise.Pos.Motion.Set(0.05, 0, 0);
+        var form = guise.GetBehavior<EntityBehaviorWalkerForm>();
+        var health = guise.GetBehavior<EntityBehaviorHealth>();
+        if (form == null || health == null)
+        {
+            Fail("hurt stand-up", "the guise has no form or health behavior");
+            return;
+        }
+        float fraction = forms.Config.Forms.HurtShiftHealthFraction;
+        float light = Math.Max(0.1f, health.MaxHealth * (1 - fraction) * 0.5f);
+        guise.ReceiveDamage(new WalkersTestDamageSource { Source = EnumDamageSource.Player, Type = EnumDamageType.PiercingAttack, ByPlayer = true }, light);
+        if (form.StandUpPending || !guise.Alive)
+        {
+            Fail("hurt stand-up", "a light blow (" + light.ToString("0.#") + " of " + health.MaxHealth + ") stood it up");
+            return;
+        }
+        guise.ReceiveDamage(new WalkersTestDamageSource { Source = EnumDamageSource.Player, Type = EnumDamageType.PiercingAttack, ByPlayer = true, IgnoreInvFrames = true }, health.MaxHealth);
+        form.StandUpNow();
+        var body = World.GetEntitiesAround(at, 3, 3, e => FormMemory.IsTrueForm(e) && e.Alive).FirstOrDefault();
+        if (body != null)
+        {
+            spawned.Add(body);
+        }
+        if (guise.Alive || body == null)
+        {
+            Fail("hurt stand-up", guise.Alive ? "the badly hurt doe did not stand up" : "no true form in its place");
+            return;
+        }
+        Pass("a running doe shrugs off a light blow and stands up once badly hurt");
     }
 
     private void TestFurBurns(Vec3d at)

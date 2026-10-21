@@ -17,5 +17,7 @@ Forms self-test: the guise refuses a player-caused death, and takes one an admin
 Forms: skinwalker-animal-whitetail #[0-9]+ refused a player-caused death
 Forms: 2 unnatural fur\(s\) burned \(fire\)
 Forms self-test: unnatural fur dropped into fire burns up and is reported: ok
-Forms self-test: 9 passed, 0 failed
+Forms self-test: a running doe shrugs off a light blow and stands up once badly hurt: ok
+Forms: skinwalker-animal-whitetail #[0-9]+ shifted into skinwalker-true #[0-9]+ \(a player hurt it\)
+Forms self-test: 10 passed, 0 failed
 Forms: [0-9]+ walker bodies await the ritual

@@ -283,9 +283,10 @@ public class EntityBehaviorWalkerForm : EntityBehavior
         if (standUpAtMs > 0 && nowMs >= standUpAtMs)
         {
             standUpAtMs = 0;
-            // Stages 1 and 2 never stand up for a blow; stage 0 is a body nobody is haunting with (a command spawn).
+            // From forms.hurtShiftMinStage (1: every stage, owner 2026-10-21); stage 0 is a body nobody is
+            // haunting with (a command spawn).
             int stage = FormMemory.Stage(entity);
-            if (!isTrue && entity.Alive && (stage == 0 || stage >= 3))
+            if (!isTrue && entity.Alive && (stage == 0 || stage >= forms.Config.Forms.HurtShiftMinStage))
             {
                 if (!InWater() && TryShift("a player hurt it"))
                 {

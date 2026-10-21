@@ -193,13 +193,13 @@ public class FormsSelfTest
     }
 
     /// <summary>
-    /// A running stage 3 doe: a player's light blow leaves it a doe; blows that bring it to
+    /// A running stage 1 doe: a player's light blow leaves it a doe; blows that bring it to
     /// forms.hurtShiftHealthFraction or less stand it up as the true form.
     /// </summary>
     private void TestHurtStandUp(Vec3d at)
     {
         var guise = Spawn(FormMemory.GuiseCode("whitetail"), at);
-        FormMemory.Tree(guise).SetInt(WalkerMemory.Stage, 3);
+        FormMemory.Tree(guise).SetInt(WalkerMemory.Stage, 1);
         guise.Pos.Motion.Set(0.05, 0, 0);
         var form = guise.GetBehavior<EntityBehaviorWalkerForm>();
         var health = guise.GetBehavior<EntityBehaviorHealth>();

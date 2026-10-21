@@ -7,7 +7,7 @@
         "Mr. Chrome"
     ],
     "description": "Something's moving out there. A forest stalker that wears an innocent face: the Skinwalker.",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "website": "https://github.com/DunkelzahnsWill/VS-Walkers",
     "side": "Universal",
     "requiredOnClient": true,

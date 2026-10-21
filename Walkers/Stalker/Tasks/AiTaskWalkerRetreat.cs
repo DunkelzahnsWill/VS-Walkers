@@ -11,8 +11,8 @@ namespace Walkers.Stalker.Tasks;
 /// walkers-retreat: gets the body out of sight, so the director can remove it or forms can shift it
 /// once nobody sees it. It walks into cover away from the players who count, under a canopy where it
 /// can, and out of block light. The true form runs after a hit that broke off the hunt (health) or
-/// while burning, when it heads for water within 16 blocks first. A hurt guise only ever walks
-/// (creature bible, section 4); a doe that bolted from a look runs like a deer. In the defence (just
+/// while burning, when it heads for water within 16 blocks first. A doe that bolted, from a look
+/// or a player's hit, runs like a deer; otherwise a guise only walks. In the defence (just
 /// stood up by a hit, at any stage) it walks off into cover, and walkers-lunge strikes back when
 /// whoever hit it closes in. It obeys the freeze, except while burning, bolting or defending.
 ///

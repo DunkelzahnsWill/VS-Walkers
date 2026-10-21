@@ -374,11 +374,16 @@ public sealed class WalkerBrain
                 system.Ladder.OnHarm(Memory);
             }
         }
-        // Stages 1 and 2: a hurt doe neither shifts nor runs; it walks into the trees and is gone the
-        // first moment nobody sees it (after the 20 s guard).
-        if (!IsTrueForm && Stage <= 2)
+        if (!IsTrueForm)
         {
-            SlipAwayReason ??= "hurt";
+            // A hit doe bolts like a deer, drawing its attacker after it until it is hurt enough to
+            // stand up (Forms decides when). In stages 1 and 2 it is gone the first moment nobody
+            // sees it (after the 20 s guard).
+            fleeUntilMs = now + (long)(Config.Stalk.FleeSeconds * 1000);
+            if (Stage <= 2)
+            {
+                SlipAwayReason ??= "hurt";
+            }
         }
     }
 

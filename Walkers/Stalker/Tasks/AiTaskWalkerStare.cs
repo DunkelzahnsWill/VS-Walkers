@@ -8,9 +8,10 @@ namespace Walkers.Stalker.Tasks;
 /// <summary>
 /// walkers-stare: keeps the body facing its victim, turning the whole body in small steps (the server
 /// cannot turn an animal's head on its own). It runs in its own slot beside the task that walks, and
-/// turns only while the body stands still. A frozen body does not turn, except a stage 1 doe within
-/// gaze.stareRange, which stands and looks back like a deer would (creature bible, section 5). In the
-/// defence it faces whoever hit it.
+/// turns only while the body stands still. A frozen body does not turn, except a doe holding eye
+/// contact, which turns to face whoever looks at it, and a stage 1 doe within gaze.stareRange, which
+/// stands and looks back like a deer would (creature bible, section 5). In the defence it faces
+/// whoever hit it.
 ///
 /// JSON: <c>stepDegrees</c> (12) per step, <c>stepIntervalMs</c> (600) between steps.
 /// </summary>
@@ -33,7 +34,7 @@ public class AiTaskWalkerStare : WalkerTaskBase
     public override bool ShouldExecute()
     {
         var brain = Brain;
-        return brain != null && Target(brain) != null && !entity.Swimming && !IsOnCooldown();
+        return brain != null && (brain.EyeContactWith ?? Target(brain)) != null && !entity.Swimming && !IsOnCooldown();
     }
 
     public override void StartExecute()
@@ -45,18 +46,21 @@ public class AiTaskWalkerStare : WalkerTaskBase
     public override bool ContinueExecute(float dt)
     {
         var brain = Brain;
-        var target = brain == null ? null : Target(brain);
+        var contact = brain?.EyeContactWith;
+        var target = brain == null ? null : contact ?? Target(brain);
         if (target == null || entity.Swimming)
         {
             return false;
         }
         long now = world.ElapsedMilliseconds;
-        if (now < nextStepMs || pathTraverser.Active || (brain!.Frozen && (brain.Stage != 1 || brain.VictimDistance > Config.Gaze.StareRange)))
+        if (now < nextStepMs || pathTraverser.Active ||
+            (contact == null && brain!.Frozen && (brain.Stage != 1 || brain.VictimDistance > Config.Gaze.StareRange)))
         {
             return true;
         }
-        nextStepMs = now + StepIntervalMs;
-        float step = StepDegrees * GameMath.DEG2RAD;
+        // Eye contact: the doe turns to face whoever looks at it, quicker, so the tell reads before it bolts.
+        nextStepMs = now + (contact != null ? StepIntervalMs / 2 : StepIntervalMs);
+        float step = (contact != null ? StepDegrees * 2 : StepDegrees) * GameMath.DEG2RAD;
         float want = YawTo(entity.Pos, target.Pos.XYZ);
         if (System.Math.Abs(GameMath.AngleRadDistance(entity.Pos.Yaw, want)) > step / 2)
         {

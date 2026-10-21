@@ -17,7 +17,8 @@
   gaze: looking away does not: pass
   gaze: rock in between blocks it: pass
 Stalker self-test: all synchronous checks passed
-Stalker self-test: slip-away, approached: bolts and is marked: pass
+Stalker self-test: slip-away, looked at: holds eye contact: pass
+Stalker self-test: slip-away, after eye contact: bolts and is marked: pass
 Stalker self-test: slip-away, unwatched: removed: pass
 Stalker self-test: slip-away passed
 Stalker AI, walkers loaded: [0-9]+

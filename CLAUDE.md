@@ -12,6 +12,8 @@ Read README.md first; it is the source of truth for building, testing and the pa
 - Prefix every registered code with `walkers` (`WalkersModSystem.ModId`). No Harmony.
 - Chat commands hang off the one shared root: `api.ChatCommands.GetOrCreate(WalkersModSystem.ModId)`
   plus your own `.BeginSubCommand("<feature>")`; never `Create` the root.
-- Small fixes may go straight to `main`; anything larger goes through a pull request. The owner
-  merges pull requests.
+- Every change goes through a pull request, however small; never push to `main` (the push is
+  refused for some threads and not others, so no thread relies on it). A small fix inside one
+  feature's files with no design change may be set to auto-merge on green CI; anything larger waits
+  for the owner's merge. Threads never merge by hand.
 - Target game 1.22.7. Use legacy AI task codes in JSON; the `-r` refactored tasks have known bugs.

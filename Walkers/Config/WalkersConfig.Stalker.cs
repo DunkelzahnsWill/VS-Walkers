@@ -100,7 +100,7 @@ public class GazeConfig
 
     [Description("The stare reactions (the doe's eye contact and bolt, the look-back, the true form's stare aggro) only within this many blocks; farther off it just holds still.")]
     [Range(8, 96)]
-    public int StareRange { get; set; } = 48;
+    public int StareRange { get; set; } = 20;
 
     [Description("Watched this many real seconds without a break before it freezes.")]
     [Range(0, 3)]

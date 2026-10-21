@@ -333,8 +333,10 @@ them, the rules of a walker's death and the items that come of it.
 
 - **The guise** wears a deer type that lives where its victim is (see the director's deer country).
   With `forms.guiseShrugsDamage` on, nothing a player does kills it: it flinches with the hurt
-  animation and sound and is whole again soon after. From stage 3, a guise a player hurts or sets
-  alight stands up as the true form `forms.hurtShiftDelayMs` later.
+  animation and sound and is whole again 10 s after the last blow. From stage 3, a guise a player
+  sets alight, or whose blows bring it to `forms.hurtShiftHealthFraction` (0.5) of its health or less
+  within that time, stands up as the true form `forms.hurtShiftDelayMs` later; a lighter hit leaves a
+  doe that bolts (the stalker AI's flight).
 - **The shift.** A new body takes over the walker's memory (`AttachBody`, then the old body is
   retired), at least `forms.shiftCooldownSeconds` apart: to the true form at night as the stalker AI
   allows, back to the guise once a broken-off true form is out of sight. At escalation level 1 a

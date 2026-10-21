@@ -121,23 +121,30 @@ public class EntityBehaviorWalkerForm : EntityBehavior
                 // A fall, drowning or another creature can kill the guise; the true body then lies in its place.
                 return damage;
             }
-            ScheduleStandUp();
-            if (!forms.Config.Forms.GuiseShrugsDamage)
-            {
-                return damage;
-            }
             var health = entity.GetBehavior<EntityBehaviorHealth>();
-            float allowed = health == null ? damage : Math.Max(0, health.Health - 1);
-            if (damage <= allowed)
+            float applied = damage;
+            if (forms.Config.Forms.GuiseShrugsDamage && health != null)
             {
-                return damage;
+                float allowed = Math.Max(0, health.Health - 1);
+                if (damage > allowed)
+                {
+                    applied = allowed;
+                    if (allowed <= 0.05f)
+                    {
+                        // No damage means no hurt animation from vanilla; the doe still flinches (owner's answer 2).
+                        PlayHurt();
+                    }
+                }
             }
-            if (allowed <= 0.05f)
+            // Fire stands it up at once; a blow only once it is down to forms.hurtShiftHealthFraction of its
+            // health (owner, 2026-10-21), so a stray arrow leaves a doe that bolts (the stalker AI's) and can
+            // draw its hunters on.
+            if (source is WalkersBurnDamageSource || health == null || health.MaxHealth <= 0 ||
+                (health.Health - applied) / health.MaxHealth <= forms.Config.Forms.HurtShiftHealthFraction)
             {
-                // No damage means no hurt animation from vanilla; the doe still flinches (owner's answer 2).
-                PlayHurt();
+                ScheduleStandUp();
             }
-            return allowed;
+            return applied;
         }
 
         var weapon = WalkerRitual.WeaponOf(source, entity.World, AttackSnapshot(player));

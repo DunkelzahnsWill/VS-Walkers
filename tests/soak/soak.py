@@ -333,6 +333,7 @@ def main():
         "/walkers config gaze",
         "/walkers config stalk",
         "/walkers config forms.hurtShiftHealthFraction",
+        "/walkers config forms.hurtShiftMinStage",
         "/walkers config harass.doorway.enabled false",
         "/walkers config harass.minGapSeconds 5",
         "/walkers reload",

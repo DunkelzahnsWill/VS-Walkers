@@ -266,7 +266,7 @@ brain picks the mode; the AI tasks in the entity JSON act on it.
 | `walkers-creep` | both | Keeps the stage's distance band, moves a little closer after every look, never into bright block light; stage 4 at night, the true form stands far off in the open |
 | `walkers-hunt` | true | Stage 5: closes in while unwatched, runs within 16 blocks, holds at doors and while the victim sleeps |
 | `walkers-lunge` | true | From within `gaze.lungeRange`: a dash and one hit, capped at `forms.maxHitFraction` of the target's health |
-| `walkers-retreat` | both | Into cover after a break-off, a withdraw or a hit on the guise; a doe that bolted runs; a true form stood up by a hit walks off (walkers-lunge strikes back); to water while burning |
+| `walkers-retreat` | both | Into cover after a break-off or a withdraw; a doe that bolted (a look, a player within 16 blocks, a player's hit) runs; a true form stood up by a hit walks off (walkers-lunge strikes back); to water while burning |
 | `walkers-doorway` | true | Stage 5: opens an unlocked door the victim is behind (where `harass.respectClaims` allows), holds the doorway, never walks in; off with `harass.doorway.enabled` |
 
 Without a director, a body picks the nearest counting player within 64 blocks and climbs the ladder

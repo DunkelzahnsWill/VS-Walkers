@@ -6,6 +6,17 @@ release, because a joining client must have exactly the server's version of the 
 This file is shown to players (it is pasted into the ModDB file notes), so it says what a player
 meets, not how every rule works. Server owners find the details in the README.
 
+## Unreleased
+
+### The creature
+
+- Hurt her badly enough, and the doe shows what she is from the first night of a haunt, not only later.
+
+### Fixes
+
+- A badly hurt doe that fled under low branches no longer stays a doe for good: what hides in it comes
+  out once there is room.
+
 ## 1.1.0 (for Vintage Story 1.22.7)
 
 ### The creature

@@ -30,6 +30,9 @@ public class EntityBehaviorWalkerForm : EntityBehavior
     /// <summary>A hurt guise is whole again this long after the last blow: it shrugs damage off.</summary>
     private const long GuiseMendMs = 10000;
 
+    /// <summary>A hurt guise that found no room to stand up tries again this often until it mends.</summary>
+    private const long StandUpRetryMs = 1000;
+
     /// <summary>A torch hit this recent names the igniter of a fire that starts.</summary>
     private const long IgniterMemoryMs = 2000;
 
@@ -116,7 +119,7 @@ public class EntityBehaviorWalkerForm : EntityBehavior
 
         if (!isTrue)
         {
-            if (player == null)
+            if (player == null && source is not WalkersTestDamageSource { ByPlayer: true })
             {
                 // A fall, drowning or another creature can kill the guise; the true body then lies in its place.
                 return damage;
@@ -276,15 +279,25 @@ public class EntityBehaviorWalkerForm : EntityBehavior
         }
 
         TickFire(deltaTime);
-        if (standUpAtMs > 0 && entity.World.ElapsedMilliseconds >= standUpAtMs)
+        long nowMs = entity.World.ElapsedMilliseconds;
+        if (standUpAtMs > 0 && nowMs >= standUpAtMs)
         {
             standUpAtMs = 0;
-            // Stages 1 and 2 never stand up for a blow; stage 0 is a body nobody is haunting with (a command spawn).
+            // From forms.hurtShiftMinStage (1: every stage, owner 2026-10-21); stage 0 is a body nobody is
+            // haunting with (a command spawn).
             int stage = FormMemory.Stage(entity);
-            if (!isTrue && entity.Alive && (stage == 0 || stage >= 3) && !InWater())
+            if (!isTrue && entity.Alive && (stage == 0 || stage >= forms.Config.Forms.HurtShiftMinStage))
             {
-                TryShift("a player hurt it");
-                return;
+                if (!InWater() && TryShift("a player hurt it"))
+                {
+                    return;
+                }
+                // No room for the taller body (a bolting doe often runs under a canopy) or in water: try
+                // again every second until it mends.
+                if (nowMs - lastHitMs < GuiseMendMs)
+                {
+                    standUpAtMs = nowMs + StandUpRetryMs;
+                }
             }
         }
         checkAccum += deltaTime;
@@ -304,6 +317,19 @@ public class EntityBehaviorWalkerForm : EntityBehavior
         else
         {
             TickDead();
+        }
+    }
+
+    /// <summary>True while a stand-up waits for forms.hurtShiftDelayMs to pass.</summary>
+    internal bool StandUpPending => standUpAtMs > 0;
+
+    /// <summary>Lets a pending stand-up happen now (the self-test does not wait for the delay).</summary>
+    internal void StandUpNow()
+    {
+        if (standUpAtMs > 0)
+        {
+            standUpAtMs = entity.World.ElapsedMilliseconds;
+            OnGameTick(0);
         }
     }
 
@@ -472,13 +498,15 @@ public class EntityBehaviorWalkerForm : EntityBehavior
         return form.GetBool(FormMemory.NightRollShifts);
     }
 
-    private void TryShift(string why)
+    private bool TryShift(string why)
     {
         if (WalkerShift.Shift(forms, entity, why, out var failure) == null)
         {
             // The spot does not fit the other body; the next check tries again, as Grow does.
             forms.Mod.Logger.Debug("Forms: {0} #{1} could not shift ({2}): {3}", entity.Code.Path, entity.EntityId, why, failure);
+            return false;
         }
+        return true;
     }
 
     private bool InWater() => entity.Swimming || entity.FeetInLiquid;

@@ -22,6 +22,9 @@ public class WalkersBurnDamageSource : DamageSource
 public class WalkersTestDamageSource : DamageSource
 {
     public ItemStack? Weapon;
+
+    /// <summary>Counts as a player's blow, so the self-test can hurt a guise without a player online.</summary>
+    public bool ByPlayer;
 }
 
 /// <summary>

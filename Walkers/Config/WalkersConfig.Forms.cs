@@ -53,7 +53,11 @@ public class FormsConfig
     [Range(0, 1)]
     public float HurtShiftHealthFraction { get; set; } = 0.5f;
 
-    [Description("From stage 3, a guise a player hurts enough or sets alight stands up as the true form this many real milliseconds later.")]
+    [Description("Lowest haunt stage at which a guise a player hurts enough or sets alight stands up as the true form; 1 is every stage.")]
+    [Range(1, 5)]
+    public int HurtShiftMinStage { get; set; } = 1;
+
+    [Description("A guise a player hurts enough or sets alight stands up as the true form this many real milliseconds later.")]
     [Range(0, 500)]
     public int HurtShiftDelayMs { get; set; } = 400;
 

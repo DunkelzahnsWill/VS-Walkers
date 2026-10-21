@@ -22,10 +22,19 @@ What changed in each version is in [CHANGELOG.md](CHANGELOG.md).
 ## Installing
 
 Players and server owners: put `walkers_<version>.zip`, still zipped, into the `Mods` folder of the
-game (`%APPDATA%\VintagestoryData\Mods` on Windows) and of the server's data folder. The mod is
-required on both sides, and a client must have exactly the server's version; the game offers to
-download it from ModDB on joining. The server writes `ModConfig/walkers.json` on its first start;
-see [Config and commands](#config-and-commands).
+game (`%APPDATA%\VintagestoryData\Mods` on Windows, `~/.config/VintagestoryData/Mods` on Linux) and
+of the server's data folder. The mod is required on both sides, and a client must have exactly the
+server's version. Once the mod is on ModDB, the game offers to download it on joining; a version that
+is not on ModDB (a test build) has to be copied to every client by hand. The server writes
+`ModConfig/walkers.json` on its first start; see [Config and commands](#config-and-commands).
+
+**Dedicated server.** The server loads mods from the folders listed under `ModPaths` in its
+`serverconfig.json`: by default `Mods` next to the server program and `Mods` in its data folder
+(`~/.config/VintagestoryData` on Linux unless the server was started with `--dataPath`). Put the zip
+in one of them, remove any older `walkers_*.zip`, and restart the server; mods load only at start.
+The server's `Logs/server-main.log` then shows `mod@walkers_<version>.zip` in the load order and
+`[walkers] Server side started, version <version>`. A hosting panel's "Mods" upload page puts the
+zip in the same place.
 
 **Compatibility.** Built against and tested on 1.22.7: every change boots a headless 1.22.7
 dedicated server (the smoke test), and a 45-minute soak with three haunts showed zero errors and

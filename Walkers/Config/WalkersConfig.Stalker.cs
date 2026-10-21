@@ -121,7 +121,7 @@ public class StalkConfig
     [Range(3, 60)]
     public float VanishWatchedSeconds { get; set; } = 10;
 
-    [Description("Stages 1 to 4: a player this many blocks away or closer makes it slip away; any doe bolts from them.")]
+    [Description("Stages 1 to 4: a player this many blocks away or closer makes it slip away; a doe they come at unseen bolts from them.")]
     [Range(4, 48)]
     public int VanishApproach { get; set; } = 16;
 
@@ -154,7 +154,11 @@ public class StalkConfig
 
     [Description("The doe holds eye contact this many real seconds (long enough to see its eyes), then bolts.")]
     [Range(0.5, 5)]
-    public float EyeContactSeconds { get; set; } = 1.5f;
+    public float EyeContactSeconds { get; set; } = 3;
+
+    [Description("Anyone this many blocks away or closer makes the doe bolt at once, without the eye contact.")]
+    [Range(0, 16)]
+    public float PanicDistance { get; set; } = 6;
 
     [Description("The doe's bolt, a vanilla deer's flight (about 8 blocks a second). Smaller deer types scale it down.")]
     [Range(0.02, 0.1)]

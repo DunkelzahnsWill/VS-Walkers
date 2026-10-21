@@ -92,9 +92,24 @@ public sealed class StalkerSelfTest
         var brain = StalkerModSystem.BrainOf(guise);
         if (phase == 1 && nowMs - phaseAtMs >= 1500)
         {
-            // Watched from close by, the doe bolts instead of holding still, and is marked to go.
-            bool ok = brain != null && brain.Fleeing && brain.Mode == StalkerMode.Retreat && !brain.Frozen && brain.SlipAwayReason == "bolted";
-            Report("slip-away, approached: bolts and is marked", ok, brain == null
+            // Looked at from within the stare range, the doe first holds still and faces the stand-in.
+            bool ok = brain != null && brain.Frozen && !brain.Fleeing && brain.EyeContactWith?.EntityId == standIn?.EntityId;
+            Report("slip-away, looked at: holds eye contact", ok, brain == null
+                ? "no brain"
+                : $"mode {WalkerBrain.ModeName(brain.Mode)}, frozen {brain.Frozen}, fleeing {brain.Fleeing}, contact {brain.EyeContactWith?.EntityId.ToString() ?? "none"}");
+            if (!ok)
+            {
+                Finish(false);
+                return;
+            }
+            phase = 3;
+            phaseAtMs = nowMs;
+        }
+        else if (phase == 3 && nowMs - phaseAtMs >= (long)(system.Config.Stalk.EyeContactSeconds * 1000))
+        {
+            // Then it bolts, and is marked to go once unseen.
+            bool ok = brain != null && brain.Fleeing && brain.Mode == StalkerMode.Retreat && !brain.Frozen && brain.SlipAwayReason != null;
+            Report("slip-away, after eye contact: bolts and is marked", ok, brain == null
                 ? "no brain"
                 : $"mode {WalkerBrain.ModeName(brain.Mode)}, watching {brain.Gaze.VictimWatching}, frozen {brain.Frozen}, mark {brain.SlipAwayReason ?? "none"}");
             if (!ok || standIn == null || guise == null)

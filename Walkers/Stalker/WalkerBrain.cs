@@ -179,6 +179,9 @@ public sealed class WalkerBrain
     /// <summary>The doe bolted after eye contact or a close approach and is running for cover.</summary>
     public bool Fleeing => !IsTrueForm && api.World.ElapsedMilliseconds < fleeUntilMs;
 
+    /// <summary>Whom the doe is holding eye contact with before it bolts (walkers-stare turns it to face them); null when none.</summary>
+    public Entity? EyeContactWith { get; private set; }
+
     /// <summary>A player hit it lately and is still around: a true form strikes back and disengages.</summary>
     public bool Defending => IsTrueForm && MsSincePlayerHit < NoRemovalAfterHitMs && LastAttacker is { Alive: true };
 
@@ -310,12 +313,14 @@ public sealed class WalkerBrain
     }
 
     /// <summary>
-    /// The doe is human-shy: looked at from within gaze.stareRange it holds eye contact for
-    /// stalk.eyeContactSeconds (time enough to see its eyes), then bolts for cover like a deer; a
-    /// player within stalk.vanishApproach makes it bolt at once. From stage 2 it is gone once unseen.
+    /// The doe is human-shy: looked at from within gaze.stareRange it stands, turns to face the one
+    /// looking and holds eye contact for stalk.eyeContactSeconds (time enough to see its eyes), then
+    /// bolts for cover like a deer. A player closing in unseen within stalk.vanishApproach, or anyone
+    /// within stalk.panicDistance, makes it bolt at once. From stage 2 it is gone once unseen.
     /// </summary>
     private void UpdateBolt(long now, double dt)
     {
+        EyeContactWith = null;
         if (IsTrueForm || !Config.Enabled)
         {
             contactSeconds = 0;
@@ -324,7 +329,13 @@ public sealed class WalkerBrain
         var stalk = Config.Stalk;
         bool close = Gaze.AnyWatched && Gaze.NearestSeenDistance <= Config.Gaze.StareRange;
         contactSeconds = close && !Fleeing ? contactSeconds + dt : 0;
-        if (!Fleeing && (contactSeconds >= stalk.EyeContactSeconds || Gaze.NearestWatcherDistance <= stalk.VanishApproach))
+        if (close && !Fleeing)
+        {
+            EyeContactWith = Gaze.VictimWatching && VictimDistance <= Config.Gaze.StareRange ? Victim : NearestWatcher(Config.Gaze.StareRange);
+        }
+        double nearest = Gaze.NearestWatcherDistance;
+        bool startled = nearest <= stalk.PanicDistance || (!close && nearest <= stalk.VanishApproach);
+        if (!Fleeing && (contactSeconds >= stalk.EyeContactSeconds || startled))
         {
             contactSeconds = 0;
             fleeUntilMs = now + (long)(stalk.FleeSeconds * 1000);
@@ -333,6 +344,22 @@ public sealed class WalkerBrain
         {
             SlipAwayReason ??= "bolted";
         }
+    }
+
+    private Entity? NearestWatcher(double range)
+    {
+        Entity? best = null;
+        double bestSq = range * range;
+        foreach (var watcher in watcherBuffer)
+        {
+            double sq = watcher.Pos.SquareDistanceTo(Body.Pos);
+            if (sq <= bestSq)
+            {
+                bestSq = sq;
+                best = watcher;
+            }
+        }
+        return best;
     }
 
     /// <summary>

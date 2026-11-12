@@ -4,7 +4,7 @@ The map of the planning thread (rule 5). It points to the Road Bible, `record/ro
 planning's own plan beneath. The Road Bible and the settled briefs outrank it: where this map says
 anything different, the map is wrong.
 
-Last written 2026-11-12 19:13Z, against the Road Bible as it stands on `main` at commit `42c46b6`, the
+Last written 2026-11-12 19:32Z, against the Road Bible as it stands on `main` at commit `42c46b6`, the
 merge of PR #129.
 
 ## Features
@@ -64,17 +64,19 @@ Planning may rewrite this part whenever it likes (rule 5). In the order planning
    - In the row of feature 9, that "the numbers as they stand" are the settings and the numbers fixed
      in the code alike (G42).
    - In the rows of features 8 and 9, that the thread brings to its brief what the prototype tried,
-     for the return and for the fight, as the proto thread's diary holds it (R45). The review thread
-     asked it of feature 9 when it read PR #105.
+     for the return and for the fight, as the proto thread's diary holds it (part 2). R45 is the
+     reason for it and does not order it: under R45 the numbers that the prototype tries are removed
+     with its folder. The review thread asked it of feature 9 when it read PR #105.
 
-   The change was on `main` before the builder threads `director`, `creature` and `commands` were
-   started, so no builder had to update a map for it (rule 5). The coordinator had agreed to start
-   them only then, and planning told it of the merge at once (R46). The day was the review thread's
-   suggestion, made when it read this map. The wording of the change is planning's, and none of the
-   three was dropped. The review thread has told the owner what the paragraph means for an
-   installation that loaded the prototype (G67, "For the owner"). If the owner would rather have the
-   mod put such a file right by itself, planning changes the book (rule 4). This item keeps its
-   place, as item 1 does: R46 names it by its number.
+   The change is on `main`. None of the builder threads `director`, `creature` and `commands` had
+   been started when it merged, so none of them will have a map to update for it (rule 5). The
+   coordinator had agreed to start them only once the change was on `main`, and planning told the
+   coordinator of the merge at once (R46). The day was the review thread's suggestion, made when it
+   read this map. The wording of the change is planning's, and none of the three was dropped. The
+   review thread has told the owner what the paragraph means for an installation that loaded the
+   prototype (G67, "For the owner"). If the owner would rather have the mod put such a file right by
+   itself, planning changes the book (rule 4). This item keeps its place, as item 1 does: R46 names
+   it by its number.
 3. **Follow the owner's word on the order of the road.** The review thread's counter-view to it (G22)
    is with the owner. If the owner reorders the road or moves feature 7, planning changes part 3.
 4. **After the owner has played the prototype.** Where an entry of `record/player-diary.md` calls for a

@@ -1,6 +1,6 @@
 # Map of the coordinator
 
-Written 2026-11-12 17:42Z, changed 17:48Z, and again at 17:54Z. The rules (record/COMMANDMENTS.txt), the Road Bible (record/road-bible.md) and the settled briefs outrank this map. It points to them and adds only my own plan beneath. Where it differs from them, they stand and the map is wrong.
+Written 2026-11-12 17:42Z, changed 17:48Z, and again at 17:54Z and 18:28Z. The rules (record/COMMANDMENTS.txt), the Road Bible (record/road-bible.md) and the settled briefs outrank this map. It points to them and adds only my own plan beneath. Where it differs from them, they stand and the map is wrong.
 
 ## Where I fit
 
@@ -26,7 +26,7 @@ Written 2026-11-12 17:42Z, changed 17:48Z, and again at 17:54Z. The rules (recor
 
 ## My plan (mine to rewrite)
 
-1. Now: PR #105 (part 2 of the Road Bible after R45) waits for the owner's merge. It merges before PR #75 (rule 1, R43). If PR #75 merges first, I tell review at once.
+1. Done: the owner merged PR #105 (part 2 of the Road Bible after R45) on 2026-11-12 at 18:24:36Z, merge commit fa9cdcf. The prototype, PR #75, may merge now (rule 1, R43).
 2. After PR #105 merges: I tell the proto thread that the prototype's terms changed, so that it updates its map, and tell the other threads as news. The planning thread updates its own map too. When each of the two maps is on main I wake review under 6(f).
 3. The owner plays the prototype (zip of PR #75 at c1920a7) and merges PR #75. What the owner says after playing goes to the record thread for player-diary.md, with the build named; I send each entry to the thread that owns what it is about.
 4. After PR #75 merges: the proto thread opens the PR that removes the prototype (owner's merge), and the owner deletes the section `proto` from ModConfig/walkers.json by hand (G40).

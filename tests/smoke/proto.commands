@@ -1,0 +1,11 @@
+# The 1.2 prototype: off by default; on lays its values over the live config without writing them to the
+# file; off puts the file's values back.
+/walkers proto
+/walkers config forms.trueHealth
+/walkers proto on
+/walkers proto
+/walkers config forms.trueHealth
+/walkers config return.afterSeasons
+/walkers proto off
+/walkers config forms.trueHealth
+/walkers config return.afterSeasons

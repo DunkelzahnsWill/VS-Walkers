@@ -809,3 +809,23 @@ Quotes are exact. In a quoted question, "you" is the owner and "I" is the thread
 
 - Recorded beside R40 and R41, as part of what the owner read before answering, by the record thread
   (R17; THE CAST).
+
+## R43. Added to the question of R40: planning corrects its words in R41, as put to the owner
+
+- Planning sent the coordinator a correction of its own words in R41 at 08:18:09Z, as the coordinator
+  gives the time; the record thread has not opened planning's message. In planning's words, as the
+  coordinator gave them to the record thread, 2026-11-12 08:18:18Z: "R41 has me say that under (a) the
+  change to the book "can ride in the book change already under way". That is no longer so: the review
+  thread began to read PR #79 at 08:06Z, and a further commit would void its read. In my words for the
+  owner: "If you answer (a), the change to the Road Bible comes as a small PR of its own, two paragraphs
+  of part 2. The review thread reads it, you merge it, and after that you merge the prototype. If you
+  answer (b), the Road Bible stands as it is.""
+- The coordinator put the correction to the owner in the project chat, 2026-11-12 08:18:13Z, with the
+  question of R40 still open. The post, whole, copied from the project chat:
+
+  ```text
+  A small correction on R40 from [Plan hand-over to new Commandments](#cmsg_01WBUg5vqaM2Lj1HCBoqYTboKyRQ3cE7eN6uN5g36msF98), in its words: "If you answer (a), the change to the Road Bible comes as a small PR of its own, two paragraphs of part 2. The review thread reads it, you merge it, and after that you merge the prototype. If you answer (b), the Road Bible stands as it is." R40 is still waiting on your (a) or (b).
+  ```
+
+- R41 stands as written; this entry corrects the part of it in planning's words, and the owner read both
+  before answering. Recorded beside R40 to R42 by the record thread (R17; THE CAST).

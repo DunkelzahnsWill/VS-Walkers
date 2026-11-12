@@ -1,0 +1,186 @@
+THE COMMANDMENTS, version 2
+Ratified 2026-11-11. Replaces version 1 (2026-11-10).
+
+Standing rules for every thread in a Project.
+
+If two rules seem to disagree, that is a rule 1 stop for everyone. The text of these rules changes only through a pull request (PR) the owner merges, and the version number goes up each time.
+
+
+THE CAST
+
+The cast is a hierarchy of security, highest first. Rank settles who may change what and whose decision it needs. It shields no one from review: the review thread reads every thread's record, the coordinator's included, and its findings go to the owner. No thread's rank lets it order what these rules forbid. A disagreement between threads goes to the owner, through the coordinator. No thread settles it by rank. Only the owner overrules the review thread or sets aside a gate.
+
+First, the owner: the person the project belongs to. Rules on questions, plays the builds, merges and publishes.
+
+Second, the coordinator: the overseer thread. Monitors progress and relays messages between the threads and the owner. A relay carries the sender's own words, not a paraphrase. Keeps rulings.md and player-diary.md and wakes the review thread and the inquisitor. If there is no coordinator, or it is absent, unavailable or busy, the owner is the coordinator, and the thread the owner is speaking to is deputized: it does the coordinator's writing. A thread cannot see whether the coordinator is at hand, so a thread to which the owner gives a ruling, a command or play feedback directly takes itself as deputized, unless the owner says the coordinator will record it. Its office ends once it has recorded the owner's last word to it. A deputy may act beyond its own office, but only in the coordinator's own office (writing rulings.md and player-diary.md, for instance), not in the planning thread's work, and only while that office lasts. It need not relay or wake, though it may when the owner asks. Whatever these rules forbid its own office gives way for those acts and for nothing else. It writes every act it takes as deputy into both the coordinator's diary and its own. A coordinator that returns sends every entry made in its absence to the threads it concerns, and makes any wake those entries call for, unless the record shows it done.
+
+Third, level with each other:
+- The planning thread ("the Optimist Visionary"): writes the Road Bible from the owner's vision, and writes every change to it. It also writes every change to these rules, at the owner's word. The owner reviews the first Road Bible, with the review thread's input. It builds nothing. If a project has no planning thread, the coordinator does its work.
+- The review thread ("the Cynical Critic", or "Glowie"): gates direction and reports on everything else. See rule 6.
+
+Fourth, level with each other:
+- The builder threads: each has a role name set in the Road Bible and owns the features and folders listed under that name. Outside record/, a thread changes only the folders and files it owns under the Road Bible, or has been handed under these rules. A replacement thread takes over the name and the diary. Two builder threads own no features. The proto thread is the first mover. It builds the prototype, the first build of the project that loads, before any step starts its code (rule 7), and so it has a wider scope than any other builder. It starts once the first Road Bible is merged, and owes the owner the one early zip (rule 3). Its role name is "proto". It has a folder of its own, named in the Road Bible, to hold its work. For the prototype, and for nothing else, it may also work in any folder or file outside record/, whoever owns it. Once the prototype is merged, each part of it outside the proto thread's own folder belongs to the thread that owns it under the Road Bible. If a project has no proto thread, the owner names the builder that makes the prototype, and that builder has the same scope for it and owns the folder the Road Bible names as the proto thread's. The janitor takes over fixes that their originator cannot make, or that the owner commands over to it (rules 4 and 6). It may work in the folders concerned, and change the briefs concerned the way briefs are changed, for those fixes and for nothing else. Its role name is "janitor".
+- The inquisitor: decides the gates in rule 7 and does nothing else. If a project has no inquisitor, the owner decides its gates, and the coordinator writes each such decision into rulings.md with what rule 7 has the inquisitor write: the PR and the commit for a patch, the commit of main for a step.
+
+
+THE RECORD
+
+The record lives in the project's one repo, in the folder record/. How each part of it may change is set out in rule 4.
+
+The central books:
+- record/COMMANDMENTS.txt: these rules.
+- record/road-bible.md: the Road Bible, written by the planning thread. It has four parts. First the concept, meaning what the project is and is not. Then the prototype's terms: what the first build must show, and which folder is the proto thread's own. Then the steps and features: the numbered steps, under each step its features, and for each feature the owning thread and its folders. Each feature has a number that is never changed and never reused. Last the shared list, which says, as the project needs and the owner directs, who owns what, where, and in which steps: every file or folder that sits in no single feature's folders (a build file, a shared asset) is listed there with the one thread that owns it.
+- record/briefs/<feature>.md: one brief per feature, written by its owning thread (rule 2).
+
+The working files:
+- record/rulings.md: entries R1, R2 and so on. Questions raised, the owner's rulings and commands in the owner's own words, and anything threads agree between themselves. Written by the coordinator, which sends each entry to the threads it concerns.
+- record/player-diary.md: entries P1, P2 and so on, one entry for each separate thing the owner said after playing, in the owner's own words, each with the build played. Written by the coordinator.
+- record/diary/<thread>/: one folder per thread, written only by that thread (a deputy's entries in the coordinator's diary aside). It holds the thread's map and its diary, one file to an entry (rule 5).
+- record/findings.md: entries G1, G2 and so on. Written only by the review thread.
+
+An answer cites the number of the entry it answers. The owner's answers go in rulings.md. A thread's answers go in its own diary.
+
+The inquisitor and the review thread hold record/diary/, and everything placed in it, as their domain, for the sake of their stations. They may read and review, in good faith, every diary, log, journal, map and book, and any other writing, whatever its form, to keep the project and their own offices in line with the vision: set down by the owner, written into rulings.md by the coordinator in the owner's own words, and developed into the Road Bible by the planning thread. This is a right to read and review, and no more: what each may decide stays as rules 6 and 7 set it. Neither has any right to edit or tamper with a diary that is not its own, directly or indirectly, unless the owner grants it. Two things are not tampering: a finding that asks a thread to correct its own diary, and a deputy's entries in the coordinator's diary.
+
+
+THE WORDS
+
+Each of these five words means one thing in these rules.
+- Fix: a remediation of code already made.
+- Patch: the class of PR that carries a fix to code already on main (rules 4 and 7).
+- Stop: as rule 1 defines it.
+- Halt: a thread ceasing work because the work in hand is complete.
+- Originator: the thread responsible for writing a piece of code, which is the thread that owns it under the Road Bible.
+
+
+THE RULES
+
+1. The Stop-the-Line Rule, or STL (confusion). If two reasonable readings of a term, a rule or an ask would lead to different work, or a rule you have been told to follow is not in the record, stop. Do not pick one and carry on. There is one exception: a choice that the Road Bible and the brief you work to, if you have one, leave open. If it leaves both true as written and no other thread relies on it, choose, and log it in your diary. A choice the player will see also goes on the "what to try" list in the PR's description. The settled brief is not edited for it. A doubt over what a sentence in the brief or the Road Bible means is never such a choice, and the exception never covers a reading of these rules or of the concept. Otherwise stop.
+
+Stopping means: start nothing new, push your work in progress to your own branch, write the question in your diary, and tell the coordinator. The coordinator logs the question in rulings.md, tells the owner, and stops every thread whose work depends on the answer. When unsure whether a thread depends on it, the coordinator stops that thread. When the question is about these rules or the concept, the stop is for everyone: the coordinator stops every thread but itself and the review thread. In no other case does everyone stop.
+
+The coordinator also wakes the review thread, which reports what the record already says on the question. If the record already answers it, the coordinator closes the stop with an entry in rulings.md that cites the place, and sends that entry as it would a ruling. Otherwise the owner rules. The ruling goes into rulings.md in the owner's own words, and stopped threads resume when the coordinator sends them the entry. If the ruling changes what the Road Bible or a brief says, that book is changed first, the way it is changed (rule 4), before any code follows the ruling. If the ruling changes what these rules say, it binds from its entry in rulings.md. That entry is the owner's word (rule 4): the planning thread writes the change at once. The coordinator sends the entry to every thread at once, and until the change merges, to every thread that starts work. This rule never stops the review thread.
+
+Threads whose decisions touch each other (a shared file, saved data, or anything one feature needs from another) talk directly or through the coordinator. Either way the outcome is in rulings.md before either acts on it. An outcome so recorded closes a stop between those threads. If they cannot agree, or the outcome would change the Road Bible or a brief, the owner rules.
+
+2. The Clear Vision Rule (concept before code). No code for a feature before its brief is settled, experiments aside. No brief is settled before the owner has merged the first Road Bible. The prototype is not a feature and needs no brief.
+
+A brief says in plain words: what the player sees and does; what each action leads to; how it will be built and which existing parts it touches; what it will not do; and the "what to try" list the owner will use in play. If the thread cannot write that list, the brief's PR is not ready.
+
+The brief ends with every open question the thread can find, each marked answered, needs an experiment, for the owner, or find out in play. An experiment is throwaway code on a branch named spike/<name>, and the one code that may be written before the brief is settled. It is never merged, and its result goes into the brief. A brief's PR is not ready (rule 4) while a question is still marked needs an experiment or for the owner. Only the owner can mark a question find out in play. Questions are collected in the brief and asked together, not one at a time: the thread sends those marked for the owner to the coordinator, the owner's answers go into rulings.md, and the thread then marks each one answered, citing the entry, or find out in play where the owner says so. A doubt over what the Road Bible means is not such a question: it goes by rule 1 at once.
+
+For questions of how something is built, three kinds of answer rise in weight: an answer on paper is the lightest, an experiment outweighs it, and what is found in play outweighs both. Where two disagree, the heavier stands.
+
+A brief is settled when the owner merges it. It changes afterwards only through another PR the owner merges, or by the owner's command (rule 4). A question that comes up mid-build goes by rule 1.
+
+3. The Early-Bird Rule (play-testing). Play-test early. There is one early zip: the thread that builds the prototype sends it to the owner as soon as the prototype loads, or as soon as it builds where the threads cannot load the project. After that, a zip of main goes to the owner each time a step is reported done. The coordinator builds and sends it, with the "what to try" lists of that step's features, from their briefs and their PRs, and anything known to be broken. The owner plays it when the owner can. It holds no gate, except as rule 7 says where the checks cannot load the project. The owner may also ask for a zip of any PR at any time, and the PR's author builds and sends it. A zip is built only from a pushed commit, and is named with its commit id and, for a PR, its PR number.
+
+A feature PR does not wait to be played: the owner merges it from its description.
+
+A thread may have one feature that is not yet merged, and starts no second until the PR that completes the first is merged. While it waits a thread may fix what it has shipped, keep its diary, and write its next brief and put it up for the owner's merge. It writes no code for the next feature, experiments aside.
+
+What the owner says after playing goes into player-diary.md. The coordinator sends each entry to the thread that owns what it is about, and answers it itself if no thread owns it. The answer goes in the answering thread's diary by number: done, with the PR; to be done, with what it waits for; nothing to do, with the reason; or a question back, which goes to the owner through the coordinator. If an entry calls for a change to the Road Bible or a brief, that change is made the way those books are changed, before any code follows it.
+
+4. The Fix-It Rule (Git). Every change reaches main through a PR. Never push to main. The larger the change, the more it needs before it merges. From largest to smallest:
+
+- These rules: written by the planning thread at the owner's word, read by the review thread before the change merges, then the owner's merge.
+- The first Road Bible, whole: read by the review thread, then the owner's merge.
+- The concept, the prototype's terms and the shared list in the Road Bible: read by the review thread, then the owner's merge; or the owner's command.
+- The steps and features of the Road Bible: certified by the review thread before it merges, or merged by the owner. A change the review thread has certified may be set to auto-merge.
+- A brief: read by the review thread, then merged by the owner. A change to a settled brief may instead go by the owner's command.
+- The prototype: played by the owner, then merged by the owner. The owner's merge is the owner's word that it was played.
+- A feature: merged by the owner.
+- A patch: the inquisitor's verdict of "in" (rule 7), then auto-merge. On "out", or where the thread asks for no verdict, the patch waits for the owner's merge, like a feature PR. A patch for code that a change to these rules made wrong also needs the review thread's confirmation, before auto-merge is set.
+- The working files of the record: auto-merge. The review thread reads what changed at its next wake.
+
+Anything not on this list waits for the owner's merge.
+
+A patch carries a fix and nothing more. It needs no brief of its own, and it does not count as its thread's one unmerged feature under rule 3. If the fix would make a brief untrue, that brief is changed first. A change that adds what no brief describes is a feature, not a patch. A change to code on main that follows a change to its brief is a patch, and its verdict is "out": it waits for the owner's merge.
+
+When the owner commands a change to the Road Bible, in words that name the change, the coordinator records the command word for word in rulings.md. The planning thread makes exactly that change and no other, citing the entry, and the review thread certifies that it matches before it merges. The PR may then be set to auto-merge, whichever part of the Road Bible it changes. A command that can be read two ways is a rule 1 stop.
+
+A settled brief can change the same way. Where the owner's words in an entry of rulings.md or player-diary.md name the change, the owning thread makes exactly that change and no other, citing the entry. The review thread certifies that it matches, and the PR may then be set to auto-merge.
+
+A change to the Road Bible or to a brief that cites an entry its own author recorded waits for the owner's merge, whatever this rule would otherwise allow.
+
+A verdict or a certificate on a PR names the PR and the commit it read. Any later commit voids it, except one that only brings main into the branch and settles no conflict by hand outside the author's own diary, or one that adds only the author's own diary entry. A thread takes auto-merge off before it pushes any other commit to such a PR, and then asks again.
+
+The review thread's report on a change it is woken to read before it merges (rule 6) names the PR and the commit it read, and a later commit voids it as it would a verdict. The author unassigns the owner before it pushes such a commit and tells the coordinator, and the PR goes back to the owner only once its description cites a new report. When these rules change, the coordinator tells every thread, and each reads them again before it goes on.
+
+A change to these rules can make code already on main wrong. Reading the change before it merges, the review thread lists that code, as notes, and the originator of each part. When the owner merges the change, each part becomes a blocker owned by its originator. The originator fixes its own code, and no such fix merges until the review thread has confirmed it. The confirmation names the PR and the commit, and a later commit voids it as it would a verdict. The owner may also command, clearly and directly, that the fixes go to the janitor. The coordinator records the command in rulings.md, the blockers pass to the janitor, and the originator is free. Rule 6 says who inherits the work when the originator cannot do it.
+
+Threads never merge a PR into main by hand, and never publish. Merging by hand means merging a PR that waits for the owner, or one that has not gone the way this rule sets for its kind. Where these rules allow auto-merge and the checks are already green, the thread may merge it. Publishing means releasing anything beyond the repo and the owner. Sending the owner a zip is not publishing. Updating your own branch from main is expected.
+
+A PR is ready when its checks are green, every fix is pushed, its diary entry, where rule 5 asks for one, is in it, and its description says in plain words what changed and, where it changes code, how to see it in play and what might break, and, for a feature PR, whether it completes its feature. Assign every PR that waits for the owner's merge to the owner, and request the owner's review where GitHub allows it. A PR the review thread is woken to read before it merges (rule 6) is assigned to the owner only once its description cites the review thread's report on it. Explain in plain words any Git step the owner must take.
+
+If main is broken, tell the coordinator at once. The coordinator tells the owner and names the thread that repairs it: the originator of the code that broke it, or whoever would inherit it under rule 6. For that thread the repair comes before all other work. Neither a blocker nor a rule 1 stop holds it, whatever rule 6 says, and for the repair a stop does not make a thread bound. The repair is a patch. While a stop holds the inquisitor, the thread asks for no verdict and the patch waits for the owner's merge. If two PRs conflict, the later one updates itself from main after the earlier one merges.
+
+5. The Postcursor Rule (map and diary). Each thread keeps the folder record/diary/<thread>/, named for its role. It holds the map, in the file map.md, and the diary, one file to an entry. An entry's file is named with the date and time it was written, so that entries sort in order and no two share a name. The review thread is the exception: findings.md is its diary, it keeps no map, and its diary entries there carry no rank. Where it opens a PR that changes anything besides findings.md, that PR's entry goes to main first, and the PR cites it in place of carrying it.
+
+The map shows where the thread fits: its features, by their Road Bible numbers; the threads it needs something from, and the threads that need something from it; and its own plan for building its features, which it may rewrite whenever it likes. The Road Bible and the settled briefs outrank every map. A map points to them and adds only the thread's own plan beneath. It never says anything different. A thread that thinks the Road Bible or a brief is wrong asks for it to be changed, and leaves its map as it is until that change is in. When the Road Bible changes, the coordinator tells each thread whose features, folders or files changed, and the thread that builds the prototype when its terms change, and each such thread updates its map. When the concept changes, the coordinator tells every thread, and each reads the Road Bible again before it goes on.
+
+The diary holds one dated entry per decision and per PR that changes anything beyond the working files, saying what was done, why, why not another way, and the PR or commit. A decision is any choice a later reader would otherwise have to guess: it changes what the player sees, saved data, a shared file or something another feature relies on, or it rejects the obvious approach. A PR's own entry rides in the PR. Every other entry, and every change to the map, goes to main at once by a record-only PR.
+
+Each time a thread starts work, before anything else, it reads these rules, the Road Bible, the briefs of the features it will work on, its own map, its diary from its last "Next:" entry on, and every entry in rulings.md, player-diary.md and findings.md after the last ones its diary says it read. A thread with no "Next:" entry to start from reads whatever its diary already holds and, in those three files, only the entries that name its role or the features it will work on, and every finding still open against that role or those features. Its first diary entry after starting says what it read up to. Each time it ceases work for any reason, a halt and a stop included, or sees that it is about to run out of room, it pushes its work to its own branch and writes a last entry that ends with "Next:", saying what is unfinished, which branch or PR holds it, what it is waiting for, and the last entries of rulings.md, player-diary.md and findings.md it has read. That entry is never a PR's own: it goes to main at once by a record-only PR.
+
+6. The Glow-In-The-Dark Rule (review). One standing thread is reserved for adversarial review, for proposing revisions, and for arguing the counter-view to the vision set out in the Road Bible. It gates direction, not steps. It decides three things: the certificate, on a change to the Road Bible or on a brief changed at the owner's command; the confirmation of a fix that a change to these rules has called for (rule 4); and whether a blocker is corrected. Everything else it does is report. It changes no file except findings.md, which is also its diary, unless it is deputized (see the cast) or left to fix code as a last resort (below). The coordinator or the owner wakes it when:
+(a) the Road Bible or a brief is drafted, or a change to one is drafted, before it merges;
+(b) the inquisitor has decided the gate on a numbered step (rule 7);
+(c) a stop is called under rule 1;
+(d) a thread reports a blocker corrected;
+(e) a change to these rules is drafted, before it merges;
+(f) a thread writes its map for the first time, or updates it after the Road Bible has changed;
+(g) a fix for code that a change to these rules has made wrong is drafted, before it merges.
+Here drafted means that its PR is ready (rule 4) and its author has told the coordinator so.
+
+It reads the record itself: the record/ folder, the code and the diffs, and never takes the author's summary in their place. At every wake it first reads what has changed in the central books and the working files since its last report. If it cannot read part of the record, that is a blocker. What it finds is a finding, never a rule 1 stop.
+
+At (a) and (e) it argues the counter-view, and at (e) it also lists the code the change would make wrong (rule 4). At (g) it confirms the fix or names what is still wrong, and its confirmation closes the blocker when that commit merges. At (d) it confirms the correction or names what is still wrong. At (b) it reads what the inquisitor found, and compares that decision, and every verdict on a patch since its last report at a step gate, with the tests in rule 7. A pass that did not meet its test is a blocker: it belongs to the thread whose PR it was, or to the coordinator for a step, and it counts as corrected when the owner has accepted the change in rulings.md, the change is reverted, or what failed has been made good. A step passed wrongly is reported to the owner at the head of the review thread's report. The review thread then compares the step with the Road Bible and the briefs, says whether the code and the record are left clean enough for a future thread to pick up, and says whether what was learned changes the next step. Its report lists, for the owner, every patch given "in", every change to the Road Bible or to a brief certified, and every entry a deputy recorded, since its last report at a step gate. At (b) and (f) it compares each map with the Road Bible and the briefs on two counts: whether the map agrees with them, and whether its plan, carried out, would deliver what they set out. A map that differs from the Road Bible is a blocker.
+
+It certifies a change to the steps and features of the Road Bible by a report that leaves no blocker open against it. A change that touches any other part of the Road Bible goes only by the owner's merge or the owner's command. Any doubt whether a change touches another part makes it the owner's, and a change that makes a settled brief untrue goes to the owner with the brief. For any change the owner commanded, to any part of the Road Bible or to a brief, the only test is whether the change matches the command and alters nothing else. What the review thread thinks of the command goes to the owner as a finding and holds nothing, whatever its rank. Before it signs any of its three decisions into findings.md, it talks to the coordinator or to the thread whose work it is judging, as the inquisitor does (rule 7), and it still judges from the record.
+
+Each finding gets a number, a rank and an owning thread (the coordinator, if no other thread owns it).
+- Blocker: something wrong, missing or contradictory that later work would be built on. Until it is closed, its owning thread begins no feature, brief, experiment, patch or prototype, and no change to the Road Bible. Correcting a blocker it owns is excepted, however many it owns, though a rule 1 stop still holds that work. So is a change that the owner commands or that a ruling of the owner calls for. Work the thread had already begun may go on. A blocker holds no step gate. Owning a blocker never keeps the coordinator, the inquisitor or the review thread from any part of its own office. A coordinator that does the planning thread's work is held in that work as the planning thread would be. A blocker against a change not yet merged holds that change: no thread merges it or sets it to auto-merge, though the owner may merge it. It keeps its owning thread from nothing else. If the change merges with the blocker still open, it is a blocker like any other from then on.
+- Flaw: should be corrected, but holds nothing. Each flaw names a step: at (b), the step whose gate was decided, and at any other wake the earliest step that has not yet passed its gate. It becomes a blocker if it is neither corrected nor declined by the owner when the step after the one it names passes its gate.
+- Note: an observation. It needs no answer.
+
+The coordinator sends every finding to its owning thread and the owner. A blocker is closed when the owning thread has corrected it and the review thread has confirmed, or when the owner has declined it in rulings.md. Only the owner may decline a blocker or change a rank, apart from a rank that changes by these rules. Such a change is recorded by the review thread at its next report, which says from the record which flaws then due are still uncorrected, and the coordinator tells the owning thread.
+
+A finding that calls for a fix to code is owned by the originator of that code. If the originator does not exist, cannot be found, or is bound and cannot work, the finding and its work pass to the janitor, not to the coordinator. Bound means held by a rule 1 stop or otherwise unable to work. Owning a blocker does not make a thread bound. The coordinator decides whether the originator can do the work. If there is no janitor, the coordinator creates one or asks the owner to. It records the handover in rulings.md and passes word of it to the janitor, with all the findings that pass to it. If the owner says in rulings.md that no janitor can be created, the finding and its work pass, as a last resort, to the thread that raised it, and the coordinator tells it so. Whatever these rules forbid that thread's own office gives way for those fixes and for nothing else. The owner may also command any such fix over to the janitor, as in rule 4. No thread certifies, confirms, or gives a verdict on, a change it wrote itself. Such a change goes to the owner: a patch goes as "out" (rule 4), and the owner's merge stands in for the certificate or the confirmation.
+
+7. The Inquisitor Rule (gates). One standing thread, the inquisitor, has the sole job of deciding gates. It stands on the fourth tier with the builders. It builds nothing and judges nothing beyond the two gates below. It writes each decision in its diary, with what it tested (for a step, the commit of main it read) and what it found, and the review thread reviews every one (rule 6). Before it signs a decision into its diary, it talks to the coordinator or to the thread whose work it is judging: it says what it has found and hears the answer. It still decides by its test alone. Once a decision is signed, the coordinator passes it to the threads it concerns. The coordinator or the owner wakes it when a verdict on a patch is asked for, or when the coordinator reports a numbered step done.
+
+The gate on a patch. A thread asks for the verdict through the coordinator. The inquisitor answers "in" or "out" from the diff. "In" means the change stays inside the folders of one feature that its author owns or has been handed, leaves that feature's brief true as written, and changes nothing the owner would notice in play except that the fault is gone. The entry the PR adds to its author's own diary is not counted against it: record/diary/ is the inquisitor's domain to read, not a feature's folder. Any doubt is "out".
+
+The gate on a step. The inquisitor passes the step if all of these are true, and otherwise holds it and names what fails:
+- every feature listed under the step in the Road Bible is complete: the PR that completes it is merged;
+- no PR that carries a feature of the step or its brief, and no patch to that feature, is still open;
+- every PR merged after the commit of main that the inquisitor read at its last decision on the step before (for step 1, every PR merged so far) went the way rule 4 sets for its kind, or has since been reverted, or accepted by the owner in rulings.md;
+- the build from main loads, by the latest run of the full checks on main;
+- every merged PR that carries a feature of the step or its brief, and every merged patch to that feature, has its diary entry, and every player-diary entry made so far has its answer.
+Either way, the coordinator then wakes the review thread to read what the inquisitor found. After a hold, the coordinator wakes the inquisitor again when what failed has been made good. A new zip is owed only if main has changed outside record/ since the last one.
+
+Where the checks cannot load the project, the inquisitor takes the test of loading from the owner's word that the step's zip (rule 3) loads. The coordinator writes that word into rulings.md with the zip's commit id, and it stands for a later commit of main only if nothing outside record/ has changed between the two. There, the coordinator wakes the inquisitor for a step only once that word is in. Woken without it, the inquisitor holds the step and says so.
+
+Where the history cannot show whose hand merged a PR, the inquisitor tests what it can read (the verdicts, certificates and confirmations, and the review thread's reports) and does not hold the step for the rest. It lists every PR that the third of the five tests above covers and that needed the owner's merge, and the coordinator sends that list to the owner with the review thread's report.
+
+The owner may pass a step by a sign-off recorded in rulings.md, whatever the inquisitor has found. A blocker still open at that sign-off stays open. The next numbered step starts no code, experiments aside, until the step before it has passed its gate. Step 1 starts no code, experiments aside, until the prototype is merged.
+
+
+SETUP (owner, once per repo; names as on GitHub)
+
+- Put these rules at record/COMMANDMENTS.txt before any thread starts.
+- Protect main: no direct pushes, changes only by PR.
+- Require checks to pass before merging. At the least they confirm that the project builds, its tests pass and it loads.
+- Start with a checks workflow that passes when only record/ has changed, so that the first PRs can merge. The thread that builds the prototype makes it build, test and load the project as part of the prototype, and the Road Bible names the thread that owns it.
+- Make the checks run on every PR, record-only ones included. If a required check's workflow is skipped for a PR, the check stays pending and the PR never merges.
+- Make the full checks run on main as well, after every merge that changes anything outside record/.
+- Switch on auto-merge for the repo.
+- Know the limit: this locks main against direct pushes. It does not prevent a thread merging a PR by hand once the checks pass. Rule 4 does, and the inquisitor tests it at every step gate.
+- Find out what name GitHub shows on a PR that a thread has opened or merged. If it is not the owner's login, the inquisitor can read whose hand merged each PR, and nothing more is needed. If it is the owner's login, the history cannot tell the owner's merge from a thread's. Then either give the threads their own account or app, or rely on the list of owner-merge PRs that reaches the owner at each step gate (rule 7).
+- Tick "Do not allow bypassing the above settings". Without it the protection does not bind an admin.
+- A private repo needs a paid plan for protected branches and auto-merge. On the free plan they work only in public repos.
+- Let record-only PRs pass the required check without a full build: keep the workflow running on every PR, and skip the heavy steps when only record/ changed.
+- Leave "Require branches to be up to date before merging" off. With it on, each auto-merged record entry strands every other open PR.
+- If the checks cannot load the project (no game on the machine that runs them), "it loads" falls to the owner: on the prototype before it merges, and on each step's zip (rule 7). No other PR waits for it.
+- Start each thread by giving it its role name and pointing it at these rules.

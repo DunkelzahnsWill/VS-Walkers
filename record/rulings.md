@@ -854,3 +854,19 @@ Quotes are exact. In a quoted question, "you" is the owner and "I" is the thread
   note G46 in PR #97 (head `38d5642`); neither is on main yet. The coordinator gives the post's time as
   08:38Z; the project chat gives 08:36:43Z.
 - Recorded 2026-11-12 by the record thread (R17; THE CAST).
+
+## R45. The owner's ruling on R40: the prototype's eleven numbers live in its own folder (option a)
+
+- The owner, in the project chat, 2026-11-12 16:54:12Z. The message, whole, copied from the project
+  chat:
+
+  ```text
+  R40.) A
+  ```
+
+- Answers the question of R40 with option (a), as R40 quotes it in the proto thread's words: "In the
+  prototype's own folder, as built. They are removed with it before step 1 is done, and features 8 and 9
+  start again from 1.1.1."
+- Closes the question of R40, and with it the rule 1 stop the proto thread called on it. The owner read
+  R41 to R43 before answering.
+- Recorded 2026-11-12 by the record thread (R17; THE CAST), at the coordinator's request.

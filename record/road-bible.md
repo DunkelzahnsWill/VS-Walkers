@@ -63,8 +63,9 @@ The creature, called the walker in this book:
 ### What this road adds
 
 The owner's direction is R9. In one line: kill it wrong and it comes back sooner; keep killing it wrong
-and it changes. The owner's order of work is the immediate before the distant (R24): the first two
-points below are the immediate, the third is the distant.
+and it changes. The owner's order of work, in the owner's words: "First we adjust and tweak what is
+already there. Then and only then we move on to expanding/adding to the concept" (R27, and R24 before
+it). The first two points below adjust what is already there. The third adds to the concept.
 
 - **It comes back sooner.** An improperly killed walker returns faster than the two seasons of version
   1.1.1, and the climb up the escalation LEVELS is shortened to match (R9).
@@ -209,8 +210,8 @@ Done, the owner can hunt a walker and find its stats and its wits as the worksho
 
 Done, the owner can kill a walker improperly three times running and meet what it comes back as.
 
-This step waits whole. The owner's order is the immediate before the distant (R24): no brief and no
-experiment for features 10 to 12 is begun before step 2 has passed its gate.
+This step waits whole (R27): no brief and no experiment for features 10 to 12 is begun before step 2
+has passed its gate.
 
 | No. | Name | What it is | Owner | Folders |
 | --- | --- | --- | --- | --- |

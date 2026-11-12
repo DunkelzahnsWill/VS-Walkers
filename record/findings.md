@@ -711,3 +711,216 @@ Next:
 - Where it is: this file, in a record-only PR from branch `claude/project-thread-qcrhya`.
 - Sent to the coordinator, word for word: G12 to G22.
 - Read up to: rulings.md R30, player-diary.md no entry, findings.md G23.
+
+## G24. Report under rule 6 (d) and (e): PR #50, version 3 of the rules, read again at commit 2fcc1b6 (diary entry), 2026-11-12 05:27Z
+
+Woken by the coordinator at 05:01:22Z under rule 6 (d) and (e): planning had reported blocker G6
+corrected and PR #50 ready again at commit `2fcc1b6`. That commit voided my report G5, which was on
+`551c4d6` (rule 4). This report is on `2fcc1b6`, and a later commit voids it in the same way.
+
+**What I read.**
+
+- First, what changed in the record since G12. Main went from c140a6b to 5233350. New there: planning's
+  "Next:" entry `2026-11-12T050123Z.md`, and my own G12 to G23. No central book has changed on main, and
+  rulings.md still ends at R30.
+- PR #50 at `2fcc1b6`: `record/COMMANDMENTS.txt`, compared word by word with version 2 on main and with
+  the first draft at `551c4d6`; planning's second entry for the PR, `2026-11-12T045530Z.md`, which
+  answers G6 to G10 by number; and the description. The check "build" on that commit: success, finished
+  05:01:06Z.
+- The comparison with version 2 shows what the description lists and nothing else: seven lines of the
+  file changed and one paragraph added. They are the two lines of the header, the coordinator's
+  paragraph in THE CAST (one new sentence, and "A deputy's office" where version 2 has "Its office"),
+  the new paragraph after it, one clause in THE RECORD, two paragraphs of rule 1, and one sentence at the
+  end of rule 5's first paragraph.
+- R30 again, for what planning and the record thread have agreed, and the record thread's one entry,
+  `record/diary/record/2026-11-12T043000Z.md`.
+- Every file on main outside `record/`, searched again for the coordinator, the record thread, deputies,
+  rulings.md, player-diary.md, findings.md and the rules file. Nothing outside `record/` has changed
+  since `60946d8`.
+- Planning's copies for the coordinator in the project's shared folder (`planning/pr50-second-commit/`):
+  the rules file, the diary entry and the two diffs are the same as the commit, byte for byte. The
+  coordinator, which cannot read the repo, has the true text before it.
+
+Read up to: rulings.md R30, player-diary.md no entry, findings.md G23.
+
+**In short.** The second draft settles what the first report found. Blocker G6 is corrected, and my
+decision on it is G25. The flaws G7, G8 and G9 are corrected in the draft, and the note G10 is taken up.
+I found no new blocker and no new flaw, and two new notes that need no answer (G26, G27). My advice to
+the owner: as far as the review goes, PR #50 can be merged at `2fcc1b6`. Of the seven points its
+description puts to the owner I would keep all seven. Rule 4 asks one thing more before the merge: the
+description cites this report, and planning then assigns the PR to the owner.
+
+**The findings of the first report, one by one.**
+
+- G6 (blocker): corrected. The decision and its reasons are in G25.
+- G7 (flaw): corrected in the draft, in each of its three parts.
+  1. The two deputy sentences no longer disagree. One sentence after them governs both: "While a record
+     thread is at hand (below), neither of these two sentences deputizes a thread: it is deputized only
+     if the owner tells it to do the recording itself."
+  2. The condition is said one way in both paragraphs, "While a record thread is at hand", and it is now
+     something a thread can know: "A thread goes by what the coordinator last told it, and a thread the
+     coordinator has told nothing takes it that none is at hand."
+  3. The fallback is there. "The coordinator starts it, and starts a replacement if it ends." A thread
+     that has been told the record thread is no longer at hand, or has been told nothing, is under
+     version 2's deputy sentences again. So the draft fails towards recording: a thread in doubt
+     records. Two writers of one file is the smaller harm, and Git shows it: two PRs that each add an
+     entry at the end of rulings.md conflict, and rule 4 has the later one update itself from main.
+- G8 (flaw): corrected in the draft. The words "those files" are gone. The cast names what the record
+  thread writes, "rulings.md and player-diary.md, and in the coordinator's own folder,
+  record/diary/coordinator/, the coordinator's map and diary", and what it may change: "It changes
+  nothing in the repo but rulings.md, player-diary.md, the coordinator's folder and its own diary folder
+  (rule 5), and it writes none of the central books." The wide sentence is narrowed to the same files.
+  findings.md is out of its reach, and the coordinator's map is settled: the record thread writes it.
+- G9 (flaw): corrected in the draft, as the finding proposed. Rule 1's last sentence is version 2's
+  again, and two sentences follow it: "No stop keeps a record thread from recording. A record thread's
+  own doubt over what to write goes to the coordinator, and the entry in doubt stays unwritten until the
+  coordinator answers."
+- G10 (note): taken up. Planning added a sentence of its own: "Where it cannot open the message, the
+  entry says through whose hands the words came." It is a good one. R10 to R14 are entries of that kind.
+- G11 (note, for the owner): stands as written. The clause it asks to keep, "Where the coordinator cannot
+  reach the repo", is unchanged. rulings.md holds no answer of the owner's to it, and a note needs none.
+
+G7 to G9 are corrected in a change that is not yet merged. They stand corrected in the record when
+`2fcc1b6` merges.
+
+**The seven points that go past the owner's card.**
+
+1. The record thread reads the repo for the coordinator. Keep, as before.
+2. It holds no office of its own. Keep. The files are now named.
+3. A stop for everyone does not hold it, no stop keeps it from recording, and a doubt of its own goes to
+   the coordinator. Keep. It is what G9 asked for.
+4. Its own diary folder, and no map. Keep. It is what G6 asked for.
+5. While a record thread is at hand, a thread the owner speaks to sends the owner's words on and does
+   not record them. Keep. What that costs when the coordinator is away is in G27.
+6. New: the coordinator starts the record thread and its replacement, and tells the threads whether one
+   is at hand. Keep. What follows for the coordinator is in G26.
+7. New: where the record thread takes the owner's words from, and what each such entry says. Keep.
+
+**The two cases the description leaves open.** I agree with planning on both.
+
+- The coordinator and the record thread both away, before the threads have been told. A ruling the owner
+  gives a thread then waits unrecorded. What it costs is time, not a wrong act: stopped threads resume
+  only when the entry is sent to them (rule 1), and a change the owner commands cites its entry (rule
+  4). The owner can end the wait by telling that thread to record the words itself. My own suggestion in
+  G7 left the same case open.
+- A project with no planning thread whose coordinator cannot reach the repo. Nobody there could write
+  the Road Bible. Version 2 has the same gap. The first draft closed it only by a sentence wide enough
+  to hand the record thread the central books, which G8 objected to. It is not this project's case, and
+  the owner's card did not ask.
+
+**The counter-view (rule 6 (e)).** To the change as a whole it is still G11: if the coordinator could be
+given the repo, none of this would be needed. To the second draft I have only the two notes. Both are
+small, and neither is worth another commit by itself, since a commit would void this report and call for
+a third read.
+
+**Code the change would make wrong (rule 4).** None, as before. No file outside `record/` names the
+coordinator, the record thread, a deputy or any file of the record. Inside the record, the first draft
+made the record thread's folder wrong, and the second does not: nothing is left on main that version 3,
+as now drafted, forbids.
+
+**What I could not check.** Planning's entry on main says that the record thread read the new wording at
+04:59Z and has no objection. That exchange was between the two threads, and I could not see it. Nothing
+in this report rests on it. The record thread's own words on its folder are in R30: "your smaller change
+(drop the sentence that takes my folder away) suits me".
+
+**The header's date.** Unchanged: "Ratified 2026-11-12". It is the owner's to check, as planning says.
+
+## G25. Decision under rule 6 (d): blocker G6 is corrected in PR #50 at commit 2fcc1b6
+
+- A decision of the review thread (rule 6: "whether a blocker is corrected"). It answers G6.
+- Signed 2026-11-12 05:27Z, on PR #50 at `2fcc1b6`. A later commit to PR #50 voids it with the report
+  G24 (rule 4).
+
+G6 found that rule 5 of the first draft forbade the record thread a folder it had already opened under
+version 2. It offered two ways to close the blocker, and planning took way (a).
+
+What the text says now:
+
+- Rule 5 ends: "A record thread keeps a diary like any other thread, and no map." The sentence that put
+  its own entries into the coordinator's diary is gone.
+- Rule 5 opens, unchanged: "Each thread keeps the folder record/diary/<thread>/, named for its role."
+  The record thread's role name is "record", so its folder is `record/diary/record/`, the one on main.
+- THE CAST lets it change "its own diary folder (rule 5)".
+- THE RECORD keeps each folder "written only by that thread", and sets aside "a record thread's writing
+  in the coordinator's folder". So its own entries are in its own folder and the coordinator's words are
+  in the coordinator's: one voice to a folder.
+- G6 asked for one thing to be settled with planning: with the sentence dropped whole, rule 5 would have
+  given the record thread a map to keep. The text now says that it keeps none.
+
+What is on main fits the new text: `record/diary/record/2026-11-12T043000Z.md`, the record thread's one
+entry. Nothing has to be moved, and nothing is left on main that the draft forbids.
+
+Before signing I told planning what I had found, and asked whether anything in `2fcc1b6` is meant
+differently from how I read it and whether another commit is planned (05:22Z). Its answer, 05:23:05Z:
+"Nothing in 2fcc1b6 is meant differently from how you read it." And: "I plan no further commit to PR
+#50." I judge from the text of the commit, as set out above.
+
+The blocker is corrected, and I confirm it. G6 is closed for PR #50 at `2fcc1b6`. No finding of mine
+holds that change now.
+
+## G26. Note: the word that a record thread is at hand is kept in messages, not in the record
+
+- Rank: note. Owning thread: the coordinator. A proposal; it needs no answer.
+- Found 2026-11-12 05:27Z in PR #50 at `2fcc1b6`, THE CAST: "The coordinator tells every thread when its
+  record thread has started and when it is no longer at hand, and tells each thread it starts later
+  whether one is at hand. A thread goes by what the coordinator last told it, and a thread the
+  coordinator has told nothing takes it that none is at hand."
+
+Under version 3, whether a thread is a deputy turns on what the coordinator last told it. That word is a
+message. A thread that is replaced, or that loses the early part of its session, has only what the
+record holds. The draft is safe if the word is lost: such a thread takes it that no record thread is at
+hand and records as a deputy, which gives two writers and loses nothing. Still, the record should show
+from when each thread stopped being a deputy. At each step gate I list every entry a deputy recorded
+(rule 6), and a later reader will want to know whether the thread was one.
+
+Today the record does show it. R30 has the time the record thread started, and the coordinator told the
+review thread in its message of 04:25:39Z: "Under R17 the record thread now exists". The proposal is for
+later. Each time the coordinator tells the threads that a record thread has started, has been replaced
+or is no longer at hand, its diary gets an entry that says so, written by the record thread or, where
+there is none, by the replacement when it starts. Rule 5 has the diary hold "one dated entry per
+decision", and a decision is "any choice a later reader would otherwise have to guess". Planning's answer
+when I put this to it (05:23:05Z): "it is the coordinator's to put in its diary each time it tells the
+threads; the text does not ask for it."
+
+## G27. Note: with the coordinator away, no thread relays or wakes at the owner's ask unless it is also told to record
+
+- Rank: note. Owning thread: planning. It needs no answer, and planning has given one.
+- Found 2026-11-12 05:27Z in PR #50 at `2fcc1b6`, THE CAST: "While a record thread is at hand (below),
+  neither of these two sentences deputizes a thread: it is deputized only if the owner tells it to do
+  the recording itself." Against a sentence the draft leaves unchanged: "It need not relay or wake,
+  though it may when the owner asks."
+
+In version 2, with the coordinator away, the thread the owner speaks to is a deputy. It records the
+owner's word, and at the owner's ask it may also send the entry on or wake a thread. In version 3, while
+a record thread is at hand, that thread is no deputy. The record thread records the word, and it "relays
+nothing between the threads and the owner, and wakes no one". So until the coordinator is back, the
+entry is on main and nobody sends it, and stopped threads resume only "when the coordinator sends them
+the entry" (rule 1). The returning coordinator sends what was recorded in its absence, as version 2
+already has it.
+
+This is the price of one writer, and the owner has two ways round it. One is the owner's own hand: with
+the coordinator away "the owner is the coordinator", and can write to the waiting thread or wake one.
+The other is to tell the thread at hand to do the recording itself, which makes it a deputy, with a
+deputy's leave to relay and wake. Planning's answer (05:23:05Z): "I agree that this follows, and I
+accept it". I put it on record so that a later reader knows it was seen and accepted, not overlooked.
+
+## G28. Where things stand (diary entry), 2026-11-12 05:27Z
+
+Both reports I was woken for are in: G12 on PR #53 at `ed2ae5a`, and G24 on PR #50 at `2fcc1b6`. I
+cease work with this entry until the next wake.
+
+Next:
+
+- Unfinished: nothing in hand.
+- Open findings. Against PR #53 at `ed2ae5a`: G13 to G15 (blockers) and G16 to G19 (flaws), all
+  planning's. Against PR #50 at `2fcc1b6`: none. G6 is closed (G25), and G7 to G9 are corrected in the
+  draft and stand corrected when it merges.
+- Waiting for: planning's next commit of PR #53 and the wake that reports it, under rule 6 (a) again and
+  (d) for G13 to G15. Planning has told me that one commit will answer G13 to G20, and that it holds
+  that commit for the owner's line on G14. After the Road Bible merges, the wake under 6 (f) when
+  planning writes its map. If PR #50 gets another commit, a third read.
+- Where it is: this file, in a record-only PR from branch `claude/project-thread-qcrhya`.
+- Sent to the coordinator, word for word: G12 to G23, and G24 to G28. Since G12 the text is too long for
+  messages, so I put a copy of each batch in the project's shared folder (`review/`) and send the
+  coordinator the place and the headings. The copies are outside the record. The record is this file.
+- Read up to: rulings.md R30, player-diary.md no entry, findings.md G28.

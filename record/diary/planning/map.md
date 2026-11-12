@@ -4,7 +4,7 @@ The map of the planning thread (rule 5). It points to the Road Bible, `record/ro
 planning's own plan beneath. The Road Bible and the settled briefs outrank it: where this map says
 anything different, the map is wrong.
 
-Last written 2026-11-12 17:12Z, against the Road Bible as it stands on `main` at commit `cd2a49c`, the
+Last written 2026-11-12 17:43Z, against the Road Bible as it stands on `main` at commit `cd2a49c`, the
 owner's merge of PR #79.
 
 ## Features
@@ -53,12 +53,9 @@ Planning may rewrite this part whenever it likes (rule 5). In the order planning
    of its paragraphs change, in PR #105. The change touches the prototype's terms, so it goes by the
    review thread's read and the owner's merge (rule 4). It merges before the prototype, PR #75
    (rule 1).
-2. **Follow the owner's word on the order of the road.** The review thread's counter-view to it (G22)
-   is with the owner. If the owner reorders the road or moves feature 7, planning changes part 3.
-3. **After the owner has played the prototype.** Where an entry of `record/player-diary.md` calls for a
-   change to the Road Bible, planning writes that change before any code follows it (rule 3).
-4. **At the book's next change, whatever calls for it,** planning weighs four things with it. None of
-   them holds any work, and none is begun:
+2. **As soon as PR #105 is merged: three small things in part 3, in a change of their own.** Each
+   sharpens one place of the steps and features, and none changes a feature's number, name, owner or
+   folders. None is begun:
    - At the "Done" line of step 1, a sentence saying that a settings file which still holds the
      section `proto` is not among the files that line speaks of. The prototype's build writes that
      section into the settings file of an installation it runs on, and such a file gets no new
@@ -69,11 +66,26 @@ Planning may rewrite this part whenever it likes (rule 5). In the order planning
      as the proto thread's diary holds it. What the owner says after playing is said of those
      numbers, and once the prototype's folder is removed they are no longer in the code (R45). The
      review thread asked it of feature 9 when it read PR #105.
-   - Whether the numbers of the gaze rule stay in point 5 of the concept. Planning weighs that again
-     once the brief of feature 2 as it stands is settled.
-5. **After the workshop of step 2.** The brief of feature 9 holds what the workshop settles about the
-   four gaze cases (R34). Planning then brings point 5 of the concept in line with it, as the book
-   says.
+
+   Why not before that merge: the third rests on what PR #105 writes into part 2. Why not later: as
+   this is written, the builder threads `director`, `creature` and `commands` are not started, so no
+   builder has to update a map for the change (rule 5). Planning means to have it on `main` before
+   they are started, and tells the coordinator so. The last day is before the briefs of features 7,
+   8 and 9 are begun. A change to part 3 alone goes by the review thread's certificate and may then
+   merge on its own, so it costs the owner no merge (rule 4). Whether the change touches part 3
+   alone is the review thread's to say, and in any doubt it waits for the owner's merge (rule 6).
+   The day is the review thread's suggestion, made when it read this map. The wording of the change
+   is planning's: each sentence is tested against the code and the record when it is written, and if
+   a closer look drops one of the three, the change's diary entry says why.
+3. **Follow the owner's word on the order of the road.** The review thread's counter-view to it (G22)
+   is with the owner. If the owner reorders the road or moves feature 7, planning changes part 3.
+4. **After the owner has played the prototype.** Where an entry of `record/player-diary.md` calls for a
+   change to the Road Bible, planning writes that change before any code follows it (rule 3).
+5. **Point 5 of the concept, on two days.** Once the brief of feature 2 as it stands is settled,
+   planning weighs again whether the numbers of the gaze rule stay in point 5. After the workshop of
+   step 2, the brief of feature 9 holds what the workshop settles about the four gaze cases (R34),
+   and planning then brings point 5 in line with it, as the book says. A change to point 5 is a
+   change to the concept: it goes by the review thread's read and the owner's merge (rule 4).
 6. **After each step's gate.** The review thread says whether what was learned changes the next step
    (rule 6). Where the owner then rules or commands a change to the road, planning writes it.
 7. **Before step 3 begins.** The owner ruled "tentatively" that reinforced blocks and locked or barred

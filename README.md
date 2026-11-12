@@ -98,8 +98,14 @@ When something goes wrong, `%APPDATA%\VintagestoryData\Logs\client-main.log` is 
 
 ## Working in parallel
 
-Each piece of work happens on its own branch with a pull request to `main`, and CI must be green
-before merging. The layout lets branches stay out of each other's files:
+The work on this mod is done by several threads under the standing rules in
+[record/COMMANDMENTS.txt](record/COMMANDMENTS.txt), and who owns which feature, folder and file is set
+in the Road Bible, [record/road-bible.md](record/road-bible.md) (part 3 for the features, part 4 for
+the shared files). Where this section and those two disagree, they win. Each piece of work happens on its
+own branch with a pull request to `main`; CI must be green, and rule 4 of the Commandments says who may
+merge each kind of pull request (for most, only the owner). Each feature works only in the folders
+part 3 of the Road Bible lists for it; some features share the folders of another. Where a feature has
+folders of its own, they follow this layout, which lets branches stay out of each other's files:
 
 | What | Where it goes |
 | --- | --- |
@@ -111,25 +117,26 @@ before merging. The layout lets branches stay out of each other's files:
 | Smoke checks | `tests/smoke/<feature>.expect` and, if needed, `tests/smoke/<feature>.commands`; checks after a restart in `tests/smoke/<feature>.restart.commands` and `.restart.expect` |
 
 Feature folders: `Commands` (config and commands), `Director` (director, spawns and the return),
-`Stalker` (stalker AI), `Forms` (forms and kill ritual) and `Harassment` (harassment kit).
+`Stalker` (stalker AI), `Forms` (forms and kill ritual) and `Harassment` (harassment kit). The Road
+Bible names the thread that owns each.
 
 The shared surfaces, and who changes them:
 
 - **The config** (`Walkers/Config/`) is the one piece of code every feature uses; see
-  [Config and commands](#config-and-commands) below. The config and commands work owns
-  `WalkersConfig.cs`, `WalkersConfigJson.cs`, `WalkersConfigSystem.cs` and `WalkersPlayerPrefs.cs`.
-  Each feature owns its own `WalkersConfig.<Feature>.cs`; the director, stalker AI, forms and
-  harassment ones start as drafts of the creature bible's settings, and their features change them freely.
+  [Config and commands](#config-and-commands) below. The owner of the config and commands feature
+  (feature 5 in the Road Bible) owns `WalkersConfig.cs`, `WalkersConfigJson.cs`, `WalkersConfigSystem.cs`
+  and `WalkersPlayerPrefs.cs`. Each feature owns its own `WalkersConfig.<Feature>.cs`.
 - **The `/walkers` chat command** is one root shared by every feature. Get it with
   `api.ChatCommands.GetOrCreate(WalkersModSystem.ModId)` and add only your own
   `.BeginSubCommand("<feature>")`; never `Create` the root, or the second feature to start fails once
-  both are on `main`. The config and commands work sets the root's description and privilege.
+  both are on `main`. The config and commands feature sets the root's description and privilege.
   Network channels are named `walkers-<feature>`.
-- **The creature's entity JSON** (`assets/walkers/entities/`) belongs to the JSON prototype work. A
-  code branch that needs a change there keeps it small and says so in its pull request.
-- **`modinfo.json` and `Walkers/Walkers.csproj`** rarely change. The project already references every
-  game assembly the plan needs (API, VSEssentials, VSSurvivalMod, Newtonsoft.Json, protobuf-net). The
-  version changes only at release.
+- **The creature's entity JSON**: the walker's two files in `assets/walkers/entities/` belong to the
+  stalker feature (feature 2 in the Road Bible), with its shapes and textures; a later creature brings
+  its own files, under the names part 3 gives it.
+- **`modinfo.json` and `Walkers/Walkers.csproj`** rarely change, and the Road Bible's part 4 names
+  their owner. The project already references every game assembly the plan needs (API, VSEssentials,
+  VSSurvivalMod, Newtonsoft.Json, protobuf-net). The version changes only in a release pull request.
 - **`lang/en.json`** holds only general keys such as the mod name.
 
 Conventions that keep the mod compatible with others: everything under the `walkers` domain, every
@@ -455,6 +462,7 @@ CHANGELOG.md                  every release, player-facing
 LICENSE                       MIT
 docs/moddb.md                 the ModDB page's text
 tests/smoke/                  per-feature smoke expectations and console commands
+record/                       the rules (COMMANDMENTS.txt), the Road Bible, rulings, findings, diaries
 Walkers/                      the mod project
   modinfo.json
   Core/                       mod identity and startup log line
@@ -484,12 +492,14 @@ Never reuse a version number: a joining client must have exactly the server's ve
 
 ## Releasing
 
-1. On `main`, set `"version"` in `Walkers/modinfo.json` (plain `x.y.z`) and add its section at the top
-   of `CHANGELOG.md`. The changelog is pasted into ModDB, so it never mentions the return.
-2. Run `scripts/release.sh`. It refuses a dev version, a missing changelog section or uncommitted
+1. When the owner calls for a release, one release pull request sets `"version"` in
+   `Walkers/modinfo.json` (plain `x.y.z`), adds its section at the top of `CHANGELOG.md`, and brings the
+   mod page's text and this README up to date (the Road Bible, part 4). The changelog is pasted into
+   ModDB, so it never mentions the return without the owner's word. The owner merges it.
+2. On `main` after that merge, run `scripts/release.sh`. It refuses a dev version, a missing changelog section or uncommitted
    changes, then runs setup and the build, adds `LICENSE` and `CHANGELOG.md` to the zip, smoke-tests
    that finished zip, and writes `Releases/walkers_<version>.zip.sha256` and
    `Releases/walkers_<version>-notes.md` (the changelog section). `--allow-dirty` makes a trial run.
-3. The owner publishes: tag `v<version>` on that commit, create the GitHub release with the zip and
+3. The owner publishes, and no thread ever does (rule 4 of the Commandments): tag `v<version>` on that commit, create the GitHub release with the zip and
    the notes, then upload the same zip on ModDB with the notes and the game version tag. The page's
    text is in [docs/moddb.md](docs/moddb.md).

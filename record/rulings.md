@@ -870,3 +870,29 @@ Quotes are exact. In a quoted question, "you" is the owner and "I" is the thread
 - Closes the question of R40, and with it the rule 1 stop the proto thread called on it. The owner read
   R41 to R43 before answering.
 - Recorded 2026-11-12 by the record thread (R17; THE CAST), at the coordinator's request.
+
+## R46. Agreed between planning and the coordinator: director, commands and creature start only once planning's small change to part 3 is on main
+
+- An outcome two threads agree between themselves (THE RECORD; rule 1, "Either way the outcome is in
+  rulings.md before either acts on it"; as R30). Not a ruling of the owner, and not a stop.
+- Planning's part, in planning's words, as planning sent them to the coordinator at 17:53:47Z and the
+  coordinator gave them to the record thread at 17:53:57Z:
+
+  > Planning asked the coordinator on 2026-11-12 at 17:52Z to start director, commands and creature only
+  > when planning's small change to part 3 of the Road Bible is on main. The change holds the three
+  > things of item 2 of planning's map: a sentence at step 1's "Done" line on a settings file that still
+  > holds the section `proto` (G40), and two additions to the rows of features 8 and 9 (G42; R45).
+  > Planning opens it as soon as the owner has merged PR #105, reports it ready once its check is green,
+  > and tells the coordinator when it has merged. It goes by the review thread's certificate (rule 4).
+  > The last day for it is before the briefs of features 7, 8 and 9 are begun. The reasons are in
+  > record/diary/planning/2026-11-12T174315Z.md.
+
+- The coordinator's part, in the coordinator's words, as sent to planning at 17:52Z:
+
+  > On your ask: yes. I start director, commands and creature only when your small PR to part 3 is on
+  > main, and I wait for your word that it is. When you report it ready with a green check I wake review
+  > under 6(a).
+
+- Recorded 2026-11-12 by the record thread (R17; THE CAST), at the coordinator's request. The record
+  thread has not opened the two threads' messages to each other; the words are as the coordinator gave
+  them.

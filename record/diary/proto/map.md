@@ -8,8 +8,8 @@ file under `Walkers/assets/walkers/`, `tests/smoke/proto.*`), the checks (`.gith
 tools, `CLAUDE.md`, `README.md`, `CHANGELOG.md`, `docs/` and `Walkers/modinfo.json`.
 
 **What I need, and from whom.**
-- The owner: the play of the prototype and its merge (rule 4), after the owner has merged planning's
-  change to part 2 that the answer (a) to R40 calls for (R43). The measure of the faster return is a
+- The owner: the play of the prototype and its merge (rule 4). The change to part 2 that the answer (a)
+  to R40 called for is merged (PR #105, R45), so the order of R43 no longer holds it. The measure of the faster return is a
   first guess (part 2, R37), and the retune may try changes to the four gaze cases behind the switch
   (part 2, R34).
 - The coordinator and the record thread: the entries of rulings.md as they are recorded.
@@ -19,7 +19,8 @@ tools, `CLAUDE.md`, `README.md`, `CHANGELOG.md`, `docs/` and `Walkers/modinfo.js
 **Who needs something from me.**
 - The owner: the one early zip (rule 3), and the prototype's PR with every number and every change to
   shipped code listed (part 2, points 4 and 5).
-- `director` and `creature`: the prototype merged, to build features 8 and 9 on or replace.
+- `director` and `creature`: the prototype's numbers on record (my entry 2026-11-12T071700Z.md);
+  features 8 and 9 start again from 1.1.1 (R45).
 - `director` (feature 8) and `commands` (features 5 and 7): `Walkers/Proto/` gone before they build.
   It names eleven settings of features 1, 2 and 3 and calls into feature 5's loader and commands, so
   while it is on `main` their PRs could break code that only I may repair (G40).
@@ -33,8 +34,8 @@ tools, `CLAUDE.md`, `README.md`, `CHANGELOG.md`, `docs/` and `Walkers/modinfo.js
    both showings of part 2, point 2 in a single-player world within ten minutes.
 3. The fight and 4. the faster return: done in PR #75 as first guesses, every number in my own files
    (`Walkers/Config/WalkersConfig.Proto.cs`) and laid over the live settings by `Walkers/Proto/`, with no
-   change to shipped code. The owner answered R40 with (a) (R45), so they stay there; part 2 is
-   changed to say so before PR #75 merges (R43).
+   change to shipped code. The owner answered R40 with (a) (R45), so they stay there, as part 2
+   says since PR #105, and go with the folder (step 7).
 5. One PR with both, its numbers and its changes to shipped code listed, the "what to try" list opening
    with Survival mode and aggressive creatures; then the early zip to the owner.
 6. Before step 1 (part 4): `CLAUDE.md` and `README.md` brought in line with the rules (R8). Done:

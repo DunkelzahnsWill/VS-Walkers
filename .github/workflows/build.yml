@@ -20,30 +20,56 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      # A pull request that changes only record/ passes without the build and the server test (the Road
+      # Bible, part 2; the Commandments, SETUP). The job itself always runs, so the required check never
+      # stays pending. A push to main always runs in full.
+      - name: Decide whether this run needs the full checks
+        id: scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "full=true" >> "$GITHUB_OUTPUT"; echo "Not a pull request: full checks."; exit 0
+          fi
+          changed=$(git diff --name-only "$BASE_SHA"...HEAD)
+          echo "Changed files:"; echo "$changed"
+          if [ -n "$changed" ] && ! echo "$changed" | grep -qv '^record/'; then
+            echo "full=false" >> "$GITHUB_OUTPUT"; echo "Only record/ changed: the build and the server test are skipped."
+          else
+            echo "full=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - uses: actions/setup-dotnet@v6
+        if: steps.scope.outputs.full == 'true'
         with:
           dotnet-version: '10.0.x'
 
       - name: Cache the game server download
+        if: steps.scope.outputs.full == 'true'
         uses: actions/cache@v6
         with:
           path: .cache/vintagestory/downloads
           key: vs-server-${{ hashFiles('scripts/versions.env') }}
 
       - name: Set up the game server (checksum-verified)
+        if: steps.scope.outputs.full == 'true'
         run: scripts/setup.sh
 
       - name: Validate, build and package
+        if: steps.scope.outputs.full == 'true'
         run: ./build.sh
 
       - name: Smoke test on a headless server
+        if: steps.scope.outputs.full == 'true'
         run: scripts/smoke-test.sh
 
       # Uploaded unwrapped, so the download is walkers_<version>.zip itself, ready for the Mods folder.
       # Kept even when the smoke test fails, so a failing build can be looked at on a PC.
       - name: Upload the mod zip
-        if: ${{ !cancelled() && hashFiles('Releases/*.zip') != '' }}
+        if: ${{ !cancelled() && steps.scope.outputs.full == 'true' && hashFiles('Releases/*.zip') != '' }}
         uses: actions/upload-artifact@v7
         with:
           path: Releases/*.zip
@@ -51,7 +77,7 @@ jobs:
           overwrite: true
 
       - name: Upload the smoke-test server logs
-        if: always()
+        if: ${{ always() && steps.scope.outputs.full == 'true' }}
         uses: actions/upload-artifact@v7
         with:
           name: smoke-test-logs

@@ -1,0 +1,16 @@
+# Replies and log lines for tests/smoke/proto.commands.
+Prototype loaded, switched off
+The 1\.2 prototype is off\.
+  forms\.trueHealth: 50\.0 \(the prototype would make it 70\.0\)
+  return\.afterSeasons: 2\.0 \(the prototype would make it 0\.11\)
+Prototype: 11 setting\(s\) stand in for the file's
+The prototype is on: 11 setting\(s\) stand in for the file's
+The 1\.2 prototype is on\.
+  forms\.trueHealth: 70\.0 \(the file says 50\.0\)
+  gaze\.lungeRange: 7\.0 \(the file says 5\.0\)
+  return\.afterSeasons: 0\.11 \(the file says 2\.0\)
+forms\.trueHealth = 70\.0 \(default 50\.0
+return\.afterSeasons = 0\.11 \(default 2\.0
+The prototype is off: every setting has the file's value again\.
+forms\.trueHealth = 50\.0 \(default 50\.0
+return\.afterSeasons = 2\.0 \(default 2\.0

@@ -1,0 +1,17 @@
+{
+    "proto-desc": "The 1.2 prototype: shows its switch and what it changes. Subcommands: on, off, status",
+    "proto-status-desc": "Shows the prototype's switch and each setting it stands in for",
+    "proto-on-desc": "Switches the prototype on (saved to the settings file as proto.enabled)",
+    "proto-off-desc": "Switches the prototype off: every setting takes the file's value again",
+    "proto-on": "on",
+    "proto-off": "off",
+    "proto-status-line": "Prototype: {0}",
+    "proto-status-header": "The 1.2 prototype is {0}.",
+    "proto-status-fight-on": "  {0}: {1} (the file says {2})",
+    "proto-status-fight-off": "  {0}: {1} (the prototype would make it {2})",
+    "proto-already-on": "The prototype is already on.",
+    "proto-already-off": "The prototype is already off.",
+    "proto-switched-on": "The prototype is on: {0} setting(s) stand in for the file's. Walkers already in their true form keep their health until they next shift, and a walker that died before keeps its return day. /walkers proto shows each value.",
+    "proto-switched-off": "The prototype is off: every setting has the file's value again.",
+    "proto-not-saved": "The switch was not saved: {0}"
+}

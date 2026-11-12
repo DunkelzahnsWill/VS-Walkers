@@ -748,3 +748,31 @@ Quotes are exact. In a quoted question, "you" is the owner and "I" is the thread
   branches asked for in R36 are named `claude/proto-...`.
 - Closes the question of R36.
 - Recorded 2026-11-12 by the record thread (R17; THE CAST).
+
+## R40. Question under rule 1: where do the prototype's eleven numbers live?
+
+- Raised 2026-11-12 by the proto thread, which called a stop under rule 1 at 07:30:17Z, as the coordinator
+  gives the time; the record thread has not opened the proto thread's message. The proto thread's own
+  statement is in `record/diary/proto/2026-11-12T073500Z.md` (PR #80). The proto thread says the review
+  thread found the matter on its rule 6 (f) wake.
+- A doubt over what a sentence of the Road Bible means (part 2, the prototype's terms), so a stop. It holds
+  the proto thread only, and of its work only what turns on the answer: in the proto thread's words, "Only
+  my work depends on it". The coordinator told planning and the review thread so.
+- Put to the owner by the coordinator in the project chat, 2026-11-12 07:30:24Z, in the proto thread's
+  words. The post, whole, copied from the project chat:
+
+  ```text
+  A question for you from [Build the 1.2 prototype](#cmsg_01WBUg5vqaM2Lj1HCBoqYTboSEcNy2VbLkqjS3RJomJnXd), which has stopped on it under rule 1. Only that thread's work waits on it, and you can go on playing the prototype meanwhile. In its words:
+
+  > Part 2 of the Road Bible says: "What the prototype changes about the return goes in feature 1's folders, and what it changes about the fight in the folders of features 2 and 3." PR #75 puts nothing there. Its eleven values and the overlay are all in Walkers/Proto/ and WalkersConfig.Proto.cs. I took the sentence to cover code only, which is a reading of the book I may not choose.
+  >
+  > Where do the prototype's eleven numbers live?
+  > (a) In the prototype's own folder, as built. They are removed with it before step 1 is done, and features 8 and 9 start again from 1.1.1.
+  > (b) As new settings in the director's, stalker's and forms' own settings files, with the shipped defaults unchanged and no feature code reading them. The switch and the overlay stay in the prototype's folder, and the numbers outlive its removal for the feature owners to build on.
+  > I recommend (b): it follows the book's words.
+
+  An "a" or "b" does it. One correction to what I told you earlier: the return as built comes after about 5 in-game days, not 3, because it waits out the victim's rest. The thread is pushing a small commit of corrections to PR #75 and will tell you there.
+  ```
+
+- Not yet answered.
+- Recorded 2026-11-12 by the record thread (R17; THE CAST), at the coordinator's request.

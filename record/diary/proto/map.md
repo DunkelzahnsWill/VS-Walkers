@@ -8,8 +8,10 @@ file under `Walkers/assets/walkers/`, `tests/smoke/proto.*`), the checks (`.gith
 tools, `CLAUDE.md`, `README.md`, `CHANGELOG.md`, `docs/` and `Walkers/modinfo.json`.
 
 **What I need, and from whom.**
-- The owner: the answer to R31, before the faster return and the early zip; the answer to R33 on main,
-  before any change to the four gaze cases; the play of the prototype and its merge (rule 4).
+- The owner: the play of the prototype and its merge (rule 4), after the owner has merged planning's
+  change to part 2 that the answer (a) to R40 calls for (R43). The measure of the faster return is a
+  first guess (part 2, R37), and the retune may try changes to the four gaze cases behind the switch
+  (part 2, R34).
 - The coordinator and the record thread: the entries of rulings.md as they are recorded.
 - `director` (feature 1) and `creature` (features 2 and 3): nothing before the prototype merges. After
   it, what the prototype put in their folders is theirs (part 2).
@@ -29,14 +31,14 @@ tools, `CLAUDE.md`, `README.md`, `CHANGELOG.md`, `docs/` and `Walkers/modinfo.js
    passes without the build and the server test.
 2. `Walkers/Proto/`: the switch, off by default, and the admin commands (`/walkers proto ...`) that reach
    both showings of part 2, point 2 in a single-player world within ten minutes.
-3. The fight and 4. the faster return: where their values go is a question under rule 1 (diary,
-   2026-11-12 07:35Z). Part 2 says what the prototype changes about the return goes in feature 1's
-   folders, and about the fight in those of features 2 and 3. Until the answer is in rulings.md, PR #75
-   stands as built and nothing more is built on either reading.
+3. The fight and 4. the faster return: done in PR #75 as first guesses, every number in my own files
+   (`Walkers/Config/WalkersConfig.Proto.cs`) and laid over the live settings by `Walkers/Proto/`, with no
+   change to shipped code. The owner answered R40 with (a) at 16:54:12Z, so they stay there; part 2 is
+   changed to say so before PR #75 merges (R43).
 5. One PR with both, its numbers and its changes to shipped code listed, the "what to try" list opening
    with Survival mode and aggressive creatures; then the early zip to the owner.
-6. Before step 1 (part 4): `CLAUDE.md` and `README.md` brought in line with the rules (R8), by a PR
-   that waits for the owner's merge. Due now (G38).
+6. Before step 1 (part 4): `CLAUDE.md` and `README.md` brought in line with the rules (R8). Done:
+   PR #91, merged by the owner.
 7. The removal: a PR that removes `Walkers/Proto/`, `Walkers/Config/WalkersConfig.Proto.cs`, the `proto`
    lang folder and `tests/smoke/proto.*`, opened as soon as the owner has merged the prototype and before
    any builder's first code of step 1. The book's "before step 1 is reported done" (part 2) is the last

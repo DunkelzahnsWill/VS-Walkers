@@ -103,8 +103,9 @@ The work on this mod is done by several threads under the standing rules in
 in the Road Bible, [record/road-bible.md](record/road-bible.md) (part 3 for the features, part 4 for
 the shared files). Where this section and those two disagree, they win. Each piece of work happens on its
 own branch with a pull request to `main`; CI must be green, and rule 4 of the Commandments says who may
-merge each kind of pull request (for most, only the owner). The layout lets branches stay out of each
-other's files:
+merge each kind of pull request (for most, only the owner). Each feature works only in the folders
+part 3 of the Road Bible lists for it; some features share the folders of another. Where a feature has
+folders of its own, they follow this layout, which lets branches stay out of each other's files:
 
 | What | Where it goes |
 | --- | --- |
@@ -130,8 +131,9 @@ The shared surfaces, and who changes them:
   `.BeginSubCommand("<feature>")`; never `Create` the root, or the second feature to start fails once
   both are on `main`. The config and commands feature sets the root's description and privilege.
   Network channels are named `walkers-<feature>`.
-- **The creature's entity JSON** (`assets/walkers/entities/`) belongs to the stalker feature (feature 2
-  in the Road Bible), with the walker's shapes and textures.
+- **The creature's entity JSON**: the walker's two files in `assets/walkers/entities/` belong to the
+  stalker feature (feature 2 in the Road Bible), with its shapes and textures; a later creature brings
+  its own files, under the names part 3 gives it.
 - **`modinfo.json` and `Walkers/Walkers.csproj`** rarely change, and the Road Bible's part 4 names
   their owner. The project already references every game assembly the plan needs (API, VSEssentials,
   VSSurvivalMod, Newtonsoft.Json, protobuf-net). The version changes only in a release pull request.

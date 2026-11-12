@@ -261,10 +261,16 @@ its number and its count of returns, which the admin's `/walkers director status
 of this holds on an installation whose settings file an older version of the mod wrote as on a fresh
 one, and in a world saved under version 1.1.1 as in a new one.
 
+A settings file that still holds the prototype's section `proto` does not count as one that an older
+version of the mod wrote, here or in the row of feature 7. Once the prototype's folder is removed
+(part 2), that section is a setting the mod does not know, and as version 1.1.1 loads a settings file,
+one with a setting it does not know gets no new setting written into it (1.1.1). Such a file counts
+again once the section is deleted from it by hand.
+
 | No. | Name | What it is | Owner | Folders |
 | --- | --- | --- | --- | --- |
 | 7 | `settings-update` | An installation whose settings file was written by an older version of the mod gets the defaults that a new version changes. The file is the one `ModConfig/walkers.json` of the server's installation, and every world played from that installation reads it (1.1.1). Under version 1.1.1 a setting the file lacks takes its default, and every value the file holds is kept: a new setting arrives, and a changed default of a setting already in the file never does (1.1.1). The file does not mark which of its values an admin chose and which are untouched defaults (1.1.1), so which saved values follow a changed default is the first question of this feature's brief | `commands` | those of feature 5 |
-| 8 | `faster-return` | An improperly killed walker returns sooner (R9). What "sooner" is measured against is the first question of its brief (R37, part 1). Its brief also asks the owner whether the climb up the escalation LEVELS is shortened with it: the owner's words are that it "will likely need to be shorter" (R9). Its brief also says what becomes of a walker that already waits to return in a world saved under version 1.1.1: such a walker carries the return day it was given when it died (1.1.1). It needs feature 7 only if it changes the default of a setting that settings files already hold | `director` | those of feature 1 |
+| 8 | `faster-return` | An improperly killed walker returns sooner (R9). What "sooner" is measured against is the first question of its brief (R37, part 1). The thread brings to its brief what the prototype tried for the return, as the proto thread's diary holds it (part 2). Its brief also asks the owner whether the climb up the escalation LEVELS is shortened with it: the owner's words are that it "will likely need to be shorter" (R9). Its brief also says what becomes of a walker that already waits to return in a world saved under version 1.1.1: such a walker carries the return day it was given when it died (1.1.1). It needs feature 7 only if it changes the default of a setting that settings files already hold | `director` | those of feature 1 |
 
 ### Step 2. It fights back
 
@@ -275,7 +281,7 @@ only this step's code, until step 1 has passed its gate.
 
 | No. | Name | What it is | Owner | Folders |
 | --- | --- | --- | --- | --- |
-| 9 | `fight` | The walker's stats and intelligence, retuned (R9). Its brief is the workshop the owner asked for: the thread brings the numbers as they stand, what the owner said after playing the prototype, and its proposals, and the owner settles them through the brief's questions (rule 2) and in play. The retuned fight may change the four cases of point 5 of the concept and their numbers, and the workshop settles with the owner what stays (R34) | `creature` | those of features 2 and 3 |
+| 9 | `fight` | The walker's stats and intelligence, retuned (R9). Its brief is the workshop the owner asked for: the thread brings the numbers as they stand, the settings and the numbers fixed in the code alike; what the prototype tried for the fight, as the proto thread's diary holds it (part 2); what the owner said after playing the prototype; and its proposals. The owner settles them through the brief's questions (rule 2) and in play. The retuned fight may change the four cases of point 5 of the concept and their numbers, and the workshop settles with the owner what stays (R34) | `creature` | those of features 2 and 3 |
 
 ### Step 3. It changes
 

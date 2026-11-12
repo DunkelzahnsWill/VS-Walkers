@@ -776,3 +776,18 @@ Quotes are exact. In a quoted question, "you" is the owner and "I" is the thread
 
 - Not yet answered.
 - Recorded 2026-11-12 by the record thread (R17; THE CAST), at the coordinator's request.
+
+## R41. Added to the question of R40: planning's words, as put to the owner
+
+- Planning, which wrote the sentence of the Road Bible that R40 asks about, sent the coordinator what it
+  could add at 07:33:34Z, as the coordinator gives the time; the record thread has not opened planning's
+  message.
+- The coordinator put part of it to the owner in the project chat, 2026-11-12 07:33:38Z, with the question
+  of R40 still open. The post, whole, copied from the project chat:
+
+  ```text
+  The planning thread, which wrote the sentence in question, adds this to the prototype's (a) or (b) question. In its words: under (b) "the eleven numbers become settings in the features' own settings files that no code but the prototype's reads. They arrive in the settings file of every installation that runs such a build, and once the prototype's folder is removed they do nothing until features 8 and 9 take them up or remove them. Under (a) they go with the folder." It also says (b) leaves the Road Bible as it stands, while (a) changes one paragraph of it, which can ride in the book change already under way.
+  ```
+
+- Recorded beside R40, as part of what the owner read before answering it, by the record thread (R17;
+  THE CAST).

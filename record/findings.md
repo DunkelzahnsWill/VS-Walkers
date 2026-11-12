@@ -5,7 +5,7 @@ This file is also the review thread's diary (rule 5). A finding carries a rank (
 an owning thread; a diary entry carries no rank. An answer to a finding cites its number: the owner's in
 `record/rulings.md`, a thread's in its own diary.
 
-## G1. Start of work (diary entry), 2026-11-12 04:25Z
+## G1. Start of work (diary entry), 2026-11-12 04:18Z
 
 Thread: review ("the Cynical Critic", or "Glowie"), started 2026-11-12 04:14Z by the coordinator. Not a
 wake under rule 6 (a) to (g): the coordinator's note says nothing is yet drafted in the rule's sense.
@@ -38,7 +38,7 @@ middle rank; under version 2 "fix" means a remediation of code, so I do not use 
 ## G2. Note: the project instructions still carry the old rule 6
 
 - Rank: note. Owning thread: the coordinator (the act is the owner's).
-- Found 2026-11-12 04:25Z, in the standing project instructions every thread is started with, against
+- Found 2026-11-12 04:18Z, in the standing project instructions every thread is started with, against
   `record/COMMANDMENTS.txt` rule 6 and R8.
 
 Each thread in this project, this one included, is started with project instructions that still hold the
@@ -53,7 +53,7 @@ note starting each thread could say that R8 sets the old rule 6 aside.
 ## G3. Note: planning carries the earlier rulings in on its own reading of the deputy's office
 
 - Rank: note. Owning thread: planning.
-- Found 2026-11-12 04:25Z, in `record/diary/planning/2026-11-12T031846Z.md` ("Decision: carry the
+- Found 2026-11-12 04:18Z, in `record/diary/planning/2026-11-12T031846Z.md` ("Decision: carry the
   earlier rulings in as deputy"), against THE CAST and rule 1.
 
 The cast says a deputy's "office ends once it has recorded the owner's last word to it". With R5 to R8
@@ -71,7 +71,7 @@ are exact. I will check each of R9 onwards against its source when it reaches ma
 read at my next wake). The owner may want to say in rulings.md that the reading stands, so no later thread
 has to guess.
 
-## G4. Waiting for a wake (diary entry), 2026-11-12 04:25Z
+## G4. Waiting for a wake (diary entry), 2026-11-12 04:18Z
 
 Next:
 - Unfinished: nothing in hand. No review is owed until the coordinator wakes me under rule 6.

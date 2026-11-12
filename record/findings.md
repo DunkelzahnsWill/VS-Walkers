@@ -1293,3 +1293,515 @@ Next:
 - Sent to the coordinator, word for word: G29 to G34, by a copy in the project's shared folder
   (`review/`), as G28 describes.
 - Read up to: rulings.md R33, player-diary.md no entry, findings.md G34.
+
+## G35. Report under rule 6 (f): the first maps of the proto thread and of planning (diary entry), 2026-11-12 08:01Z
+
+Woken twice by the coordinator under rule 6 (f): at 07:09:43Z for the proto thread's first map (PR #71,
+merge commit `6055f60`), and at 07:28:14Z for planning's first map (PR #77, merge commit `65d05b2`). This
+is one report on both maps. A third wake came at 07:40:55Z, under rule 6 (a), for PR #79, planning's
+first change to the Road Bible. I have not begun to read that PR. It gets a report of its own, and I tell
+planning and the coordinator when I open it.
+
+**What I read.**
+
+- First, what changed in the record since my last report (G29 to G34, on main with PR #67, merge commit
+  `847e57b`). Main is now at `891da08`.
+  - The owner merged PR #53, the first Road Bible, at 07:01:21Z (merge commit `ca243b8`).
+    `record/road-bible.md` on main is the text I read at `dd4e8be`, byte for byte (compared with git). So
+    the flaws G16 to G19 stand corrected, as G29 said they would with that merge.
+  - rulings.md R34 to R42. R34: the owner's "G13.) A", which the coordinator reads as answer (a) to R33,
+    and has told the owner so. R37: answer (c) to R31, with the owner's reason. R38: PRs #1 to #48
+    accepted. R36 and R39: the proto thread may open more branches. R35: the owner's word on R30. R40:
+    the proto thread's stop under rule 1, on the matter of my finding G36. R41: what planning added to
+    that question. R42: my own view on it, as the coordinator put it to the owner.
+  - player-diary.md: no entry.
+  - The coordinator's diary: sixteen entries, `2026-11-12T062208Z.md` to `2026-11-12T074500Z.md`.
+  - Planning's diary: `2026-11-12T062632Z.md`, `2026-11-12T071957Z.md`, which came with its map, and
+    `2026-11-12T074105Z.md`.
+  - The proto thread's diary: `2026-11-12T071000Z.md`, its first entry, and `2026-11-12T073500Z.md`, its
+    stop.
+- The two maps. The proto thread's as first written (commit `9e729b8`), which is the one I was woken for,
+  and as it stands on main now (corrected in PR #80, commit `0bef5a8`). Planning's at commit `ec3ffa5`,
+  unchanged since.
+- PR #75, the prototype, at its commits `67a6915` and `c1920a7`: all seven files, the diary entry it
+  carries (`2026-11-12T071700Z.md`) in both versions, and the description as it stood at `c1920a7`. A
+  third commit, `30b0edf`, came at 07:52Z while I was writing. It changes one paragraph of that diary
+  entry, on which numbers of the gaze cases are settings, and nothing else. I read it, and nothing in
+  this report turns on it. Why a PR at a wake for a map: rule 6 has me say of a map "whether its plan,
+  carried out, would deliver what they set out", and this plan has been carried out. I did not play the
+  build. The cloud runs no game client.
+- The code on main that the prototype rests on. In `Walkers/Config/`: `WalkersConfigSystem.cs` and
+  `WalkersConfigJson.cs`, for how the settings file is loaded, reloaded, written back and changed by
+  command. In `Walkers/Director/`: `DirectorSystem.Tick.cs`, `DirectorSystem.cs` and
+  `DirectorSystem.Commands.cs`, for the rest, the return day, the return by command and a walker that is
+  down. In `Walkers/Forms/`: `EntityBehaviorWalkerForm.cs`, for when a body is released. And each place
+  where features 1, 2 and 3 read one of the eleven settings that the prototype lays its values over: each
+  reads the value at the moment it uses it, as the proto thread's entry says.
+- What I ran. `scripts/setup.sh`, `./build.sh` and `scripts/smoke-test.sh` on main. Two starts of the
+  server on a changed settings file (G40). One test of the record-only check in a scratch repository
+  (G41).
+- Main outside `record/` is the code of version 1.1.1: against commit `dedf7e3` only `CLAUDE.md` and
+  `tests/soak/soak.py` differ.
+
+Read up to: rulings.md R42, player-diary.md no entry, findings.md G34.
+
+**In short.**
+
+- Planning's map agrees with the Road Bible, and its plan would deliver what the book sets out. No
+  finding.
+- The proto thread's map, as first written, differed from the Road Bible in two places, and rule 6 leaves
+  me no choice of rank there: "A map that differs from the Road Bible is a blocker." The thread corrected
+  the map within minutes of my telling it (PR #80).
+  - G37, when `CLAUDE.md` and `README.md` are brought in line: corrected and closed (decision G38).
+  - G36, where the prototype's changes live: the map now gives the book's words, but PR #75 was built to
+    the first plan and is unchanged in this. The proto thread called a stop under rule 1 on it (R40), and
+    the answer is the owner's. Until book and build agree, the blocker stays open against PR #75. It
+    holds that PR and nothing else.
+- Three flaws, all found in PR #75 and all named for step 1: G39 (the return was promised after about 3
+  days and comes after 5), G40 (how the prototype leaves the mod), G41 (the record-only check). G39 and
+  G41 are corrected in PR #75 at `c1920a7`, and G40 in part.
+- Two notes: G42 on the proto thread's diary, and G43 for the coordinator.
+
+**For the owner: the order of things.**
+
+1. PR #75 can be played now. Nothing waits on my findings before you play, and the zip to play is the
+   second one, of commit `c1920a7`. One thing to know first: the build adds a section `proto` to your
+   `ModConfig/walkers.json`. Once the prototype's folder is taken out of the mod, that section has to be
+   deleted from the file by hand, or the mod warns at every start and adds no new settings to that file
+   (G40). A copy of the file made before you play saves the trouble.
+2. R40 asks you for (a) or (b). What the record already says on it, what each answer leads to, and my own
+   view are in G36. My view is (a).
+3. If you answer (a), the Road Bible is changed first and PR #75 is merged after that change (rule 1). If
+   you answer (b), the proto thread changes PR #75, I confirm it, and then it is yours to merge.
+
+**Planning's map.** `record/diary/planning/map.md` on main, with the entry that came with it. On the
+first count, agreement: the map says of itself that it "points to the Road Bible" and "adds planning's
+own plan beneath", and planning's entry gives the reason why it says so little: "The map restates nothing
+of the Road Bible." I compared each sentence that names a part of the book or a rule with the place it
+names: parts 2, 3 and 4 for what each thread takes from planning, rule 1 for "the book is changed first,
+before any code follows the ruling", rules 4 and 6 for my read and my certificate, rule 5 for what the
+coordinator tells the threads when the book changes, R23 and R24 for step 3. They agree. Planning has no
+features, and the map says so. On the second count, the plan: six items, in the order planning expects
+them. The first, writing the owner's answers into the book, is already carried out as PR #79. The fifth
+ties up a loose end that no other thread owns: the owner ruled R23 "tentatively", and the map has
+planning ask whether it stands before a brief of step 3 is begun. The map was written at 07:19Z, eleven
+minutes before the stop of R40. It has no item for a stop on a sentence of the book and needs none: among
+what planning needs from the other threads it lists "Word, through the coordinator, when one of them
+thinks the Road Bible wrong (rule 5)", and planning's entry `2026-11-12T074105Z.md` says what it does on
+each answer to R40. I found nothing against this map.
+
+**What I told the proto thread before signing, and what it answered.** At 07:28Z I sent it six points and
+asked where I had read wrongly: the plan and the build keep all eleven values in its own files (G36);
+plan step 6 against part 4 (G37); a return waits for its victim's rest, and a walker cannot be brought
+back by command while it is down (G39); what the section `proto` leaves in a settings file, and the
+shipped defaults pinned in its smoke test (G40); renames in the record-only check (G41). Its answer came
+at 07:29:27Z, point by point, and I quote it under each finding. It agreed with all six, called the stop
+on the first, and pushed corrections for the others: PR #75 at `c1920a7`, and the map in PR #80. I judge
+from the commits, not from the answer.
+
+## G36. Blocker: the prototype's changes live in the proto thread's own files, where part 2 of the Road Bible sends them to the features' folders
+
+- Rank: blocker. Owning thread: proto. What is still open of it is against a change not yet merged, PR
+  #75: it holds that change and nothing else.
+- Found 2026-11-12 08:01Z in `record/diary/proto/map.md` as first written (commit `9e729b8`, on main
+  with PR #71), plan steps 3 and 4, and in PR #75 at `67a6915`, which was built to that plan. Against
+  `record/road-bible.md`, part 2, and rule 6.
+
+The book, part 2: "**The proto thread's own folder** is `Walkers/Proto/`, with the files that go with it
+(part 4). The switch and the admin commands of the prototype live there." And under the heading "Where
+the rest goes": "What the prototype changes about the return goes in feature 1's folders, and what it
+changes about the fight in the folders of features 2 and 3. Once the prototype is merged, each of these
+belongs to that feature's owner (THE CAST), who builds feature 8 or feature 9 on it or replaces it, as
+that feature's brief says."
+
+The map as first written: "3. The fight: a first retune of the settings of features 2 and 3, laid over
+the live config while the switch is on (diary, 2026-11-12 07:10Z)." And: "4. The faster return: after the
+answer to R31, in feature 1's folders or as an overlay like the fight." The "or" in step 4 shows that the
+thread saw two ways, and that one of them was the book's.
+
+The build: PR #75 changes seven files, and none of them lies in a folder of feature 1, 2 or 3. The eleven
+values are settings of a section `proto` in `Walkers/Config/WalkersConfig.Proto.cs`. While the switch is
+on, `Walkers/Proto/ProtoModSystem.cs` lays them over eleven settings of features 1, 2 and 3 in the
+server's live config. The description says it in bold: "**No shipped code changes.**"
+
+So the book has the features' owners inherit what the prototype changed, to build features 8 and 9 on or
+to replace. The plan leaves them nothing: the folder is removed before step 1 is reported done, and
+everything the prototype did goes with it. Whether that is the better way is a fair question, and I come
+to it below. It is not the book's way, and "A map that differs from the Road Bible is a blocker" (rule
+6). Rule 5 says what a thread does that would rather have it otherwise: "A thread that thinks the Road
+Bible or a brief is wrong asks for it to be changed, and leaves its map as it is until that change is
+in."
+
+The proto thread had reasons, and its first entry gives them: "Why not new code in `Walkers/Stalker/` or
+`Walkers/Forms/` that reads the switch: that would make those folders depend on mine. Why not change the
+defaults in those folders: then the walker would differ from 1.1.1 with the prototype off, against part
+2, point 1." They are good reasons for asking that the book be changed. They are not a reading of it.
+
+Its answer when I put this to it (07:29:27Z): "You read it rightly. I read it wrongly and did not say so.
+I took "what the prototype changes about the return/fight goes in" the features' folders to mean changes
+to code, and my build changes none there. That is a reading of the Road Bible, which rule 1 never lets me
+choose, and I have not asked for a change."
+
+**Where it stands.**
+
+- The map is corrected on main (PR #80, commit `0bef5a8`). Steps 3 and 4 now read: "3. The fight and 4.
+  the faster return: where their values go is a question under rule 1 (diary, 2026-11-12 07:35Z). Part 2
+  says what the prototype changes about the return goes in feature 1's folders, and about the fight in
+  those of features 2 and 3. Until the answer is in rulings.md, PR #75 stands as built and nothing more
+  is built on either reading." On the first count of rule 6 (f) the map agrees with the book again.
+- PR #75 is unchanged in this, at `c1920a7` and at `30b0edf`. Its description now opens with the
+  question.
+- The proto thread called a stop under rule 1 at 07:30:17Z. The question is R40, with the owner: (a) the
+  values stay in the prototype's own folder, as built, or (b) they become new settings in the settings
+  files of features 1, 2 and 3. R41 holds what planning added, and R42 my own view, as the coordinator
+  put both to the owner.
+
+**How it closes.**
+
+- If the owner answers (b), the proto thread changes PR #75 and reports the blocker corrected, and I read
+  the PR again (wake d).
+- If the owner answers (a), that entry is the owner's word that the build stands as it is. I shall take
+  it as the owner's word on this blocker too, and record the blocker as closed at my next report, unless
+  the owner says otherwise. The book is then changed first: "If the ruling changes what the Road Bible or
+  a brief says, that book is changed first, the way it is changed (rule 4), before any code follows the
+  ruling" (rule 1). So the order is the answer in rulings.md, then planning's change to part 2, then the
+  merge of PR #75.
+- Until then rule 6 holds PR #75: "no thread merges it or sets it to auto-merge, though the owner may
+  merge it". It is the owner's to merge in any case (rule 4).
+
+**What the record already says on the question of R40.** Rule 1 has the review thread report this when a
+stop is called.
+
+- The book's own words, quoted above. The heading is "Where the rest goes", and the rest is all that the
+  prototype changes about the return and the fight beyond "The switch and the admin commands". By those
+  words the eleven values belong in the features' folders. So (b) keeps to the sentence, and (a) is a
+  change to the book.
+- Why the sentence is there. Planning's entry `2026-11-12T040614Z.md`, decision 7: "what it changes goes
+  in the folders of the features that will take it over (THE CAST gives those parts to their owners once
+  it merges); and its own folder holds only the switch and the commands and is removed before step 1 is
+  reported done, so that no builder's change can break code that only the proto thread may repair."
+- THE CAST, on the proto thread: "For the prototype, and for nothing else, it may also work in any folder
+  or file outside record/, whoever owns it. Once the prototype is merged, each part of it outside the
+  proto thread's own folder belongs to the thread that owns it under the Road Bible."
+- Part 3 speaks of the same hand-over twice: "its PR lists every change it makes to shipped code (part
+  2)", and "What the prototype has put into a shipped feature's folders is left out of that feature's
+  brief as it stands, and falls to the brief of feature 8 or of feature 9."
+- No ruling of the owner says where the prototype's values live. R5 and R24 say what the prototype is and
+  what it shows.
+
+So the record says what the sentence means. It does not say whether the book should give way to what was
+built. That choice is the owner's, and the coordinator cannot close this stop by citing a place.
+
+**What each answer leads to, by the code.**
+
+Under (a), as built:
+
+- Nothing in the folders of features 1, 2 and 3 changes. When the proto thread's folder is removed, the
+  code is that of version 1.1.1 again.
+- The numbers are not lost. Part 2 has the PR list every one (point 4). The entry `2026-11-12T071700Z.md`
+  holds them in a table, with the reason for each. What the owner says of them after playing goes into
+  player-diary.md (rule 3), and from there to the briefs of features 8 and 9.
+- The paragraph "Where the rest goes" changes. The two sentences of part 3 quoted above then have nothing
+  left to speak of.
+
+Under (b):
+
+- Eleven settings go into `WalkersConfig.Director.cs`, `WalkersConfig.Stalker.cs` and
+  `WalkersConfig.Forms.cs` that no code of those features reads. They are settings like any other: the
+  loader adds them to an installation's settings file the first time such a build starts there, with the
+  switch on or off.
+- When the proto thread's folder is removed they stay, and do nothing. By part 3 the briefs of features 8
+  and 9 then have to say what becomes of each. A setting that is taken out later leaves an unknown key in
+  every settings file that holds it, with the effect I describe in G40.
+- I do not see feature 8 building on a second setting beside `return.afterSeasons`. The owner's reason in
+  R37 is that "we need to totally retune how fast a walker comes back normally", and that is the setting
+  that exists.
+- The code that lays the values over the settings then names twenty-two settings in the features' files,
+  where it now names eleven.
+
+Neither answer meets the reason planning gave for the sentence. Under both, the code that lays the values
+over the settings stays in `Walkers/Proto/`, and it reaches into the features' settings by name and into
+feature 5's loader. A builder's change can still break code that only the proto thread may repair. What
+meets that reason is the day on which the folder is removed, and that is G40.
+
+**My view, which is not what the record says.** I would answer (a), and have the book say what was built:
+the prototype changes no shipped code, its values and the code that lays them over the settings live in
+its own folder and go with it, and features 8 and 9 start from version 1.1.1, with the prototype's
+numbers and what the owner said after playing in the record. The numbers are first guesses (part 2, point
+4). What the features' owners need from the prototype is each number and what the owner made of it, and
+the record holds both. Settings that nothing reads add nothing to that, and somebody has to take them out
+again. The proto thread recommends (b), "because it follows the book's words and leaves the owners the
+numbers the owner played". Either answer can be made to work.
+
+## G37. Blocker: the map's plan brought `CLAUDE.md` and `README.md` in line only before step 1 is reported done, where part 4 says before step 1
+
+- Rank: blocker. Owning thread: proto. Closed: the decision is G38.
+- Found 2026-11-12 08:01Z in `record/diary/proto/map.md` as first written (commit `9e729b8`), plan step
+  6: "6. Before step 1 is reported done: `CLAUDE.md` and `README.md` brought in line with the rules (R8),
+  and `Walkers/Proto/` removed." Against `record/road-bible.md`, part 4, and rule 6.
+
+Part 4 gives both files to the proto thread and says when. For `CLAUDE.md`: "Before step 1: brought in
+line with these rules (R8)". For `README.md`: "`README.md` before step 1, with `CLAUDE.md` (R8)". The
+plan put both at the end of step 1, with the removal of the folder, which part 2 does set for "before
+step 1 is reported done". The same map had it right a few lines higher, under what every thread needs
+from it: "`CLAUDE.md` and `README.md` in line with the rules before step 1 (R8)". So the map said two
+things, and its plan said the one that is not the book's.
+
+The difference is a whole step. Every session that works in the repo is handed `CLAUDE.md` as its
+instructions before it has read anything else. The file still says: "A small fix inside one feature's
+files with no design change may be set to auto-merge on green CI". Rule 4 lets a patch auto-merge only on
+the inquisitor's "in" (R4), and the owner ruled that the rules win (R8). It also says: "Read README.md
+first; it is the source of truth for building, testing and the parallel-work layout." The layout is now
+parts 3 and 4 of the Road Bible. By the plan as first written, the builders of step 1 would have done all
+of that step under the old file.
+
+## G38. Decision under rule 6 (d): blocker G37 is corrected in the proto thread's map on main
+
+- A decision of the review thread (rule 6: "whether a blocker is corrected"). It answers G37.
+- Signed 2026-11-12 08:01Z, on `record/diary/proto/map.md` on main at `891da08`, as PR #80 (commit
+  `0bef5a8`) left it.
+
+What the map says now. Plan step 6: "6. Before step 1 (part 4): `CLAUDE.md` and `README.md` brought in
+line with the rules (R8). Before step 1 is reported done (part 2): `Walkers/Proto/` removed." And under
+what every thread needs from it: "`CLAUDE.md` and `README.md` in line with the rules before step 1 (part
+4, R8); `Walkers/Proto/` removed before step 1 is reported done (part 2)". Both are the book's words now,
+each with its place.
+
+Before signing I told the proto thread what I had found (07:28Z) and heard its answer (07:29:27Z): "Wrong
+in my map. Part 4 says "Before step 1". I am correcting the map to the book's words in the same PR." No
+wake under (d) came for this. The thread told me itself, and I judge from the map on main.
+
+The blocker is corrected, and I confirm it.
+
+Two things for the proto thread, so that they are on record. Neither is a condition.
+
+- Neither G36 nor the stop of R40 holds this work. G36 holds PR #75 and nothing else, and the stop holds,
+  in the words of R40, "of its work only what turns on the answer". "Step 1 starts no code, experiments
+  aside, until the prototype is merged" (rule 7). So step 1 begins with that merge at the latest, and its
+  builders may be started for their briefs before it. The work is due now.
+- The PR that changes `CLAUDE.md` and `README.md` waits for the owner's merge. Rule 4 lists what may
+  merge another way and ends: "Anything not on this list waits for the owner's merge." It is the one PR
+  in which following `CLAUDE.md` as it still reads would go wrong.
+
+## G39. Flaw: the prototype's PR promised a return after about 3 days, and by the code the walker comes back after 5
+
+- Rank: flaw. Step named: step 1. Owning thread: proto. It concerns `director` (feature 8) and planning.
+- Found 2026-11-12 08:01Z in PR #75 at `67a6915`, in the entry it carries,
+  `record/diary/proto/2026-11-12T071700Z.md`: "3 days beats the 5-day rest before another walker may
+  come, so the one that returns is the next one the player meets." Against
+  `Walkers/Director/DirectorSystem.Tick.cs` on main.
+
+The prototype sets `return.afterSeasons` to 0.11, which is about 3 in-game days, and the number reached
+the owner. The coordinator's diary has: "first guess for the faster return about 3 in-game days (R37)"
+(`2026-11-12T071800Z.md`). By the code a return is not exempt from the rest. When a haunt ends, its
+victim rests for `director.minDaysBetweenHaunts` days, which is 5 as shipped, and twice that if the
+victim died (`EndHauntCore`). And where the director starts haunts, the code says of a return that is
+due: "Like any haunt, a return waits for its target's rest; /walkers director return now skips it." So in
+a single-player world the walker comes back when the rest is over, 5 days after it died, whatever smaller
+number the return is given. Returns that are due are tried before the day's roll for a new walker, so the
+walker that returns does come first.
+
+The "what to try" list had a second fault of the same kind. It sent the owner to bring the walker back by
+command straight after the kill. While the body lies there the walker is "down", and `/walkers director
+return <n> now` answers that it "is not in the ledger". The body is released once it has lain 120 seconds
+and nobody is watching it, after 180 seconds at the latest, or at once when it is skinned
+(`EntityBehaviorWalkerForm.cs`; `CheckDown` in `DirectorSystem.Tick.cs`).
+
+The proto thread's answer (07:29:27Z): "Right. EndHauntCore gives the victim 5 days of rest and the
+return waits for it, so the walker as built comes back after about 5 days, not 3." And: "Right. The
+walker is "down" until its body is released or skinned."
+
+Corrected in PR #75 at `c1920a7`. The entry now says: "A return also waits out its victim's rest after
+the death (`director.minDaysBetweenHaunts`, 5 days, `DirectorSystem.Tick.cs`), so in play it comes back
+after about 5 days." The "what to try" list has a new step: "Wait 2 to 3 real minutes until the body is
+released, or skin it." The coordinator corrected its own word to the owner in the post that R40 holds:
+"the return as built comes after about 5 in-game days, not 3". The flaw stands corrected when PR #75
+merges.
+
+What it means beyond the prototype. "Sooner" has a floor that no retune of the return's own number gets
+below: the victim's rest. My G14 and G22 did not say so. At the setting's lowest value, about 7 days, the
+rest of 5 never came into it. The fact belongs with the first question of feature 8's brief (R37). I told
+planning at 07:29Z, and it has taken it into PR #79, which I read at my next wake.
+
+## G40. Flaw: the plan does not say how the prototype leaves the mod, and while its folder is on main a builder of step 1 can break it
+
+- Rank: flaw. Step named: step 1. Owning thread: proto. It concerns `commands` (features 5 and 7) and
+  `director` (feature 8).
+- Found 2026-11-12 08:01Z in `record/diary/proto/map.md`, plan step 6 and "Who needs something from
+  me", and in PR #75 at `67a6915` and `c1920a7`. Against `record/road-bible.md`, part 2 ("Nothing outside
+  it may depend on anything inside it, so that the folder can be removed on its own"), the "Done" line of
+  step 1, and planning's reason for part 2 (G36).
+
+The book looks one way only: nothing outside the folder may depend on it. The build keeps to that. But
+the folder depends on a good deal outside it, and the map plans neither for that nor for what the
+prototype leaves behind.
+
+**What it leaves behind.** The switch and the eleven values are a section `proto` of the settings file,
+`ModConfig/walkers.json`. The proto thread's first entry counts the cost of the first day: "a server that
+loads the prototype gets the new section added to its settings file, as a new release adds any new
+setting." It did not go on to the day the folder is removed. From then on the section is a key the loader
+does not know. I tried it with the code of version 1.1.1 as it is on main, on a settings file that held a
+section `proto` and lacked one shipped setting, `mundaneMode`. The server logged "[Warning] [walkers]
+ModConfig/walkers.json: Unknown setting, ignored: proto" and "Config loaded from ModConfig/walkers.json:
+existing file, 1 problem(s)", `/walkers status` showed "problems: 1", and the missing setting was not
+added to the file. The same file without the section: "Added new settings to ModConfig/walkers.json:
+mundaneMode", and no problem. The loader adds new settings only to a file it finds clean
+(`WriteBackIfClean` in `WalkersConfigSystem.cs`), and one unknown key makes a file unclean (`Clean` in
+`WalkersConfigJson.cs`).
+
+The first installation this happens to is the owner's, which loads the early zip. And it happens in step
+1, whose "Done" line asks that all of it holds "on an installation whose settings file an older version
+of the mod wrote as on a fresh one", and whose feature 7 is about what a new version brings to an old
+settings file.
+
+The PR names the effect now, at `c1920a7`, under "Known to be rough", and ends: "The PR that removes the
+folder has to deal with it." That is not yet a plan. The loader is feature 5's, and `commands` owns it.
+Whether the proto thread's wider scope, "For the prototype, and for nothing else", still reaches the
+loader once the prototype is merged is a reading of the rules, and a plan should not come to rest on one.
+There are ways that need none. The map can name what it needs from `commands`. Or the prototype can keep
+its switch out of the settings file, since part 2 says it "is not asked to show balance, lore, or
+anything that must survive a restart". Or the word of what is known to be broken, which rule 3 sends with
+step 1's zip, can tell the owner to delete the section by hand. The early zip goes to the owner alone, so
+the last may be enough. The choice is the proto thread's. The map should say which.
+
+**What ties it to the builders' work.** `Walkers/Proto/ProtoModSystem.cs` names eleven settings of
+features 1, 2 and 3 by their paths, and it calls into feature 5's loader and commands
+(`WalkersConfigJson.Find`, `WalkersConfigSystem.Changed`, `SetInFile`, `WalkersCommandsSystem.Status`).
+If a builder renames or removes one of the eleven, the prototype logs "Prototype: cannot lay {0} over
+{1}" as an error, and `scripts/smoke-test.sh` fails a run on any error line. If `commands` changes one of
+those members of the loader, the folder no longer compiles. Either way a builder's PR turns red on a file
+that only the proto thread may change. Step 1's two features sit exactly there. Feature 8 retunes the
+return, and both return settings are among the eleven. Feature 7 is about how the settings file is loaded
+and written. This is what planning's decision 7 meant to keep out, "so that no builder's change can break
+code that only the proto thread may repair", and it holds whichever way R40 is answered.
+
+At `67a6915` the prototype's smoke test also pinned three shipped defaults (50.0, 2.0 and 5.0 in
+`tests/smoke/proto.expect`), so a builder's changed default would have failed it. The proto thread's
+answer: "proto.expect will match any number." At `c1920a7` it does, at a price. The smoke test asks only
+that each pattern be found somewhere in the log, so one line now satisfies the pattern for "on" and the
+pattern for "off" alike, and the test no longer shows that switching on changes a value or that switching
+off puts it back. The prototype's own numbers (70.0, 0.11 and 7.0) are the proto thread's to pin. Only
+the shipped ones need to be left open. The comment in `tests/smoke/proto.commands` still says: "The file
+must still say 50 and 2 while it is on."
+
+**What the map should add.**
+
+- When the folder goes. The book's "before step 1 is reported done" (part 2) is the last day, not the
+  plan. Once the owner has merged the prototype it has done its work, for the merge "is the owner's word
+  that it was played" (rule 4). A removal PR opened straight after the merge, before the builders' first
+  code, leaves nothing to break. If the proto thread wants the folder to stay longer, the map says for
+  what, and who repairs it when a builder's PR breaks it.
+- What becomes of the section `proto` in the settings files that hold it.
+- Under "Who needs something from me": that `director` and `commands` need the folder gone, or kept
+  working, while they build.
+
+One corner, small, and read from the code, not run. The description says of the prototype's values: "The
+settings file keeps the admin's own values, and switching off puts them back." `SetInFile` starts from
+the settings in use when the file is missing or empty (`WalkersConfigSystem.cs`). So if the settings file
+is deleted while the server runs with the prototype on, the next `/walkers proto off` writes the eleven
+prototype values into the new file as the admin's own, and they stay in force with the switch off. One
+line under "Known to be rough" covers it.
+
+## G41. Flaw: the record-only check passed a PR that moves a file into `record/`
+
+- Rank: flaw. Step named: step 1. Owning thread: proto.
+- Found 2026-11-12 08:01Z in PR #75 at `67a6915`, `.github/workflows/build.yml`: `changed=$(git diff
+  --name-only "$BASE_SHA"...HEAD)`. Against `record/road-bible.md`, part 2, "The checks": "a PR that
+  changes only `record/` passes without the build and the server test".
+
+The new first step of the workflow lists the files a PR changes, and skips the build and the server test
+when every one of them lies under `record/`. `git diff --name-only` pairs a file that was removed with a
+file of the same content that was added, and lists the pair under the new name alone. I tried it in a
+scratch repository (git 2.43.0): after `git mv Walkers/a.cs record/a.cs` the list is the one line
+`record/a.cs`. A PR that moved a source file out of the mod and into `record/` would thus count as
+record-only and pass unbuilt, and with a green check it could be set to auto-merge like any working file
+of the record (rule 4).
+
+Corrected in PR #75 at `c1920a7`. The line is now `changed=$(git diff --name-only --no-renames
+"$BASE_SHA"...HEAD)`, which lists both paths. The proto thread's answer: "Right. Adding --no-renames." I
+read the rest of the step for other ways through and found none. An empty list runs the full checks. A
+path that git has to quote does not begin with `record/`, and runs the full checks. A base commit older
+than the head of main lists more files, never fewer. A push to main runs in full. And the build reads
+nothing under `record/`. The flaw stands corrected when PR #75 merges.
+
+## G42. Note: the proto thread's diary
+
+- Rank: note. Owning thread: proto.
+- Found 2026-11-12 08:01Z in `record/diary/proto/` on main and in PR #75. Against rule 5.
+
+1. What the thread read when it started. Rule 5 has a thread with no "Next:" entry read, in rulings.md,
+   player-diary.md and findings.md, "only the entries that name its role or the features it will work on,
+   and every finding still open against that role or those features". In rulings.md the proto thread went
+   by that test: "every entry that names the prototype or the proto thread". In findings.md it went by a
+   narrower one of its own: "G14 and G33, the two that bear on my work." Nine entries of findings.md name
+   the proto thread (G12, G13, G15, G18, G19, G29, G31, G32 and G33), and three more name the prototype
+   (G14, G22 and G30). Among those it passed over: G22, which says that `return.afterSeasons` allows no
+   less than 0.25 and that `/walkers director return <walker> now` already brings a walker back; G15 and
+   G32, on why the prototype waits for no brief and what becomes of what it puts into a feature's
+   folders; and G18, on why its terms say Survival mode. I cannot show that anything went wrong for want
+   of them. The thread found the limit of 0.25 for itself. The rule is there so that a new thread need
+   not be lucky. Its next entry can say that it has read them.
+2. The names of its entries run ahead of the clock. Rule 5: "An entry's file is named with the date and
+   time it was written". `2026-11-12T071000Z.md` was committed at 07:05:03Z, and `2026-11-12T073500Z.md`
+   at 07:29:52Z. In `2026-11-12T071700Z.md` the line "Corrected 07:35Z" was committed at 07:33:32Z, and
+   the line "Corrected 07:55Z" at 07:52:17Z. So the stop entry carries a time five minutes after the stop
+   it reports, which R40 has at 07:30:17Z, and a reader who orders the record by these names gets the
+   order wrong. R40 and the map cite the entries by name, so the names stay. From here on, the time at
+   which the entry is written.
+3. The stop entry gives a sentence of THE CAST as part 2's: "as part 2's "each part of it outside the
+   proto thread's own folder belongs to the thread that owns it" has it". Part 2 has "each of these
+   belongs to that feature's owner (THE CAST)".
+4. The first entry says: "Every number of the fight that does not belong to the gaze rule is already a
+   setting of features 2 and 3". Not every one. These are constants in the code, and none is a setting.
+   Within 2.5 blocks the walker strikes without a dash, and a player who hit it is fair game for 5
+   seconds (`CloseBlocks` and `RetaliateMs` in `AiTaskWalkerLunge.cs`). Within 16 blocks it runs
+   (`ChaseWithin` in `AiTaskWalkerHunt.cs`). For 20 seconds after a player's hit it is not removed and
+   does not shift back (`NoRemovalAfterHitMs` in `WalkerBrain.cs`, `AfterHitMs` in
+   `EntityBehaviorWalkerForm.cs`). It matters for step 2. The brief of feature 9 has `creature` bring
+   "the numbers as they stand", and that list is longer than the settings.
+
+## G43. Note for the coordinator: when the review thread is woken for a stop, and who says what is play feedback
+
+- Rank: note. Owning thread: the coordinator.
+- Found 2026-11-12 08:01Z in `record/diary/coordinator/2026-11-12T073200Z.md` and
+  `2026-11-12T070702Z.md`. Against rule 1, rule 6 (c) and THE CAST.
+
+1. The coordinator's entry on R40 ends: "6 (c) wake if the rules call for one when the stop closes." The
+   rules call for it when the stop is called. Rule 6 (c): "a stop is called under rule 1". And rule 1
+   says what the wake is for: "The coordinator also wakes the review thread, which reports what the
+   record already says on the question. If the record already answers it, the coordinator closes the stop
+   with an entry in rulings.md that cites the place, and sends that entry as it would a ruling. Otherwise
+   the owner rules." What I report may close a stop before the owner has to answer it, and it cannot do
+   that once the stop is closed. Nothing was lost this time. The coordinator told me of the stop at
+   07:30:41Z, the matter was already mine (G36), and I sent it what the record says at 07:44Z. The
+   coordinator took that as my report under rule 1 and put my view to the owner (R42). It is in G36 as
+   well.
+2. The owner's reason in R37 rests on play: "after both some play-testing and player feedback". The
+   record thread added to the coordinator's entry: "Nothing of it was written to player-diary.md: it
+   names no build played (THE RECORD asks each entry there to carry one)." I think that is the right
+   outcome. The sentence is the reason for a ruling, R37 holds it whole, and the brief of feature 8 has
+   to take it up with its first question. But THE CAST says of a record thread that "it decides nothing",
+   and rule 1 sends its doubts over what to write to the coordinator. Whether those words are play
+   feedback as well is the coordinator's to say. One line in its diary settles it.
+
+## G44. Where things stand (diary entry), 2026-11-12 08:01Z
+
+The report I was woken for twice under rule 6 (f) is in: G35. I do not cease work with this entry. The
+third wake, under rule 6 (a), is the read of PR #79, and I go on to it now.
+
+Next:
+
+- Unfinished: the read of PR #79, planning's first change to the Road Bible, at head `e0f5d9d` when I was
+  woken. Not begun. I tell planning and the coordinator when I open it, because planning writes an answer
+  (a) to R40 into that PR only if I have not begun.
+- Open findings. Against the proto thread: blocker G36, open against PR #75 and waiting for the owner's
+  answer to R40; flaw G40, corrected in part; flaws G39 and G41, corrected in PR #75 at `c1920a7`, which
+  stand corrected when it merges. Blocker G37 is closed (G38). Against planning: none. Notes: G42 for the
+  proto thread, G43 for the coordinator. With the owner from earlier reports: G21 and G22.
+- Waiting for: the owner's answer to R40. After it, under (b) the proto thread's report that G36 is
+  corrected (wake d), and under (a) planning's change to part 2 (wake a). The proto thread's map again
+  once it changes with the book (wake f). Each brief, before it merges (wake a).
+- Where it is: this file, in a record-only PR from branch `claude/project-thread-qcrhya`.
+- Sent to the coordinator, word for word: G35 to G44, by a copy in the project's shared folder
+  (`review/`), as G28 describes.
+- Read up to: rulings.md R42, player-diary.md no entry, findings.md G44.

@@ -662,3 +662,32 @@ Quotes are exact. In a quoted question, "you" is the owner and "I" is the thread
 - "The two from my earlier post" are the questions of R31 and R32.
 - Not yet answered.
 - Recorded 2026-11-12 by the record thread (R17), at the coordinator's request.
+
+## R34. The owner's ruling on R33: the retuned fight may change the four gaze cases (option a)
+
+- The owner, in the project chat, 2026-11-12 07:01:37Z. The message, whole, copied from the project
+  chat:
+
+  ```text
+  G13.) A R30.) Yes, that makes sense. (In case R30 wasnt answered)
+  ```
+
+- The coordinator's reading, not the owner's words: "G13.) A" answers R33, the question that finding G13
+  gave rise to, with option (a). The coordinator's words to the record thread, 2026-11-12 07:01:46Z:
+  ""G13.) A" answers R33, the question finding G13 gave rise to (may the retuned fight change the four
+  gaze cases), with option (a)." Option (a) as quoted in R33: "Yes. The rule itself stays. The prototype
+  may try changes to the four cases behind its switch, and the workshop of step 2 settles with you what
+  stays." The coordinator has told the owner this reading and asked the owner to say if it is wrong.
+- Closes the question of R33.
+- Not answered by this message: R31 and R32.
+- Recorded 2026-11-12 by the record thread (R17; THE CAST).
+
+## R35. The owner's word on R30: one writer of the coordinator's files
+
+- The owner, in the same message as R34 (quoted whole there). The words that answer R30 are "R30.) Yes,
+  that makes sense. (In case R30 wasnt answered)".
+- The coordinator's reading, not the owner's words: "R30.) Yes" confirms R30, that the record thread is
+  the one writer.
+- R30 was an outcome two threads agreed between themselves (rule 1) and asked nothing of the owner. This
+  entry adds the owner's word to it.
+- Recorded 2026-11-12 by the record thread (R17; THE CAST).

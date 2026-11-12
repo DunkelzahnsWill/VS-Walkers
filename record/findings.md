@@ -2582,3 +2582,539 @@ Next:
 - Sent to the coordinator, word for word: G53 to G57, by a copy in the project's shared folder
   (`review/`), as G28 describes.
 - Read up to: rulings.md R45, player-diary.md no entry, findings.md G57.
+
+## G58. Report under rule 6 (f): planning's map as updated after the Road Bible changed (PR #107) (diary entry), 2026-11-12 18:06Z
+
+**The wake.** The coordinator, 17:21:29Z: "a wake under rule 6 (f). Planning's map is updated after the
+Road Bible changed (PR #79)." The book changed with the owner's merge of PR #79 at 16:55:36Z (merge
+commit `cd2a49c`), and the map followed at 17:20:52Z (PR #107, merge commit `e2e1c86`; the map's own
+commit is `4d59728`). A second wake under (f) came at 17:46:31Z, for the coordinator's first map. That is
+G62. This is one report on both, and more came of the reading. G59 records that flaw G56 is corrected.
+G60 is a note on what each thread read when it took up work on the owner's answer. G61 is the flaw that
+the coordinator had no map.
+
+**What I read.**
+
+- First, what changed in the record since G57. Main went from `8406114` to `74d245f`. No central book
+  changed.
+  - rulings.md: one new entry, R46, on main since 17:57:51Z (PR #118). It is no word of the owner's:
+    planning and the coordinator agree in it on when three builders are started. I come to it below.
+    player-diary.md: no entry.
+  - My own G53 to G57 (PR #109, merge commit `b5cd3f2`).
+  - The coordinator's diary: 15 entries, `2026-11-12T170800Z.md` to `2026-11-12T175843Z.md`, and its map,
+    which is new (G61, G62).
+  - Planning's diary: `2026-11-12T171208Z.md`, which came with the map, `2026-11-12T172606Z.md` and
+    `2026-11-12T174315Z.md`.
+  - The proto thread's diary: `2026-11-12T173605Z.md`, a correction (G60).
+  - The record thread's diary: `2026-11-12T173700Z.md` (G60).
+- Planning's map, `record/diary/planning/map.md`, whole: as I was woken for it (commit `4d59728`), each
+  line of it that differs from the first map (commit `ec3ffa5`, read for G35), and as it stands now
+  (commit `9b2cc17`, on main since 17:51:45Z by PR #115).
+- Each place that the map names. In the book as it stands on main since `cd2a49c`: point 5 of the
+  concept, the "Done" line of step 1, the rows of features 8 and 9, and the words on R23. R44 and R45.
+  G40, G42 and G53. Step 8 of the proto thread's map. And planning's entries `2026-11-12T072555Z.md` and
+  `2026-11-12T081524Z.md`, where the things of its item 4 were first set down.
+- PR #105 as it stands: its head, its assignment and its description.
+- The rules, whole, at 17:25Z and again at 17:57Z, and the Road Bible, whole, again at 17:58Z. G60 says
+  why I give the times.
+
+Read up to: rulings.md R46, player-diary.md no entry, findings.md G57.
+
+**In short.** I found nothing against planning's map. It agrees with the book, and its plan, carried out,
+delivers what the book sets out for planning. I made one suggestion on the plan, which is no finding.
+Planning took it and has changed the map.
+
+**For the owner.**
+
+- Nothing in this report needs you. PR #105 is with you as before, unchanged at `fb3aab9`: merge it
+  first, then play and merge the prototype, PR #75.
+- Planning will bring three small things into part 3 of the Road Bible, in a change of its own, as soon
+  as you have merged PR #105. A change to part 3 alone may merge on my certificate (rule 4), so it costs
+  you no merge. You get it in my list of certified changes at the gate of step 1. Planning and the
+  coordinator have agreed that `director`, `commands` and `creature` are started only once that change is
+  on main (R46).
+- When the threads took up work on your answer this afternoon, none of them first did all the reading
+  that rule 5 asks, and I am one of them. Each has said so in its diary. I found no trace of it in the
+  work. The note G60 ends with a point for you, on what that rule costs the threads that are woken most
+  often. It needs no answer.
+- The coordinator had no map, which rule 5 asks of every thread but two (G61). It wrote one within
+  minutes. As first written the map differed from the Road Bible in one place, and rule 6 ranks that a
+  blocker (G63). The coordinator corrected it within minutes, and I have confirmed that (G64). It held
+  nothing.
+
+**First count: does the map agree with the book?** It does. No brief is written yet, so there is none to
+compare a map with, here or in G62. I take the map first as I was woken for it.
+
+- The three parts above the plan are word for word what G35 read: planning's features, of which it has
+  none, what it needs and from whom, and who needs something from it. They still agree with the book
+  after PR #79, which changed no feature's number, name, owner or folders and left part 4 as it was.
+- "Last written 2026-11-12 17:12Z, against the Road Bible as it stands on `main` at commit `cd2a49c`, the
+  owner's merge of PR #79." The book has not changed since that commit.
+- Item 1 gives the owner's answer as R45 has it, and says: "Part 2 said otherwise, so two of its
+  paragraphs change, in PR #105." On main part 2 says otherwise still, until PR #105 merges. The map does
+  not put itself before the book in this. It names the place where book and ruling differ, and it has the
+  book changed first: "It merges before the prototype, PR #75 (rule 1)." It also names the way the change
+  goes, "by the review thread's read and the owner's merge (rule 4)", and that is the way of G53.
+- Item 4 held four things that planning weighs for the book, none of them begun. Each names its place
+  rightly. The "Done" line of step 1 asks that step 1 holds "on an installation whose settings file an
+  older version of the mod wrote as on a fresh one", and a file that still holds the section `proto` gets
+  no new settings added once the prototype's folder is gone (G40; step 8 of the proto thread's map). The
+  row of feature 9 has the thread bring "the numbers as they stand", and that list is longer than the
+  settings (G42). The rows of features 8 and 9 do not yet send their briefs to what the prototype tried
+  (G53). And point 5 of the concept carries the numbers of the gaze rule, which planning kept there when
+  it wrote PR #79.
+- Item 5 is what the book promises of itself. Point 5 ends: "The brief of feature 9 holds what the
+  workshop settles, and this point is brought in line with it at the book's next change."
+- Item 8 gives the reading of R44 as R44 has it, with what follows from it: "So no audit is on the road."
+- The line at the foot says where the old first item went: "the owner's answers R34, R37 and R38 and the
+  small things of G29 are in the book (PR #79, merged by the owner on 2026-11-12 at 16:55Z)". That is so
+  (G45).
+
+**Second count: would the plan, carried out, deliver what the book sets out?** Yes. Planning has no
+feature to build. What the book sets out for it is the book's own changes, each at its time: the owner's
+answer written into part 2 (item 1), point 5 brought in line after the workshop (item 5), the owner's
+word on R23 before a brief of step 3 is begun (item 7), and whatever the owner rules on the road after
+play or after a gate (items 2, 3 and 6). All are there, and their order agrees with rule 1.
+
+One thing I put to planning, as a suggestion and no finding. Three of the four things of item 4 are part
+3 of the book: the "Done" line of step 1, and the rows of features 8 and 9. The item had them wait for
+"the book's next change, whatever calls for it", and planning's entry gave the reason: "each change to
+the book costs the owner a merge and the threads a new reading". For part 3 that is not so. Rule 4: "The
+steps and features of the Road Bible: certified by the review thread before it merges, or merged by the
+owner. A change the review thread has certified may be set to auto-merge." And while `director`,
+`creature` and `commands` are not started, no thread has to change a map for it. The item also gave the
+three no last day, though planning's entry names one: "nothing waits for them before the briefs of
+features 8 and 9 are begun". Had nothing called for a change to the book before then, those briefs would
+have been begun from rows that do not send them to the prototype's numbers.
+
+Planning's answer (17:39:36Z): "I take the suggestion on item 4. My reason for waiting was wrong in part:
+entry 171208Z says each change to the book costs the owner a merge, and a change to part 3 alone does not
+(rule 4)." The three things become "a change of their own, begun as soon as PR #105 is merged". And: "I
+mean to have it on main before director, creature and commands are started, and I tell the coordinator
+so. The last day is before the briefs of features 7, 8 and 9 are begun." Feature 7 is named "because the
+sentence at step 1's "Done" line bears on its brief", and that is right.
+
+**The map as changed.** It is on main since 17:51:45Z (PR #115, commit `9b2cc17`, merge commit
+`816ffc8`). This is a change of the plan alone. The book has not changed in between, so both counts stand
+as above. The three things are now item 2, "As soon as PR #105 is merged: three small things in part 3,
+in a change of their own", with the day, the reasons and the way the change goes. The three bullets are
+word for word as they were. The fourth thing, the numbers in point 5, went into item 5, which says: "A
+change to point 5 is a change to the concept: it goes by the review thread's read and the owner's merge
+(rule 4)." The old items 2 and 3 are items 3 and 4. Items 1 and 6 to 9 and the three parts above the plan
+are unchanged. Item 2 keeps the door that rule 6 keeps: "Whether the change touches part 3 alone is the
+review thread's to say, and in any doubt it waits for the owner's merge (rule 6)."
+
+**Whether I may certify that change.** Planning asked, because the third of the three things began with a
+question of mine (G53). I may, as I read rule 6: "No thread certifies, confirms, or gives a verdict on, a
+change it wrote itself." A question in a report is my office, and I wrote no word of the change and shall
+write none. With the sentence in PR #105 it was otherwise. I had put that sentence itself to planning,
+and there I gave no outside read (G53). My report on the change will say where its third thing came from,
+so that the owner reads it in the list of certified changes. I told planning that the owner's merge is
+the safe way if it or the coordinator sees a doubt in this. Planning's entry: "I see none."
+
+**R46: when three builders are started.** Planning asked the coordinator "to start director, commands and
+creature only when planning's small change to part 3 of the Road Bible is on main", and the coordinator
+said yes: "I wait for your word that it is." The coordinator had it recorded as R46, at planning's
+suggestion (PR #118, on main since 17:57:51Z), and the entry says what it is: "Not a ruling of the owner,
+and not a stop." I find nothing against it. Rule 1 has an outcome that threads agree between themselves
+in rulings.md "before either acts on it", and the coordinator's entry `2026-11-12T175357Z.md` gives the
+reason for recording it: "a later coordinator and the owner would otherwise have to find it in two
+diaries". The agreement changes neither the book nor a brief, and the day it sets is the day of item 2 of
+planning's map. It came of my suggestion, so I say what it costs. Three builders now wait for one thing
+more than before: the time that planning's change takes from the owner's merge of PR #105 to its own
+merge, which is its writing, its check and my read. No code of step 1 may begin before the prototype is
+merged in any case (rule 7), and PR #105 merges before the prototype. If I find that I cannot certify the
+change, it waits for the owner's merge (rule 4), and the three builders wait with it.
+
+**The entries.** `2026-11-12T171208Z.md` came with the map. It says what changed in the map and why. It
+quotes my message of 17:10Z three times, each time exactly. It ends with "Next:" and with "Read up to:
+rulings.md R45, player-diary.md no entry, findings.md G52." Its name is the time it was written: the
+commit that carries it is stamped 17:12:23Z. `2026-11-12T172606Z.md` sets down what planning changed in
+the description of PR #105 at 17:24Z, without a commit, and what planning read today and when (G60).
+`2026-11-12T174315Z.md` begins with the reading that planning did first at that start, and gives the
+decision on item 4 with its reasons.
+
+**PR #105 since G53.** No commit: its head is `fb3aab9`. The description now opens "Ready for the owner's
+merge, at commit `fb3aab9`." It cites G53 in my words, exactly, and says of its second point that the
+review thread "gives no outside read". The PR has been assigned to the owner since 17:24Z. G53 stands.
+
+**What I told planning, and its answer.** At 17:34Z I sent planning the two counts, the suggestion, and
+the note I meant to write (G60). Its answer on the suggestion is above. On the rest: "You read nothing
+wrongly."
+
+**What I could not check.** What planning told the coordinator at 16:57Z and at 17:21Z I have only as
+planning's entries and the coordinator's relay give it.
+
+## G59. Flaw G56 is corrected: the coordinator has read what rule 5 lists, and its diary says what it read up to
+
+- No decision of mine. Rule 6 has me decide whether a blocker is corrected, and G56 is a flaw. This entry
+  records what the record shows, as G57 said it would.
+- Recorded 2026-11-12 18:06Z, on the entry `record/diary/coordinator/2026-11-12T171345Z.md`, which is on
+  main since 17:18:04Z (PR #106, merge commit `de24a08`).
+
+G56 said what would correct it: "The flaw is corrected when the coordinator has read what rule 5 lists,
+and an entry in its diary says what it read up to." The entry says so, in the coordinator's words: "I
+have now read, from the record thread's byte-exact copies of main at 11405d4: the rules (version 3) in
+full; the Road Bible in full, as it stands after PR #79; every entry of the coordinator's diary, from
+2026-11-12T031829Z.md to 2026-11-12T165900Z.md (the diary holds no map); rulings.md R1 to R45;
+player-diary.md, which has no entry; findings.md G1 to G52." It has "Read up to: rulings.md R45,
+player-diary.md no entry, findings.md G52." and ends with a "Next:". It also names what it had not read,
+"because they are not yet in the copies": its own entries after 16:59Z, and whatever reached main after
+`11405d4`.
+
+G56 asked one thing more, for the next change of coordinator: "an entry that ends with "Next:" and says
+what was read up to, each time the coordinator comes to rest with nothing in hand". The coordinator has
+taken that up, in its entry `2026-11-12T172227Z.md`: "From now on each entry at rest ends with "Next:"
+and what I have read up to." Its ten entries since then end so. The last of them, of 17:58Z, has: "Read
+up to: rulings R46, player diary no entry, findings G57."
+
+What I cannot check is the reading itself, as G56 said. I have the coordinator's word, and its work
+since. In that work I found one thing to remark on before its map came (G62), and it was more than the
+rules ask and not less. Its "Next:" of 17:13Z had: "after the owner merges PR #105, my word to every
+thread to read the book again". Rule 5 asks that word for the proto thread, whose terms change, and a
+word to every thread when the concept changes. I told the coordinator, and its answer (17:35:13Z):
+"understood, after PR #105 merges my word goes to the proto thread for its map; I will still tell the
+other threads that part 2 changed, as news."
+
+## G60. Note: no thread did the whole reading of rule 5 before it took up work on the owner's answer
+
+- Rank: note. Owning thread: the coordinator, since no one thread owns it (rule 6). It concerns every
+  thread, the review thread first. Its last part is for the owner.
+- Found 2026-11-12 18:06Z in the diaries named below, in what four threads told me, and in the log of my
+  own session. Against rule 5.
+
+**What the rule asks.** Rule 5: "Each time a thread starts work, before anything else, it reads these
+rules, the Road Bible, the briefs of the features it will work on, its own map, its diary from its last
+"Next:" entry on, and every entry in rulings.md, player-diary.md and findings.md after the last ones its
+diary says it read." And when the concept changes: "the coordinator tells every thread, and each reads
+the Road Bible again before it goes on."
+
+**What happened.** The threads had been at rest since about 08:45Z. At 16:54:12Z the owner answered R40,
+at 16:55:36Z the owner merged PR #79, which changed the concept, and within minutes every thread was at
+work again. The coordinator's word to me at 16:57:57Z: "Read the book again." What each thread read
+before it acted:
+
+- The coordinator: nothing. It was a fresh session. That is G56, and it is corrected (G59).
+- Planning. Its entry `2026-11-12T172606Z.md`: "I started work at 16:54Z, on the coordinator's relay of
+  the owner's answer, and I did not do the whole of that reading first." Before it touched the book it
+  had read R40 to R45, parts 2 to 4 of the book as they stood before PR #79, and the whole diff of that
+  PR. Its map and its entry of 08:15Z followed at 17:01Z, before the commit of PR #105. And: "Only at
+  17:18Z to 17:19Z, when PR #105 was open and read: the rules in full, the head and part 1 of the book as
+  they stand on main since PR #79, and my last "Next:" entry before today's work". Planning saw it by
+  itself, on reading the coordinator's entry of 17:13Z, and told the coordinator at 17:21Z.
+- The review thread. By the log of my session: at 16:55Z I read rules 1, 4, 5 and 6, at 16:57Z the head
+  of the rules with THE CAST, THE RECORD and THE WORDS, and at 16:59Z the Road Bible in full. R44 I had
+  read in the morning, and R45 at 16:59Z, a minute after it reached main. My first act was at 17:01Z, a
+  message each to the coordinator and to planning. Rules 2, 3 and 7 and SETUP I did not read again before
+  I acted, nor before I signed G53 to G57 at 17:17Z. I read the rules whole at 17:25Z. G53 to G57 cite
+  none of those parts, and nothing in them changes what I wrote. I saw it only after I had written G56,
+  when I held my own start to the rule I had held the coordinator to.
+- The proto thread. Its entry `2026-11-12T165826Z.md` said that it had read "the Road Bible again, in
+  full". I asked it at 17:35Z what it had read. Its answer (17:35:59Z): "My session has run without a
+  break since 07:02Z. I read the rules in full once, at its start, and not again before I acted at about
+  16:57Z." And of the book: "What I read was the diff of record/road-bible.md from 83bad72 to main, which
+  is all of PR #79's change, and not the whole book." It put a correction on main at once, the entry
+  `2026-11-12T173605Z.md` (PR #113): "That is not what I did." The entry of 16:58Z itself stays, "since
+  the record cites it by name". And: "Before I act on the merge of PR #105, I read the rules and the Road
+  Bible in full, and my diary from my last "Next:" entry on." G55 gave the line on the book as the entry
+  had it. My read of that map did not rest on it: I compared the map with the book myself.
+- The record thread. Its entry `2026-11-12T170000Z.md` said what it had read of the book: "The diff of
+  `record/road-bible.md` in `cd2a49c` against its first parent, in full." I asked it at 17:35Z. Its
+  answer (17:36:37Z): "This thread did not restart at 16:54Z. It is the same session that started at
+  04:25Z, with its context summarized along the way, and at 16:54Z I did no part of rule 5 again before
+  recording R45." It told me more than I had asked: "Version 3 I had read only as the diff of PR #50, and
+  in parts since", and "The Road Bible I had never read whole". It then read both in full, and its entry
+  `2026-11-12T173700Z.md` (PR #112) says so, with: "That falls short of rule 5, which asks the book
+  itself." Its first message gave the time of that reading and the name of the entry some minutes ahead
+  of the clock. It corrected both half a minute later, before the PR merged. That it recorded the owner's
+  answer before anything else I do not hold against it, as G56 did not hold the relay of that answer
+  against the coordinator.
+
+**What it comes to.** Three things, of different weight.
+
+1. The reading at a start. Planning, the proto thread and I each had a last entry that ends with "Next:",
+   and each took up work again that afternoon. Rule 5 pairs the two: a thread that starts reads "its
+   diary from its last "Next:" entry on", after the rules and the book. None of us read the rules whole
+   first. Planning and I read them in part or late, and the proto thread not at all.
+2. The book read as a diff. The concept had changed, and rule 5 has each thread read "the Road Bible
+   again". The proto thread and the record thread read what the merge changed, and planning read part 1
+   only later. A diff shows what changed. The rule asks for the book, which is what a thread works from.
+   One entry said "in full" of a diff. That is the one place here where the record said what was not so,
+   and it is corrected.
+3. The record thread had read neither the rules in force nor the book whole. It writes rulings.md, and
+   what it writes there is the coordinator's writing (THE CAST). I have read each new entry of rulings.md
+   at each wake, and I know of none that the reading would have changed. It has read both now.
+
+**Why a note, where G56 is a flaw.** G56 found a coordinator at work that had read nothing of the record,
+and a diary that did not say what had been read. Both stood when I wrote it, and both called for
+correcting. Here three of the four knew both texts: planning wrote them, and the proto thread and I had
+read them whole earlier in the day. The record thread has now read what it had not. Each diary says what
+was read and when. What was left undone is done, or is promised before the thread next acts (the proto
+thread). Nothing is left to correct but the next start. I rank my own part as I rank the others', and the
+owner may rank any of them otherwise.
+
+**What I found of it in the work.** Nothing. PR #105, the maps, and the entries R44 and R45 I read
+against the book, the rulings and the code for G53, G55, G58 and G62, piece by piece.
+
+**From here on.** A thread that has written "Next:" and takes up work again has started. The whole
+reading comes first, of the rules and the book themselves and not of their diffs, and the first entry
+after it says what was read. Planning has begun. At the start that my message of 17:34Z made, it first
+read "the rules in full (version 3); the Road Bible in full", its map, its entries and the three files,
+between 17:34Z and 17:35Z (its entry `2026-11-12T174315Z.md`). The coordinator's map ends with the same:
+"At every start I do rule 5's reading before I act". I do it from my next start, and one case came before
+that. Between 17:54Z and 17:57Z, while I was writing this report, the context of my session was
+summarized. I had not seen it coming, so I had written no entry and pushed nothing. The draft lay in my
+session's scratch folder, and it was whole. I took that for a start: before I went on I read the rules
+whole (17:57Z) and the Road Bible whole (17:58Z), and no entry of this report was signed before that. And
+where my entries have said "I do not cease work with this entry", they will say that I halt: to rest with
+the work in hand complete is a halt (THE WORDS).
+
+**For the owner: what the rule costs.** Rule 5 says "Each time a thread starts work". THE WORDS make a
+halt "a thread ceasing work because the work in hand is complete", and rule 5 counts a halt as ceasing
+work. Read together, every wake that follows a rest is a start, also in a session that has gone on
+unbroken, and it asks the rules and the book whole, about 500 lines, before anything else. For a builder
+that starts a few times a day that is little. The coordinator and the record thread rest and are woken
+many times an hour while the owner is at the keyboard, and for them it is the same 500 lines each time,
+before the owner's word is relayed or recorded. No thread kept the rule in that way today, and until this
+afternoon no report of mine said so. The same reading asks an entry that ends with "Next:" at every rest.
+The coordinator's entries now end so (G59). The record thread has written none, and means to write one
+"before this thread ends or runs out of room". And a session does not always see its end coming, so that
+no such entry is written: the coordinator that took over at 16:54Z found none from the one before it
+(G56), and I did not see my own context run out this afternoon. The text of the rule stands, and until
+the owner says otherwise I read it as it is written, for the threads and for myself. If the owner means
+it more lightly, for instance the whole reading when a session begins or its context has been summarized,
+and only what has changed at a wake in between, a line from the owner says so, and planning writes it
+into the rules (THE CAST). This is a note, and it needs no answer.
+
+**What I told the threads, and their answers.** I told planning (17:34Z, 17:41Z) and the coordinator
+(17:35Z, 17:41Z) what this note would say. Planning: "On your note: nothing to correct." The coordinator:
+"On 2 and 3: taken." The answers of the proto thread and the record thread are above.
+
+## G61. Flaw: the coordinator had no map
+
+- Rank: flaw. Step named: step 1. Owning thread: the coordinator. It concerns the record thread, which
+  writes in the coordinator's folder. Corrected, as the last paragraph says.
+- Found 2026-11-12 18:06Z in `record/diary/coordinator/` on main at `1f5f8a0`. Against rule 5 and THE
+  CAST.
+
+Rule 5: "Each thread keeps the folder record/diary/<thread>/, named for its role. It holds the map, in
+the file map.md, and the diary, one file to an entry." It excepts two threads by name. The review thread
+"keeps no map", and a record thread keeps "a diary like any other thread, and no map". The coordinator is
+not excepted, and THE CAST counts on its map: the record thread writes "in the coordinator's own folder,
+record/diary/coordinator/, the coordinator's map and diary".
+
+At `1f5f8a0` the folder held 42 entries of the diary and no `map.md`. The record thread had said so in
+the coordinator's entry `2026-11-12T171300Z.md` ("the folder has no map on main"), and the coordinator in
+`2026-11-12T171345Z.md` ("the diary holds no map"). Planning and the proto thread wrote their maps within
+half an hour of the first Road Bible's merge (G35). The coordinator had none from that morning until this
+report.
+
+Why it matters. Rule 5 has a thread that starts read "its own map" among the first things. The
+coordinator that took over at 16:54Z had none to read. Its place and its plan stood in project memory:
+the order of what follows each of the owner's merges, what each builder is handed at its start, what is
+open with the owner. G56 said what project memory is: "It is not the record, and it can be short or stale
+where the record is exact." And there is a second reader. At wake (f) and at each step gate I compare
+each map with the Road Bible, to say "whether its plan, carried out, would deliver what they set out"
+(rule 6). The coordinator's plan was the one plan in the project that no one had compared with the book.
+G62 and G63 show what the comparison was worth.
+
+I could have said this at G35, when I reported on "the first maps of the proto thread and of planning"
+and did not ask where the coordinator's was.
+
+What I told the coordinator, and its answer. At 17:41Z I sent it the above. Its answer (17:42:11Z): "On
+1: the flaw is right, I have no map. I have written one and given it to the record thread to put on main
+as record/diary/coordinator/map.md". Its entry `2026-11-12T174208Z.md` gives its reason: "Why not leave
+it in project memory: memory is not the record, and review and a later coordinator read the record."
+
+Where it stands. The map is on main since 17:46:02Z (PR #114, merge commit `7457dcc`). The flaw is
+corrected, and a flaw needs no decision of mine. The read of the map is G62.
+
+## G62. Report under rule 6 (f): the coordinator's first map (PR #114), as first written and as changed (diary entry), 2026-11-12 18:06Z
+
+**The wake.** The coordinator, 17:46:31Z: "wake under 6(f). The coordinator's first map is on main." The
+map is `record/diary/coordinator/map.md`, written by the record thread in the coordinator's words (THE
+CAST), on main since 17:46:02Z (PR #114, commit `676ef3b`, merge commit `7457dcc`). I had read it in that
+PR while it was open, and at 17:46Z I had sent the coordinator five remarks on it. They crossed the wake
+by seconds. The coordinator took all five and had the map changed, and the changed map is on main since
+17:50:29Z (PR #116, commit `2d67c06`, merge commit `49bf563`). Two more sentences came into item 5 of its
+plan at 17:57:51Z (PR #118, commit `166ae0a`, merge commit `fa74367`). The coordinator sent me those as
+news and not as a wake. I report on the map as it stands after all three.
+
+**What I read.** The map as first written, whole, as changed, whole, and as it stands now, whole. The
+coordinator's entries that came with them, seven in all, from `2026-11-12T174208Z.md` to
+`2026-11-12T175357Z.md`. THE CAST and rules 1, 3, 4, 5, 6 and 7 for the coordinator's office, and the
+Road Bible, part 3 above all. For item 8 of the plan, `scripts/smoke-test.sh` and
+`.github/workflows/build.yml` on main. Project memory is no part of the record, and I did not compare the
+map with it.
+
+**In short.** As first written, the map differed from the Road Bible in one place, item 5 of its plan,
+and from rules 3 and 7 in another, item 8. Rule 6 leaves me no choice of rank for the first: "A map that
+differs from the Road Bible is a blocker." It is G63. The coordinator corrected both within minutes, and
+I have confirmed it (G64). As the map stands now I find nothing against it. It agrees with the book and
+the rules, and its plan, carried out, would deliver what they set out for the coordinator. I treat this
+map as I treated the proto thread's first one (G35 to G38).
+
+**First count: does the map agree with the book?**
+
+- The head says that the rules, the Road Bible and the settled briefs "outrank this map". "Where I fit"
+  gives the coordinator's office as THE CAST and rules 1 and 6 give it, and the record thread's as THE
+  CAST gives it. The coordinator has no features, and the map says so.
+- "What I need, and from whom" and "Who needs what from me" agree with the rules: the wakes of rule 6
+  "(a) to (g)", the inquisitor's two wakes of rule 7, and each step's zip with its lists of what to try
+  (rule 3).
+- Items 1 to 4 and 6 of the plan agree with the book and the record as they stand: PR #105 before PR #75
+  (rule 1, R43), the proto thread's map after the prototype's terms change (rule 5), the owner's play and
+  merge, the removal and the section `proto` (G40; steps 7 and 8 of the proto thread's map), and the
+  owner deciding the gates while there is no inquisitor (THE CAST).
+- Item 5, as first written, did not agree. That is G63. As changed, it gives part 3 in part 3's own
+  words.
+- Item 9 lists what is open with the owner. Two of its three things are points of SETUP. None of them
+  holds a thread.
+
+**Second count: would the plan, carried out, deliver what the book and the rules set out?** As first
+written, not in item 8: each step's gate would have waited for a word of the owner's that rule 7 does not
+ask for here (G63). As changed, yes.
+
+One remark on the changed plan, which is no finding. Since the first change item 5 has: "I start each
+when the step of its feature is at hand." For `creature` the book sets the day earlier than its step:
+"The brief of feature 9 may be begun as soon as the owner has played the prototype. Rule 7 holds back
+only this step's code, until step 1 has passed its gate." That brief is the workshop the owner asked for,
+and before it come the briefs of features 2 and 3 as they stand. Read as the day step 1 passes its gate,
+"at hand" would have begun the workshop later than the book lets it. The coordinator's answer
+(17:51:37Z): "by the book, not by the gate. I start creature as soon as the owner has played the
+prototype, which the owner's merge of PR #75 tells me (rule 4), or the owner's play report if it comes
+first." It added a sentence to item 5, "as a change to my own plan", and the sentence is on main since
+17:57:51Z (PR #118): "For creature that is earlier than its step: I start it as soon as the owner has
+played the prototype, for the briefs of features 2 and 3 as they stand and then the brief of feature 9,
+which the Road Bible lets begin then; rule 7 holds back only the code." That is the book. The
+coordinator's entry `2026-11-12T175145Z.md` says why it changed the map for it: "the next coordinator
+reads the map, not my messages".
+
+The same PR put a last sentence to item 5: "I start director, commands and creature only once the
+planning thread's small change to part 3 after PR #105 (G40, G42, what the prototype tried) is on main,
+as planning asked at 17:52Z." That is R46 (G58). It is the coordinator's own plan, and it differs from
+nothing in the book. The book says when the brief of feature 9 "may be begun". It does not say when a
+builder is started.
+
+**The five remarks, and what became of each.**
+
+1. The time. The map said "Written 2026-11-12 17:45Z", and the commit that carries it is stamped
+   17:42:28Z. After the first change it said "Written 2026-11-12 17:42Z, changed 17:48Z", and the commit
+   of that change is stamped 17:47:14Z, so the second time was again ahead of the clock. The
+   coordinator's answer: "From now on I leave the time to the record thread's clock." The line now ends
+   "and again at 17:54Z", and the commit that carries it is stamped 17:54:46Z.
+2. Item 5, the builders and their briefs: G63.
+3. Item 8, the gate and the owner's word on loading: G63.
+4. Item 7 had every such PR go "to the owner once its description cites the report". Rule 4 has more
+   kinds than that. The item now begins: "Each brief or change to a book goes the way rule 4 sets for its
+   kind." It names wake (e) for the rules, and it has: "A change to the steps and features that review
+   certifies may auto-merge".
+5. Item 2 named the proto thread's map alone. Planning updates its map after PR #105 merges as well. The
+   item now ends: "When each of the two maps is on main I wake review under 6(f)."
+
+**What the map puts into the record that was not there.** The hand-over at the builders' start: "At their
+start I hand G47 to director, G48 to creature, G50 to commands and director, and point director and
+creature to the proto thread's entry 2026-11-12T071700Z.md, which holds the numbers the owner played."
+The last clause is what I asked of the coordinator at 17:35Z, for as long as the rows of features 8 and 9
+do not say it (G58). And the last line of the map: "At every start I do rule 5's reading before I act,
+and each time I come to rest my diary entry ends with "Next:" and what I read up to."
+
+**What I told the coordinator, and its answer.** The five remarks went at 17:46Z, with the words "Yours
+to take or leave." Its answer (17:47:00Z): "I take all five and have given the record thread the changed
+places". Its entry `2026-11-12T174655Z.md` says of item 5 that it "had every builder write briefs the
+book does not ask for", and of item 8 that it "made each step gate wait for the owner's word on loading,
+where the checks here load the project". At 17:51Z I sent it what stands in this report, with G63 and
+G64. Its answer (17:51:37Z): "I find nothing read wrongly, and I take the blocker and its correction as
+you mean to record them." The two sentences of PR #118 it sent me at 17:58Z, as "two things as news, no
+wake".
+
+**What I could not check.** Whether the plan holds all that the coordinator has carried in project
+memory. From here on the map is what a later coordinator and I go by.
+
+## G63. Blocker: as first written, the coordinator's map had every builder write a brief of its shipped feature, where part 3 asks for one only before a feature is changed
+
+- Rank: blocker, by rule 6: "A map that differs from the Road Bible is a blocker." Owning thread: the
+  coordinator. It concerns the record thread, and `harass`, which is not yet started. Closed: the
+  decision is G64.
+- Found 2026-11-12 18:06Z in `record/diary/coordinator/map.md` as first written (commit `676ef3b`), items
+  5 and 8 of the plan. Against `record/road-bible.md`, part 3, and for item 8 against rules 3 and 7.
+
+Item 5. The map: "Then I start the builders the Road Bible names, each by its role name and pointed at
+the rules, and tell each that a record thread is at hand. Each first writes the brief of its shipped
+feature as it stands." The Road Bible names four builders: `director`, `creature`, `harass` and
+`commands`. And it says when a shipped feature gets its brief: "A shipped feature gets its brief when its
+owning thread is about to change it. Before that thread's own first change in the feature's folders, it
+writes the feature's brief as the feature stands (R6; THE RECORD has each brief written by its owning
+thread)." The answer the owner chose in R6 has the words "before touching it". For three builders map and
+book come to the same: `director` writes the brief of feature 1 before that of feature 8, `commands` that
+of feature 5 before feature 7, and `creature` those of features 2 and 3 before feature 9. For `harass`
+they do not. No feature on the road changes its shipped features 4 and 6. Its one later feature, 11, has
+folders of its own and stands in step 3, of which the book says: "This step waits whole (R27): no brief
+and no experiment for features 10 to 12 is begun before step 2 has passed its gate." So the map had a
+builder started for which the road has no work yet, and set it to write briefs that the book does not ask
+for. Each such brief costs the owner a merge and me a read (rule 4). G46 put it to the owner that nothing
+on the road reads features 4 and 6, and the owner has asked for no more.
+
+Item 8. The map: "When a step is reported done: zip of main through the record thread to the owner, the
+owner's word that it loads into rulings.md, then the inquisitor, then review under 6(b)." Rule 7 takes
+the test of loading from the owner's word only "Where the checks cannot load the project". Here they can.
+`scripts/smoke-test.sh` boots the game's dedicated server with the packaged mod and passes only if the
+mod loaded, and the workflow runs it on every PR and on every commit of main. So the test at a step gate
+is rule 7's own: "the build from main loads, by the latest run of the full checks on main". Of the zip
+rule 3 says: "It holds no gate, except as rule 7 says where the checks cannot load the project." As
+written, the plan would have held each step's gate for the owner. This place differs from the rules and
+not from the Road Bible. By itself it would be a flaw. It is set down here because one change corrects
+both.
+
+How it closes. When the map on main agrees with part 3 in item 5 and I have confirmed it. A blocker never
+keeps the coordinator from any part of its office (rule 6), and this one held nothing: it stood on main
+for four minutes.
+
+## G64. Decision under rule 6 (d): blocker G63 is corrected in the coordinator's map on main
+
+- A decision of the review thread (rule 6: "whether a blocker is corrected"). It answers G63.
+- Signed 2026-11-12 18:06Z, on `record/diary/coordinator/map.md` on main at `74d245f`. PR #116 (commit
+  `2d67c06`) made the correction. PR #118 (commit `166ae0a`) has since added two sentences to item 5, and
+  they leave the correction as it was (G62). The coordinator reported the correction at 17:50:51Z: "the
+  changed map is on main, for your reading under 6(f)".
+
+What the map says now. Item 5 begins: "Then I start builders as the Road Bible calls for them, each by
+its role name and pointed at the rules, and tell each that a record thread is at hand. A shipped feature
+gets its brief when its owning thread is about to change it (Road Bible part 3, R6): director the brief
+of feature 1 before feature 8, commands of feature 5 before feature 7, creature of features 2 and 3
+before feature 9. I start each when the step of its feature is at hand." Of the fourth builder it says:
+"harass changes no shipped feature on the road and I do not start it while step 3 waits whole (R27)."
+That is part 3, and the sentence that had every builder write a brief is gone. Item 8: "The zip holds no
+gate (rule 3): the checks here load the project, so the test of loading is the latest run of the full
+checks on main. I wake the inquisitor, and after its decision review under 6(b)." That is rules 3 and 7.
+
+Before signing I told the coordinator what I had found (17:46Z, and again at 17:51Z with the rank) and
+heard its answers (17:47:00Z and 17:51:37Z), which are in G62. I judge from the map on main.
+
+The blocker is corrected, and I confirm it.
+
+## G65. Where things stand (diary entry), 2026-11-12 18:06Z
+
+All that I was woken for is in: G58 on planning's map and G62 on the coordinator's. G59 records G56
+corrected. G60, G61 and G63 came of the reading, and G64 closes G63. With this entry I halt: the work in
+hand is complete, and I stay at hand for the next wake. My entries G52 and G57 said "I do not cease work
+with this entry" where the work in hand was complete. Each of them was a halt (G60).
+
+Next:
+
+- Unfinished: nothing.
+- PR #105 at `fb3aab9`: with the owner, and its description cites G53. A later commit voids G53.
+- Open findings. Blockers: none. G63 was found and closed in this report (G64). Flaws: none open. G56 and
+  G61 are corrected. Corrected in a PR that is not yet merged: G39, G40 (the test) and G41 in PR #75.
+- Notes. With the owner: G21, G22, and the last part of G60. G46 is met by R44, which stands unless the
+  owner says it is wrong. Waiting for threads that are not yet started: G47 for `director`, G48 for
+  `creature`. The coordinator's map now has both handed over at their start.
+- Waiting for: after the owner merges PR #105, the maps of the proto thread and of planning once more
+  (wake f), and planning's change to part 3, for my certificate (wake a; R46). Each brief, before it
+  merges (wake a). As news: the proto thread's entry that says what it read before it next acts (G60).
+- At my next start: the whole reading of rule 5 first, of the rules and the book themselves, and my first
+  entry says what I read (G60).
+- Where it is: this file, in a record-only PR from branch `claude/project-thread-qcrhya`.
+- Sent to the coordinator, word for word: G58 to G65, by a copy in the project's shared folder
+  (`review/`), as G28 describes.
+- Read up to: rulings.md R46, player-diary.md no entry, findings.md G65.

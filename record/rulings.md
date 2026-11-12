@@ -829,3 +829,28 @@ Quotes are exact. In a quoted question, "you" is the owner and "I" is the thread
 
 - R41 stands as written; this entry corrects the part of it in planning's words, and the owner read both
   before answering. Recorded beside R40 to R42 by the record thread (R17; THE CAST).
+
+## R44. A reading of the owner's words in R38, told to the owner: "Audit and correct any found issues, sure."
+
+- A reading, not the owner's words. The owner's words are in R38: "Audit and correct any found issues,
+  sure." The reading is planning's (its diary entry `record/diary/planning/2026-11-12T072555Z.md`,
+  decision 7), taken up by the coordinator: those words are leave to correct what is found along the way,
+  not an order for an audit as a piece of work of its own; no audit is put on the road. The review
+  thread's note G46 asked that it be recorded; planning agrees. (As the coordinator gave it to the record
+  thread, 2026-11-12 08:37:07Z.)
+- Planning's words in decision 7, copied from that entry: "I take that sentence as leave to audit and to
+  correct what is found, and not as an order for a piece of work: it names no thread and no time, and it
+  answers a question that offered the owner two things, to accept the PRs or to have them listed at the
+  gate. [...] This is a reading of the owner's words and not mine to settle."
+- The coordinator told the owner this reading in the project chat, 2026-11-12 08:36:43Z. The post's last
+  paragraph, copied from the project chat:
+
+  ```text
+  So I am recording this reading of your words in R38: "Audit and correct any found issues, sure." is leave to fix what turns up along the way, not an order for a separate audit. Please say if that is wrong. Still open with you: R40, (a) or (b).
+  ```
+
+- The owner has not answered it. Like R34's reading, it stands until the owner says it is wrong.
+- Added by the record thread: at the time of writing, planning's entry is in PR #79 (head `e0f5d9d`) and
+  note G46 in PR #97 (head `38d5642`); neither is on main yet. The coordinator gives the post's time as
+  08:38Z; the project chat gives 08:36:43Z.
+- Recorded 2026-11-12 by the record thread (R17; THE CAST).

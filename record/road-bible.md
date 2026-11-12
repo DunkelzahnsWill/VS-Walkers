@@ -97,11 +97,13 @@ it). The first two points below adjust what is already there. The third adds to 
   (R9). And as version 1.1.1 ships, the walker returns two seasons after it died (R10), which is 54
   in-game days with the game's months of 9 days, and in half that time at LEVEL 5 (R12). Meanwhile
   another walker may come for the same player after about a week: a rest of 5 days, then a 35% chance
-  each day (1.1.1). No thread takes either measure for the ruling: the brief of feature 8 puts the
-  question to the owner, and the measure the prototype takes is a first guess (part 2). Of the climb
-  up the escalation LEVELS the owner said that it "will likely need to be shorter to line up with
-  shortened respawn-time" (R9). Whether it is shortened, and by how much, is a question of the same
-  brief.
+  each day (1.1.1). A return that falls due waits for its target's rest, as any haunt does, and is
+  then served before the day's roll for a new walker. So a return reaches no player sooner than 5 days
+  after that player's last haunt ended, unless the admin sends it by command (1.1.1). No thread takes
+  either measure for the ruling: the brief of feature 8 puts the question to the owner, and the
+  measure the prototype takes is a first guess (part 2). Of the climb up the escalation LEVELS the
+  owner said that it "will likely need to be shorter to line up with shortened respawn-time" (R9).
+  Whether it is shortened, and by how much, is a question of the same brief.
 - **It fights back.** The walker's stats and its intelligence are retuned. The owner settles them in a
   workshop (R9).
 - **It changes.** When players kill a walker improperly more than twice in a row, its return skips the

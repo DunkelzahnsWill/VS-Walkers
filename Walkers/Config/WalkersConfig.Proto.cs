@@ -33,7 +33,7 @@ public class ProtoConfig
 /// </summary>
 public class ProtoReturnConfig
 {
-    [Description("Stands in for return.afterSeasons (1.1.1: 2, which is 54 days with the default calendar). 0.11 is about 3 in-game days, sooner than the 5-day rest before a new walker may come; half that at escalation 5.")]
+    [Description("Stands in for return.afterSeasons (1.1.1: 2, which is 54 days with the default calendar). 0.11 is about 3 in-game days; the return still waits out its victim's rest after the death (director.minDaysBetweenHaunts, 5 days), so it comes back after about 5 days, ahead of any new walker.")]
     [Range(0.05, 8)]
     public float AfterSeasons { get; set; } = 0.11f;
 

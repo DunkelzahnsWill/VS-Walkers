@@ -34,7 +34,7 @@ jobs:
           if [ "${{ github.event_name }}" != "pull_request" ]; then
             echo "full=true" >> "$GITHUB_OUTPUT"; echo "Not a pull request: full checks."; exit 0
           fi
-          changed=$(git diff --name-only "$BASE_SHA"...HEAD)
+          changed=$(git diff --name-only --no-renames "$BASE_SHA"...HEAD)
           echo "Changed files:"; echo "$changed"
           if [ -n "$changed" ] && ! echo "$changed" | grep -qv '^record/'; then
             echo "full=false" >> "$GITHUB_OUTPUT"; echo "Only record/ changed: the build and the server test are skipped."

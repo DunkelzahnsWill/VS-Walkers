@@ -1805,3 +1805,403 @@ Next:
 - Sent to the coordinator, word for word: G35 to G44, by a copy in the project's shared folder
   (`review/`), as G28 describes.
 - Read up to: rulings.md R42, player-diary.md no entry, findings.md G44.
+
+## G45. Report under rule 6 (a): PR #79, the first change to the Road Bible, read at commit e0f5d9d (diary entry), 2026-11-12 08:33Z
+
+Woken by the coordinator at 07:40:55Z under rule 6 (a): planning had reported PR #79 ready at commit
+`e0f5d9d`. I began to read at 08:06Z, when my report on the first maps (G35 to G44) was out, and told
+planning and the coordinator so. This report is on `e0f5d9d`, and a later commit voids it (rule 4). What
+I read beside it, the proto thread's changed map and the two PRs that carry out its plan, is G49.
+
+**What I read.**
+
+- First, what changed in the record since G44. Main went from `891da08` to `c8ae70a`. No central book
+  changed. New in the working files:
+  - rulings.md R43: planning corrects its words in R41. Under answer (a) to R40 the change to the book
+    "comes as a small PR of its own, two paragraphs of part 2", because I had begun to read PR #79. R40
+    is not answered.
+  - player-diary.md: no entry.
+  - My own G35 to G44 (PR #87, merge commit `f082278`).
+  - The coordinator's diary: six entries, `2026-11-12T080700Z.md` to `2026-11-12T082600Z.md`. The first
+    answers my note G43 on both points.
+  - Planning's diary: `2026-11-12T081524Z.md`, with a draft of what part 2 would say under answer (a) to
+    R40. I read it and report on it when the change itself comes to me.
+  - The proto thread's diary: `2026-11-12T080530Z.md`, and its map, changed (G49).
+- PR #79 at `e0f5d9d`: what its two commits change in `record/road-bible.md`, line by line, and the book
+  whole at that commit wherever a changed sentence leans on another; planning's two entries for the PR,
+  `2026-11-12T072555Z.md` and `2026-11-12T073521Z.md`; and the description, as last changed at 07:38:19Z.
+  The check "build" on that commit: success, finished 07:40:23Z.
+- The rulings behind each new sentence: R34 with R33, R37 with R31, R38 with R32, and R9, R12 and R13
+  where the book cites them. The book's quotations of the owner are exact (a script compared each with
+  rulings.md).
+- The code on main for each new sentence that describes the mod. In `Walkers/Stalker/`: `WalkerBrain.cs`
+  (`UpdateBolt` for the doe; `TrueFormMode` and `UpdateFreeze` for the blow, the hunt, fire and water)
+  and `WalkerGaze.cs` for whose distance counts, with the shipped defaults in
+  `Walkers/Config/WalkersConfig.Stalker.cs`. In `Walkers/Director/`: `EndHauntCore` and every place that
+  calls it, `StartHaunts`, `CanBeChosen`, and the admin's return and haunt commands.
+- The tables. In parts 3 and 4 no row changed its number, name, owner or folders: only the "What it is"
+  of features 8 and 9 changed. No line outside the tables is longer than 105 characters. No sentence
+  still speaks of R31 or R33 as open.
+- Planning's copy of the book in the project's shared folder (`planning/book-change-1-answers/`): the
+  same as the commit, byte for byte.
+
+Read up to: rulings.md R43, player-diary.md no entry, findings.md G44.
+
+**In short.** I found no blocker and no flaw. The change writes the owner's three answers into the book
+as they were given, takes up the four small things of G29, and adds one fact that I had told planning of.
+Three notes come with it: G46 for the owner, G47 for the brief of feature 8, and G48 for the workshop. As
+far as the review goes, PR #79 can be merged at `e0f5d9d`. This is a report and no certificate. The
+change touches the concept and the prototype's terms as well as the steps and features, and "A change
+that touches any other part of the Road Bible goes only by the owner's merge or the owner's command"
+(rule 6). Rule 4 asks one thing more before the merge: the description cites this report, and planning
+then assigns the PR to the owner.
+
+**For the owner.**
+
+- PR #79 writes your three answers of this morning into the Road Bible: the gaze (R34), "Faster" (R37)
+  and the 48 old PRs (R38). I found nothing wrong in it. Once planning has put this report into the
+  description and assigned the PR to you, it is yours to merge.
+- One thing only you can say. Of the old PRs you wrote "Audit and correct any found issues, sure."
+  Planning reads that as leave to correct what is found along the way, and has put no audit on the road.
+  If you meant an audit as a piece of work of its own, one line from you says so (G46).
+- Nothing waits for this merge: your answers have held since they were recorded. After it every thread
+  reads the book again (rule 5).
+
+**The change, part by part.**
+
+- "Faster" (R37). Part 1 now says: "What it is measured against the owner has left open, as the first
+  question of the brief of feature 8 (R37)." Point 2 of part 2, the "Done" line of step 1 and the row of
+  feature 8 say the same, each in its place. The owner chose "C", and option (c) of R31 reads "left open
+  as the first question of that feature's brief". The owner's reason is quoted whole and exactly. This is
+  the first small thing of G29: no sentence is left in which silence could be taken for an answer.
+- The gaze (R34). Point 5 has "The rule itself stays, and the retuned fight (feature 9) may change these
+  four cases and their numbers (R34)", and after it the prototype's leave and the workshop, in the words
+  of option (a) of R33. Part 2 and the row of feature 9 follow. That "G13.) A" means option (a) is the
+  coordinator's reading, and R34 says so. The description puts it to the owner once more, as its first
+  point. How far "The rule itself" reaches is G48.
+- The 48 PRs (R38). Part 3: "The owner has accepted every PR merged before these rules, #1 to #48 (R38)."
+  That is the first word of the owner's answer. The rest of that answer is G46.
+- The doe (G29). "Anyone within 6 blocks cuts that short: she bolts at once (R12, R13)." By the code she
+  is startled when the nearest player who counts, looking or not, is within `stalk.panicDistance`, and
+  R12 has "stalk.panicDistance 6 cuts it short". Planning left out the second way she is startled, an
+  approach within 16 blocks while nobody looks at her from within 20. Its entry gives the reason: for one
+  player alone that is never a move under a gaze. I checked that against `UpdateBolt`, and agree.
+- The blow (G29). "Outside the hunt, a true form that a player hit strikes back in reach and otherwise
+  walks off, not held, for 20 seconds. In the hunt, the blow frees it for those 3 seconds only (R12,
+  1.1.1)." By the code: at STAGE 5, or when it has turned on its victim, `TrueFormMode` returns the hunt
+  or the retreat before it comes to the walker that was hit, and `UpdateFreeze` holds no walker for 3
+  seconds after a blow and none that defends itself. Planning did not take my words of G29, that in the
+  hunt it goes on hunting, and is right not to: a hit walker in the hunt can also break off.
+- The order of two briefs (G29). "So the brief of a shipped feature as it stands is settled before the
+  brief of the later feature that changes it", with the pairs: 1 before 8, 2 and 3 before 9, 5 before 7.
+  Planning's entry says "It adds no rule", and I agree. Both briefs of a pair were due before the
+  feature's code in any case (R6, rule 2), and the sentence only says which is merged first. Planning
+  confirmed how it is meant: two PRs, and the later one may be open while the earlier waits for the
+  owner.
+- The rest (second commit). "A return that falls due waits for its target's rest, as any haunt does, and
+  is then served before the day's roll for a new walker. So a return reaches no player sooner than 5 days
+  after that player's last haunt ended, unless the admin sends it by command (1.1.1)." It holds. Every
+  way a haunt ends goes through `EndHauntCore`, which sets the victim's rest: 5 days as shipped, and
+  twice that when the victim died. In `StartHaunts` a due return is served before the day's roll, to a
+  target that `CanBeChosen`, and only `/walkers director return <walker> now` passes the rest. The
+  sentence is a floor, and is worded as one.
+- The head of the book. The bullet on two open questions is gone, and "This is the first Road Bible"
+  became "This book starts from version 1.1.1 of the mod, which is on `main` and public." Both follow
+  from the answers.
+
+**R40 and this PR.** The stop of R40 is about a paragraph of part 2, "Where the rest goes", and PR #79
+changes nothing in it. So the book as changed states no question as open while that stop is open. I think
+that right. rulings.md holds the stop, every thread reads it there, and the paragraph changes only under
+answer (a), by a PR of its own (R43). G36 stands as it was.
+
+**The four points the description puts to the owner** ("Points the owner's merge makes stand").
+
+1. "G13.) A" is answer (a) to the gaze question. Sound: R34 records it as the coordinator's reading, told
+   to the owner.
+2. The numbers of the gaze rule stay in the concept, named as those of version 1.1.1. Sound. It answers
+   the second point of my counter-view in G29. The list is tied to "the settings as version 1.1.1 ships
+   them", so a number that the workshop retunes makes no sentence of the list untrue. And the point says
+   where the retuned cases are held: "The brief of feature 9 holds what the workshop settles, and this
+   point is brought in line with it at the book's next change." The cost I named in G29 is put off to
+   that one change, and not removed. Planning's entry says it weighs the shorter form again then.
+3. No audit is added to the road. That is G46.
+4. The owner's reason on "Faster" is quoted and not interpreted. Right for the book. What I would have
+   the brief make of it is G47.
+
+**The counter-view (rule 6 (a)).** Against the change itself I have little to argue: it follows three
+answers and adds nothing of its own. What I argue lies at its edges, in G46 to G48, and in two things
+more.
+
+1. R37 and my counter-view to the road (G22, which is with the owner). My second argument there was that
+   players asked for a fight, and that "nobody wrote of a return". The owner now gives "both some
+   play-testing and player feedback" as the ground for retuning the return. That argument has lost
+   weight, and I say so. The first one stands as an offer: the return can be tried in version 1.1.1, with
+   the setting that is there.
+2. One change to the concept now, and perhaps another within the day. Under answer (a) to R40 part 2
+   changes again (R43), and after each change to the concept "the coordinator tells every thread, and
+   each reads the Road Bible again before it goes on" (rule 5). That speaks for merging now and not
+   later. Today three threads beside me read it. Once the builders are started it is twice as many and
+   more.
+
+**What I told planning, and its answer.** At 08:22Z I sent planning the verdict, the notes I meant to
+write (the audit, the hours of play, G22, and the two times of the hold) and two questions. Its answer
+came at 08:23:40Z: "I object to nothing. No new commit comes from me." On the two times of the hold:
+"Yes, 4 is my reading too." On the order of briefs: two PRs, the brief as it stands merged first, and the
+later brief's PR may be open meanwhile. "It adds no work and no rule". On the audit: "rulings.md is the
+right place". When planning cites this report it changes point 3 of the description to say so, which is
+an edit of the description and no commit.
+
+**What I could not check.** Planning's own run of the three scripts on `e0f5d9d`: I have the check
+"build" on GitHub, which is green on that commit. And whether the owner has answered R40 in the last
+minutes: I go by rulings.md on main, which ends at R43.
+
+## G46. Note: "Audit and correct any found issues, sure." is read as leave, and the record holds no word of the owner's on that reading
+
+- Rank: note. Owning thread: the coordinator (it is for the owner). It concerns planning.
+- Found 2026-11-12 08:33Z in PR #79 at `e0f5d9d`: planning's entry `2026-11-12T072555Z.md`, decision 7,
+  and the description, point 3 of "Points the owner's merge makes stand". Against R38.
+
+R38 holds the owner's answer on the 48 old PRs: "R32.) Accepted, would be too impractical to gate. Audit
+and correct any found issues, sure. but gate the whole project while mid-workthrough? no." The book takes
+up the first word of it, and says nothing of the second sentence. Planning's entry says why: "I take that
+sentence as leave to audit and to correct what is found, and not as an order for a piece of work: it
+names no thread and no time, and it answers a question that offered the owner two things, to accept the
+PRs or to have them listed at the gate." And: "This is a reading of the owner's words and not mine to
+settle. No sentence of the book rests on it." The description puts it to the owner as its third point:
+"No audit is added to the road."
+
+I think planning's reading the likelier of the two. Two things about it are for the owner and the
+coordinator.
+
+1. Where the owner's word on it is kept. The description says of its four points: "Merging accepts them."
+   For the other three that holds, because a sentence of the book rests on each, and the merge makes that
+   sentence stand. On this point no sentence rests. So the merge changes nothing that shows the owner's
+   mind, and the description is not part of the record. After the merge the record would hold the owner's
+   words in R38 and planning's reading in its diary, and nothing of the owner's between them. R34 shows
+   the way. There the coordinator's reading of "G13.) A" is set down as a reading, with the line: "The
+   coordinator has told the owner this reading and asked the owner to say if it is wrong." The same for
+   this sentence costs one line in the project chat and one entry. Planning agrees: "rulings.md is the
+   right place".
+2. What the road reads when it has no audit. Planning's entry says that "each owning thread reads its
+   shipped feature closely when it writes that feature's brief as it stands (R6)". That holds for four of
+   the six shipped features. A brief as it stands is due only where a later feature changes the shipped
+   one: features 1, 2, 3 and 5. Nothing on the road reads feature 4, the harassment kit, or feature 6,
+   Ellesby's papers, or the shared files of part 4. If the owner's "sure" meant more than leave, those
+   are what an audit would add, and planning would write it into the road at the book's next change.
+
+Nothing is held by this, and a note needs no answer. If the owner says nothing, planning's reading
+stands: no audit, and what is found wrong in shipped code is corrected by a patch.
+
+## G47. Note: for the brief of feature 8, the owner counts the return in hours of play
+
+- Rank: note. Owning thread: `director` (feature 8), which is not yet started. It concerns planning.
+- Found 2026-11-12 08:33Z in PR #79 at `e0f5d9d`, part 1, "It comes back sooner", and point 4 of the
+  description. Against R37.
+
+The book quotes the owner's reason whole and does not interpret it. That is right for the book: the owner
+left the measure to the brief (R37). This note is for the thread that writes that brief.
+
+The book says "Two measures are on record", and gives both in in-game days: sooner than a new walker
+comes, which is "after about a week", and the two seasons of version 1.1.1, which are 54 days. The
+owner's reason counts otherwise. It speaks of what is "Waaaay too long for players to notice a
+difference", and of "36+ hours of play". By the owner's own figures, 54 days and 36 hours or more, an
+in-game day is 40 minutes of play or more. So the floor that the book now states, "no player sooner than
+5 days after that player's last haunt ended", is more than three hours of play, and a week is nearer
+five. Whether three hours is soon enough for players to notice a difference, only the owner can say.
+
+So I would have the first question of that brief do two things. Give each measure in hours of play beside
+its in-game days. And ask with it whether a return may pass its victim's rest: as version 1.1.1 ships, no
+shorter return time alone brings a walker back sooner than the rest allows. A yes to that changes what
+the brief of feature 1 as it stands says of the rest, and the book already has the later brief's PR
+change the earlier brief too.
+
+Nothing here is for the book now. Planning has nothing against it (08:23:40Z).
+
+## G48. Note: "The rule itself stays" covers the two times of the hold
+
+- Rank: note. Owning thread: `creature` (feature 9), which is not yet started. It concerns the proto
+  thread and planning.
+- Found 2026-11-12 08:33Z in PR #79 at `e0f5d9d`, part 1, point 5. Against R12, R33 and R34.
+
+Point 5 as changed says: "The rule itself stays, and the retuned fight (feature 9) may change these four
+cases and their numbers (R34)." Before its list it has: "The hold begins after half a second of unbroken
+watching and ends after a second and a half unwatched (R12)."
+
+I read the two together like this. The half second and the second and a half belong to the rule itself,
+and not to the four cases. R33 asked: "May the retuned fight change these four cases and their numbers?"
+R34 answers that and no more. In the book only the list is tied to "the settings as version 1.1.1 ships
+them". The sentence on the hold stands on R12 alone, so a retune of either time would make a sentence of
+the concept untrue. It needs the owner's word first, and then the concept is changed before any code
+follows (rule 1).
+
+Planning, which wrote the point, reads it the same way: "Yes, 4 is my reading too." It adds that both
+times are settings, `gaze.freezeAfterSeconds` and `gaze.freezeReleaseSeconds`, "so a prototype or a brief
+could reach them easily". The prototype as it stands leaves both alone (PR #75 at `83e57db`). Of the gaze
+it lays its values over `gaze.lungeRange` and `gaze.stareAggroSeconds`, which are the third and the
+second of the four cases.
+
+This note is for the workshop, the brief of feature 9, so that nobody takes R34 for leave on the two
+times. If the workshop wants either changed, that is a question for the owner in that brief.
+
+## G49. Report: the proto thread's changed map (PR #88), PR #75 at 83e57db, and PR #91 (CLAUDE.md and README.md) at b75642a (diary entry), 2026-11-12 08:33Z
+
+The coordinator woke me at 08:09:52Z under rule 6 (f) for the proto thread's changed map. Wake (f) comes
+when "a thread writes its map for the first time, or updates it after the Road Bible has changed", and
+the book has not changed. So this was no case of (f). I told the coordinator, and it has taken that up in
+its entry `2026-11-12T081600Z.md`: "a map changed without a change to the book calls for no (f) wake; I
+tell review of it as news". I read the map all the same. It is a working file changed since my last
+report, and G40 had asked for the change.
+
+With it I read what the map's plan has brought since G44: a fourth commit of PR #75, and PR #91. No rule
+gives me a read of either before the owner merges, and I told the coordinator so when it asked. Neither
+PR is held for me. My answer reached the coordinator at 08:15:20Z, by its diary. The 08:17Z at the head
+of my message was a slip of my own, two minutes ahead of the clock.
+
+**What I read.**
+
+- The map on main (PR #88, commit `de49984`, merged 08:08:46Z), and the entry that came with it,
+  `2026-11-12T080530Z.md`, which answers G36 to G42 by number.
+- PR #75: its fourth commit, `83e57db` (08:08:51Z), which changes `tests/smoke/proto.expect` and one
+  comment in `tests/smoke/proto.commands`, and the description as it stands. The check "build" on that
+  commit: success, finished 08:11:23Z. The code is that of `c1920a7`, which G35 reported on.
+- PR #91: `CLAUDE.md` and `README.md` at its first commit, `b7fdaf5`, and at its second, `b75642a`
+  (08:26:16Z), line by line, against the rules and against parts 3 and 4 of the book; the entry it
+  carries, `2026-11-12T081021Z.md`, in both versions; and the description. The check "build" on
+  `b75642a`: success, finished 08:28:57Z.
+
+**In short.**
+
+- The map agrees with the book and now answers G40 on each count. G40 is corrected.
+- G36 is open as it was. It waits for the owner's answer to R40, and PR #75 says at its head that it is
+  held.
+- PR #91 does what part 4 and R8 ask. Its first commit had one flaw and three smaller things. The proto
+  thread corrected all four within a minute of my telling it. They are G50 and G51, both corrected at
+  `b75642a`. Nothing of mine is open against PR #91.
+
+**For the owner.**
+
+- PR #91 (`CLAUDE.md` and `README.md`) is yours to merge, at commit `b75642a`. I have read it, and
+  nothing of mine is open against it.
+- PR #75, the prototype, stays held until you have answered R40. Nothing else of mine holds it.
+- After you merge the prototype, one more merge will come to you: the PR that removes the prototype's
+  folder. The proto thread opens it at once, and rule 4 has it wait for you.
+
+**The map, against G40.** G40 asked three things of the plan.
+
+- When the folder goes. Plan step 7 is a removal PR, "opened as soon as the owner has merged the
+  prototype and before any builder's first code of step 1". The book's day, before step 1 is reported
+  done, is kept as the last day.
+- What becomes of the section `proto` in a settings file. Plan step 8: only the owner has loaded the
+  prototype, so the removal PR and the word that goes with step 1's zip "tell the owner to delete that
+  section from `ModConfig/walkers.json` by hand". And: "The loader is feature 5's, and I change nothing
+  in it." That is enough, since one installation holds the section. The description of PR #75 now tells
+  the owner the same, in bold, under "Known to be rough".
+- Who needs what. `director` (feature 8) and `commands` (features 5 and 7) need "`Walkers/Proto/` gone
+  before they build".
+
+The map adds nothing that the book does not allow, and its plan, carried out, would deliver what part 2
+sets out. One thing it leaves unsaid is how the removal PR merges. That is no finding, because rule 4
+says it: the removal is neither a patch nor the prototype, so "Anything not on this list waits for the
+owner's merge."
+
+**PR #75 at `83e57db`, against G40.** The smoke test pins the prototype's own numbers again (70.0, 7.0
+and 0.11) and leaves the shipped ones open. So it tells the switch on from the switch off again, and a
+builder's change to a default does not break it. That was the last part of G40. Whether "off" puts the
+file's values back, the test does not show, and it never did. Each pattern is looked for anywhere in the
+log, and the line that is printed before the switch is turned on already satisfies the pattern meant for
+the line after it is turned off. That is how the harness works, and I raise no finding on it for a folder
+that is about to go. The corner of a settings file deleted while the prototype is on is now under "Known
+to be rough".
+
+G40 was a flaw, and a flaw needs no decision of mine. I record that it is corrected: in the map on main,
+and for the test in PR #75, where it stands corrected when that PR merges.
+
+**The other findings, by the proto thread's answers.** G37 and G38: the work is done as PR #91. G39 and
+G41: corrected at `c1920a7`, as G35 said. G42: the thread has now read the findings it had passed over,
+and found that "Nothing in them changes the build". Of its entry names it says: "From this entry on, each
+name is the time I write it." One slip of that kind since: the entry in PR #91 says "Corrected 08:30Z" in
+a commit made at 08:26:16Z.
+
+**What I told the proto thread, and its answer.** At 08:26Z I sent it my reading: G40 met on all three
+counts, nothing new against PR #75, and four points on PR #91 at `b7fdaf5`. Its answer came at 08:26:44Z:
+"You read rightly on all four points, and I have corrected all of them in PR #91 at b75642a." I then read
+`b75642a` against each point.
+
+**What I could not check.** The proto thread's own runs of the three scripts on `83e57db` and on
+`b75642a`: I have the checks on GitHub. I did not run the prototype again, since its code is unchanged
+from `c1920a7`.
+
+## G50. Flaw: CLAUDE.md gave every feature a folder and file names of its own, where part 3 puts features 7 to 10 in the folders of shipped features
+
+- Rank: flaw. Step named: step 1. Owning thread: proto. It concerns `commands` (feature 7) and `director`
+  (feature 8).
+- Found 2026-11-12 08:33Z in PR #91 at `b7fdaf5`, `CLAUDE.md`, "Code conventions", and the table of
+  `README.md`, "Working in parallel". Against `record/road-bible.md`, parts 3 and 4.
+- Corrected in PR #91 at `b75642a`. It stands corrected in the record when that PR merges.
+
+`CLAUDE.md` at `b7fdaf5` said: "Each feature keeps its code in `Walkers/<Feature>/` with its own
+ModSystem", and went on to its settings, its text, its patches and its checks, each under the feature's
+own name. That is the layout of version 1.1.1, in which a feature was one of five folders. In the book a
+feature is a numbered thing, and part 3 gives four of the new ones no folder of their own: "Features 7 to
+10 live in the folders of shipped features". Feature 6 has no code folder at all, and its patches are
+named `lore-*`.
+
+Why it matters. The first two builder threads build features 7 and 8. `CLAUDE.md` is the first file every
+session in the repo is handed, and it is handed as an instruction. Taken at its word, the line has
+`director` make `Walkers/FasterReturn/` and `tests/smoke/faster-return.*` for feature 8. Those paths fall
+under no feature's folders, and part 4 says: "A path that falls under none is added to this list before
+anyone creates it." The table in the README had the same pattern, though there the book is named above it
+as the one that wins.
+
+What it says now. "A feature's folders are the ones part 3 of the Road Bible lists for it, and nothing
+else." It names features 7 to 10 as living in the folders of others, tells a thread to "make no new
+folder or file name for a feature unless part 3 or part 4 has it", and keeps the old layout as "The
+pattern the shipped features follow". The README says the same above its table. That corrects it.
+
+The step is step 1 because its two features are the first to be built in another feature's folders. Found
+before the merge, it cost one commit.
+
+## G51. Note: three smaller things in PR #91, corrected with G50
+
+- Rank: note. Owning thread: proto.
+- Found 2026-11-12 08:33Z in PR #91 at `b7fdaf5`. Against rule 4, and against parts 3 and 4 of
+  `record/road-bible.md`. Corrected at `b75642a`.
+
+1. The short form of rule 4 in `CLAUDE.md` ended: "everything else waits for the owner's merge". Rule 4
+   also has: "A change the review thread has certified may be set to auto-merge." The short form erred to
+   the safe side, at the cost of merges that the rules spare the owner. Now such a change "may auto-merge
+   once the review thread has certified it", and rule 4 is named as the authority.
+2. "Green checks alone never make a PR mergeable" stood beside the working files of the record, which do
+   merge on a green check alone. Now: "For anything outside the record's working files, green checks
+   alone never make a PR mergeable."
+3. The entry `2026-11-12T081021Z.md` said of the README's feature sections that "each feature's owner
+   changes them with its feature". By part 4 `README.md` is the proto thread's: "All three in a release
+   PR". Now the entry says: "The README is mine (part 4), and brought up to date with each release, in
+   the release PR." And the README gave the folder `assets/walkers/entities/` to feature 2, where part 3
+   gives feature 2 the walker's two files in it. Now it adds that "a later creature brings its own files,
+   under the names part 3 gives it".
+
+## G52. Where things stand (diary entry), 2026-11-12 08:33Z
+
+Both reports I was woken for are in: G45 on PR #79, and G49 on the proto thread's changed map and what
+its plan has brought. I do not cease work with this entry.
+
+Next:
+
+- Unfinished: nothing.
+- PR #79 at `e0f5d9d`: nothing of mine is against it. It goes to the owner once its description cites
+  G45. A later commit voids G45.
+- Open findings. Blocker G36, against the proto thread and PR #75, waiting for the owner's answer to R40.
+  Corrected in PRs that are not yet merged: G39, G40 (the test) and G41 in PR #75; G50 and G51 in PR #91.
+  Against planning: none.
+- Notes. With the owner: G21, G22 (its second argument weaker since R37) and G46. Waiting for threads
+  that are not yet started: G47 for `director`, G48 for `creature`. G42: answered by the proto thread.
+  G43: answered by the coordinator, which now wakes me under 6 (c) when a stop is called.
+- Waiting for: the owner's answer to R40. After it, under (b) the proto thread's report that G36 is
+  corrected (wake d), and under (a) planning's change to part 2, in a PR of its own (wake a; R43). The
+  maps of planning and of the proto thread once they change with the book, after PR #79 merges (wake f).
+  Each brief, before it merges (wake a).
+- Where it is: this file, in a record-only PR from branch `claude/project-thread-qcrhya`.
+- Sent to the coordinator, word for word: G45 to G52, by a copy in the project's shared folder
+  (`review/`), as G28 describes.
+- Read up to: rulings.md R43, player-diary.md no entry, findings.md G52.

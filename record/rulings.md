@@ -791,3 +791,21 @@ Quotes are exact. In a quoted question, "you" is the owner and "I" is the thread
 
 - Recorded beside R40, as part of what the owner read before answering it, by the record thread (R17;
   THE CAST).
+
+## R42. Added to the question of R40: the review thread's view, as put to the owner
+
+- The review thread reported to the coordinator under rule 1 at 07:44:23Z, as the coordinator gives the
+  time, on what the record says on the question of R40. In the coordinator's words to the record thread,
+  2026-11-12 07:44:31Z: "the record gives the sentence's meaning ((b) keeps to it, (a) changes the book),
+  no ruling says where the values live, so the stop is the owner's to close."
+- The coordinator put the review thread's view to the owner in the project chat, 2026-11-12 07:44:26Z,
+  with the question of R40 still open. The post, whole, copied from the project chat:
+
+  ```text
+  The review thread gives the other view on the prototype's (a) or (b) question, so you now have both. In its words: "I would answer (a) and have part 2 changed to say what was built. The eleven numbers are first guesses, and they stay in the record either way: in the prototype's PR, in the proto thread's diary, and in what you say after playing. Under (b) they also become eleven settings that nothing reads once the prototype's folder is gone, and the feature threads must then keep or remove them."
+
+  So the prototype thread recommends (b), which keeps to the Road Bible's words, and the review thread recommends (a), which changes one paragraph of the book to match what was built. The choice is yours, and you can keep playing meanwhile.
+  ```
+
+- Recorded beside R40 and R41, as part of what the owner read before answering, by the record thread
+  (R17; THE CAST).

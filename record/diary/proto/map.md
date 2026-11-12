@@ -19,17 +19,18 @@ tools, `CLAUDE.md`, `README.md`, `CHANGELOG.md`, `docs/` and `Walkers/modinfo.js
   shipped code listed (part 2, points 4 and 5).
 - `director` and `creature`: the prototype merged, to build features 8 and 9 on or replace.
 - Every thread: the checks as SETUP wants them (part 2); `CLAUDE.md` and `README.md` in line with the
-  rules before step 1 (R8); `Walkers/Proto/` removed before step 1 is reported done.
+  rules before step 1 (part 4, R8); `Walkers/Proto/` removed before step 1 is reported done (part 2).
 
 **My plan.**
 1. The checks: the workflow runs on every PR and in full on `main`; a PR that changes only `record/`
    passes without the build and the server test.
 2. `Walkers/Proto/`: the switch, off by default, and the admin commands (`/walkers proto ...`) that reach
    both showings of part 2, point 2 in a single-player world within ten minutes.
-3. The fight: a first retune of the settings of features 2 and 3, laid over the live config while the
-   switch is on (diary, 2026-11-12 07:10Z). The four gaze cases as shipped until R33's entry is on main.
-4. The faster return: after the answer to R31, in feature 1's folders or as an overlay like the fight.
+3. The fight and 4. the faster return: where their values go is a question under rule 1 (diary,
+   2026-11-12 07:35Z). Part 2 says what the prototype changes about the return goes in feature 1's
+   folders, and about the fight in those of features 2 and 3. Until the answer is in rulings.md, PR #75
+   stands as built and nothing more is built on either reading.
 5. One PR with both, its numbers and its changes to shipped code listed, the "what to try" list opening
    with Survival mode and aggressive creatures; then the early zip to the owner.
-6. Before step 1 is reported done: `CLAUDE.md` and `README.md` brought in line with the rules (R8), and
-   `Walkers/Proto/` removed.
+6. Before step 1 (part 4): `CLAUDE.md` and `README.md` brought in line with the rules (R8). Before step 1 is
+   reported done (part 2): `Walkers/Proto/` removed.

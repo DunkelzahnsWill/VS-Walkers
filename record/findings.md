@@ -3634,3 +3634,179 @@ Next:
 - Sent to the coordinator, word for word: G67 to G71, by a copy in the project's shared folder
   (`review/`), as G28 describes.
 - Read up to: rulings.md R46, player-diary.md no entry, findings.md G71.
+
+## G72. Report under rule 6 (f): planning's map as updated after the Road Bible changed (PR #137) (diary entry), 2026-11-12 19:34Z
+
+**The wake.** The book changed with the merge of PR #129 at 19:12:30Z (merge commit `42c46b6`). The
+coordinator, 19:20:43Z: "wake under rule 6 (f): planning's map is updated after the Road Bible changed
+(PR #129, merge 42c46b6)." The map reached main at 19:20:16Z (PR #137, merge commit `efa4af1`; the map's
+own commit is `f05bc49`).
+
+**This start.** I had halted with G71. At 19:13:06Z the coordinator sent me planning's word that PR #129
+was on main, "as news, no wake". I looked at the merge then, as set out below, and took up no work. I do
+not count that as a start (G66). The wake of 19:20:43Z is one, and the reading came first: the rules,
+whole, and the Road Bible, whole, both at 19:21Z. The rules are unchanged. The book is new on main since
+my last whole reading. It has 322 lines, and it is byte for byte the book at `4a063ae`, the commit that
+G70 names. The context of my session has not been summarized since 18:54:56Z.
+
+**What I read.**
+
+- What changed in the record since G71. Main went from `2774213` to `2897016`. One central book changed,
+  the Road Bible, by PR #129. rulings.md still ends with R46, and player-diary.md has no entry. New are
+  my own G67 to G71 (PR #134, merge commit `b857fdc`); planning's entries `2026-11-12T185821Z.md` (PR
+  #133), `2026-11-12T190630Z.md` (in PR #129) and `2026-11-12T191448Z.md` (PR #137); and the
+  coordinator's entries `2026-11-12T190422Z.md` (PR #135), `2026-11-12T191322Z.md` (PR #136),
+  `2026-11-12T192103Z.md` (PR #138) and `2026-11-12T192527Z.md` (PR #139).
+- Planning's map, `record/diary/planning/map.md`, whole, as it stands on main (commit `f05bc49`), and
+  each line of it that differs from the map that G68 read (commit `e4a42df`).
+- PR #129 as it merged: its two commits, its description and its check.
+- The proto thread's map (commit `e4d21de`) and the coordinator's map (commit `ef4859b`), whole, against
+  the three places that PR #129 changed. Neither has changed, and no wake came for either.
+
+Read up to: rulings.md R46, player-diary.md no entry, findings.md G71.
+
+**In short.** I found nothing against planning's map. It agrees with the book as PR #129 left it, and its
+plan, carried out, delivers what the book sets out for planning. PR #129 merged as it was certified.
+
+**PR #129 as it merged.** G70 certified it at `4a063ae`, and G70 reached main at 19:05:28Z (PR #134).
+After that the PR got one more commit, `bd481ce`. It adds one file, planning's entry
+`2026-11-12T190630Z.md`, and nothing else. Rule 4 excepts a commit "that adds only the author's own diary
+entry", so the certificate stood. The check of `bd481ce` ended green at 19:11:53Z, and the PR merged at
+19:12:30Z. The book on main is byte for byte the book at `4a063ae`. The description cites G70 by its
+number, with its words, its commit and its PR. So the change went the way rule 4 sets for its kind:
+"certified by the review thread before it merges". Planning's entry says that it set the PR to merge on
+its own at 19:09:12Z, while the check ran: "I did not merge it by hand." Whose hand a merge is the
+history does not show: GitHub names the owner's login for this merge, as for every merge here. The times
+agree with planning's word.
+
+One thing to be exact about. The coordinator's entry of 19:13Z has: "The rows changed are those of
+features 7, 8 and 9". The rows of features 8 and 9 changed in their words. The row of feature 7 kept its
+words, and the new paragraph under the "Done" line of step 1 says which files that row speaks of. For
+what the coordinator had to decide, whom to tell under rule 5, it comes to the same: all three features
+are concerned, and none of their threads is started. I told the coordinator so before signing (19:25Z).
+Its answer (19:25:10Z): "I do not see it otherwise. You are right." And: "My sentence of 19:13Z said more
+than that, and I have it corrected in my next diary entry." That entry is on main,
+`2026-11-12T192527Z.md`.
+
+**First count: does the map agree with the book?** It does. Four things changed, and they are the four
+that planning named to the coordinator.
+
+- "Last written 2026-11-12 19:13Z, against the Road Bible as it stands on `main` at commit `42c46b6`, the
+  merge of PR #129." The book has not changed since that commit.
+- Item 2 is marked done: "**Done: three small things in part 3, in a change of their own.**" It says:
+  "They are in the book by PR #129. The review thread certified that change (G70), and it merged on its
+  own on 2026-11-12 at 19:12Z". Its first bullet now gives the paragraph as the book has it: such a file
+  "does not count as one that an older version of the mod wrote, there or in the row of feature 7, and
+  that it counts again once the section is deleted from it by hand". The book: "does not count as one
+  that an older version of the mod wrote, here or in the row of feature 7". And: "Such a file counts
+  again once the section is deleted from it by hand." Its second bullet is word for word what G68 read.
+  Its third now says of what the prototype tried: "for the return and for the fight, as the proto
+  thread's diary holds it (R45)". The book's rows: "what the prototype tried for the return, as the proto
+  thread's diary holds it (part 2)" and "what the prototype tried for the fight, as the proto thread's
+  diary holds it (part 2)".
+- The paragraph beneath the bullets is new. The reasons for the day are gone from it. The plan needed
+  them while the change was still to come, and they stay in the record, as planning's entry says: "in the
+  map as PR #125 has it, and in my entry `2026-11-12T174315Z.md`". In their place it says what came of
+  the plan: "The coordinator had agreed to start them only then, and planning told it of the merge at
+  once (R46)." Planning told the coordinator at 19:12:53Z, 23 seconds after the merge. And one sentence
+  is new in substance: "If the owner would rather have the mod put such a file right by itself, planning
+  changes the book (rule 4)." It takes up the last sentence of the part "For the owner" of G67. It agrees
+  with the rules. A word of the owner that changes what the book says goes into rulings.md, and then
+  "that book is changed first, the way it is changed (rule 4), before any code follows the ruling" (rule
+  1). Planning's entry adds what the map's sentence leaves short: "which part the change touches decides
+  the way it goes (rule 4)".
+- The foot line adds: "Three places of part 3 are sharpened (PR #129, certified by the review thread and
+  merged on 2026-11-12 at 19:12Z; item 2 above)."
+
+The three parts above the plan are word for word what G68 read, and so are items 1 and 3 to 9. PR #129
+changed no feature's number, name, owner or folders, and nothing in parts 1, 2 and 4. So nothing that
+those lines rest on has changed.
+
+Two places I looked at twice. Neither is a finding.
+
+1. In the third bullet of item 2 the first sentence ends with the mark "(R45)", where the book's rows
+   have "(part 2)". R45 is the owner's answer that the prototype's numbers stay in its own folder and are
+   removed with it. It does not say what a thread brings to its brief. I read the marks of the three
+   bullets alike, as naming where each thing came from: G40 for the first, G42 for the second, R45 for
+   the third. So read, the map says nothing that the book does not. Planning's answer: "The marks name
+   where each thing came from. R45 is the reason for the third and orders nothing of it."
+2. "The change was on `main` before the builder threads `director`, `creature` and `commands` were
+   started, so no builder had to update a map for it (rule 5)." A reader could take this to mean that the
+   three are started. None is. The coordinator's entry of 19:13Z has: "I start no builder yet". I read
+   the sentence so: the change is on main, so none of the three will have a map to update for it.
+   Planning's answer: "None of the three was started when PR #129 merged, and by the coordinator's entry
+   of 19:21Z none is yet."
+
+Planning makes both places plain all the same: "Both places can be read the other way, so I make them
+plain in the map." It gave me the new words. The third bullet will carry the book's own mark, "(part 2)",
+and say of the ruling: "R45 is the reason for it and does not order it: under R45 the numbers that the
+prototype tries are removed with its folder." The sentence on the builders will read: "None of the
+builder threads `director`, `creature` and `commands` had been started when it merged, so none of them
+will have a map to update for it (rule 5)." I held both against the book and the record, and they agree
+with them. The changed map comes to main by a record-only PR of planning's. The book has not changed, so
+that will be news to me and no wake under (f), and planning says the same.
+
+**Second count: would the plan, carried out, deliver what the book sets out?** Yes, as in G58 and G68.
+Items 1 and 2 are carried out, and the book holds both. The new sentence names a thing that planning may
+have to do, at the owner's word. Items 3 to 9 are as G58 read them, and PR #129 changed nothing that they
+rest on.
+
+**The other two maps.** No wake came for them, and none was owed. Rule 5 has the coordinator tell "each
+thread whose features, folders or files changed, and the thread that builds the prototype when its terms
+change", and each such thread updates its map. PR #129 changed no feature, folder or file of a thread
+that is started, and it did not change the prototype's terms. I read both maps again all the same,
+against the three places. The proto thread's map agrees. Its step 8 has the owner told "to delete that
+section from `ModConfig/walkers.json` by hand", which is what the new paragraph counts on. And what it
+says `director` and `creature` need from it is "the prototype's numbers on record (my entry
+2026-11-12T071700Z.md)", which is where the rows of features 8 and 9 now send them. The coordinator's map
+agrees. Its item 4 has the owner delete the section by hand, and its item 5 has the coordinator "point
+director and creature to the proto thread's entry 2026-11-12T071700Z.md". Item 5 still says that it
+starts the three builders "only once the planning thread's small change to part 3 after PR #105 (G40,
+G42, what the prototype tried) is on main". That day has come, and the coordinator's entry of 19:13Z says
+so: "R46 is met." Its entry of 19:21Z says why the map stays as it is: "that sentence still holds as
+written, so I change nothing in it now." The plan is the coordinator's to rewrite when it likes.
+
+**The entries.** `2026-11-12T190630Z.md` rode in PR #129 as its second commit. It says what planning read
+first at that start: the rules and the book, whole, at 19:03Z. It read G67 to G71 from my commit, before
+they were on main, and then checked that findings.md on main "is byte for byte the file I had read". It
+gives planning's reason for not merging the PR itself, where rule 4 would have allowed that with a green
+check: "so that no merge of a PR of mine is ever my hand's". `2026-11-12T191448Z.md` came with the map.
+It says what was done on the certificate, each step with its time, what changed in the map and why, and
+it ends with "Next:" and with "Read up to: rulings.md R46, player-diary.md no entry, findings.md G71."
+`2026-11-12T185821Z.md` has my six points on PR #129 and planning's answers, as G69 has them.
+
+**What I told planning, and its answer.** At 19:23Z I sent planning what stands above: the two counts,
+the two places I looked at twice, PR #129 as it merged, and the other two maps. Its answer (19:33:13Z):
+"Nothing in your five points reads my map or my entries wrongly." It put one thing right in my message. I
+had written that the third bullet ends with the mark, and the mark ends the bullet's first sentence. This
+entry has it as planning says. On the two places it answered as set out above. Of its own start it says:
+"my context was summarized at 19:27:21Z, so I read the rules whole and the book whole again at 19:27Z".
+
+**What I could not check.** Whose hand merged PR #129, as said above. Nothing else.
+
+## G73. Where things stand (diary entry), 2026-11-12 19:34Z
+
+G72 is my report on planning's map as updated after PR #129. With this entry I halt: the work in hand is
+complete, and I stay at hand for the next wake.
+
+Next:
+
+- Unfinished: nothing.
+- PR #129: merged at 19:12:30Z (merge commit `42c46b6`), as certified (G70, G72). R46 is met, by
+  planning's word to the coordinator at 19:12:53Z. No builder is started yet.
+- PR #75 at `83e57db`: with the owner, to play and to merge. Nothing stands before it.
+- Open findings. Blockers: none. Flaws: none open. Corrected in a PR that is not yet merged: G39, G40
+  (the test) and G41 in PR #75.
+- Notes. With the owner: G21, G22, the last part of G60, what G66 says of the rank, and the part "For the
+  owner" of G67. None of them needs an answer. Waiting for threads that are not yet started: G47 for
+  `director`, G48 for `creature`.
+- Certified since the last gate of a step, of which there has been none: PR #129 (G70), merged as
+  certified (G72).
+- Waiting for: the first map of each builder (wake f). Each brief, before it merges (wake a). As news:
+  planning's map with the two places made plain (G72), what the owner says after playing the prototype,
+  and the owner's word on the part "For the owner" of G67, if the owner gives one.
+- At my next start: the whole reading first, and a look in the log for summaries (G66).
+- Where it is: this file, in a record-only PR from branch `claude/project-thread-qcrhya`.
+- Sent to the coordinator, word for word: G72 and G73, by a copy in the project's shared folder
+  (`review/`), as G28 describes.
+- Read up to: rulings.md R46, player-diary.md no entry, findings.md G73.

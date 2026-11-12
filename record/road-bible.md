@@ -10,6 +10,10 @@ How to read it:
   disagree, the later ruling stands (R15).
 - The mark (1.1.1) is on a sentence that rests on no ruling: it describes the mod as version 1.1.1 was
   designed and ships. The owner's merge of this Road Bible is what makes such a sentence stand.
+- Two questions that the owner has not yet answered are stated in this book as open, each with the
+  entry of `record/rulings.md` that holds it: R31 and R33. Until the owner's answer is recorded there,
+  no thread acts on an answer of its own (rule 1). Once it is recorded, the answer stands, and this
+  book is brought in line with it at its next change.
 - A haunt STAGE and an escalation LEVEL are two different scales, both 1 to 5. This book always writes
   the word with the number.
 
@@ -26,8 +30,8 @@ in compute and size (R14).
 
 The creature, called the walker in this book:
 
-1. **It is real.** One creature that every player sees, can hurt and can kill. Nothing it does is shown
-   to one player alone as a trick of the mind (R10).
+1. **It is real.** One creature that every player sees, can hurt and can kill. No effect that one player
+   alone sees stands in for it (R10).
 2. **It has two bodies.** The guise is a doe of the deer type that lives where its victim is, with
    something wrong about her eyes (R10, R11). The true form is taller than a man and thin, furs over a
    dark woody body, red eyes in a plain bark face (R10, R13, R14). A shift swaps one body for the other.
@@ -36,8 +40,23 @@ The creature, called the walker in this book:
 4. **A haunt climbs five STAGES,** from a distant watcher at STAGE 1 to the hunt at STAGE 5. Company
    holds a haunt at STAGE 3: the walker watches and mimics, and does not hunt (1.1.1). Only at LEVEL 5
    does company stop holding it (R12).
-5. **It cannot walk while watched.** A watching player's gaze stops it moving (1.1.1; its grace periods
-   are in R12).
+5. **A gaze holds it still.** While a player watches it, it does not move, and that is the player's
+   first defence (1.1.1). The hold begins after half a second of unbroken watching and ends after a
+   second and a half unwatched (R12). With the settings as shipped, it moves under a gaze in four cases:
+   - The doe is shy of people. Looked at from within 20 blocks, she holds eye contact for 3 seconds
+     and then bolts for cover (R12, R13).
+   - From LEVEL 2, its victim's unbroken stare of 2 seconds from within 20 blocks no longer holds the
+     true form. For 20 seconds it is free, and in a world whose creatures are aggressive it hunts the
+     starer (R12, 1.1.1).
+   - In the hunt, the gaze does not hold it within 5 blocks of its victim, where it dashes and strikes
+     (1.1.1).
+   - A player's blow frees it for 3 seconds, and a true form that a player hit strikes back in reach
+     and otherwise walks off, not held, for 20 seconds (R12, 1.1.1).
+
+   A walker that is burning or swimming is not held either (1.1.1). Whether the retuned fight
+   (feature 9) may change these four cases and their numbers is the owner's to rule, and is asked in
+   R33. Until the answer is recorded, the prototype leaves the four cases as shipped, and nothing is
+   built on a change to them. From then on the answer holds.
 6. **It plays fair.** Every scare has a tell (1.1.1). It never kills in one blow (1.1.1). What it costs
    a player is small, counted and capped, and it respects land claims (R11, R12). A padlock, a door bar,
    reinforcement or a block behind the door keeps it out at every LEVEL (R12).
@@ -57,8 +76,8 @@ The creature, called the walker in this book:
    server's admin (R13, 1.1.1). A player may turn off only a few comforts of their own: their name in
    whispers, the screen effects, the titles and the scare volume (1.1.1).
 10. **Players learn it from Ellesby's papers.** The lore is myth meets creepypasta: scattered documents
-    by several unreliable people, each partly wrong about what works (R10). The mod's page never
-    mentions the return and does not say which kills work (R14, `docs/moddb.md`).
+    by several unreliable people, each partly wrong about what works (R10). The mod's page keeps the
+    return secret (R13, R14) and does not say which kills work (1.1.1).
 
 ### What this road adds
 
@@ -67,8 +86,18 @@ and it changes. The owner's order of work, in the owner's words: "First we adjus
 already there. Then and only then we move on to expanding/adding to the concept" (R27, and R24 before
 it). The first two points below adjust what is already there. The third adds to the concept.
 
-- **It comes back sooner.** An improperly killed walker returns faster than the two seasons of version
-  1.1.1, and the climb up the escalation LEVELS is shortened to match (R9).
+- **It comes back sooner.** An improperly killed walker returns faster. "Faster" is the owner's word
+  (R9). What it is measured against is the owner's to rule, and is asked in R31. Two measures are on
+  record. The owner's word answered a card whose first option read "Faster, as I told players", with
+  the line "Step 3 retunes the timing so an improper kill brings it back sooner than a new walker
+  comes, and angrier." (R9). And as version 1.1.1 ships, the walker returns two seasons after it died
+  (R10), which is 54 in-game days with the game's months of 9 days, and in half that time at LEVEL 5
+  (R12). Meanwhile another walker may come for the same player after about a week: a rest of 5 days,
+  then a 35% chance each day (1.1.1). Until the answer to R31 is recorded, no thread takes either
+  measure for the ruling. If the owner leaves the measure open, it is the first question of the brief
+  of feature 8. Of the climb up the escalation LEVELS the owner said that it "will likely need to be
+  shorter to line up with shortened respawn-time" (R9). Whether it is shortened, and by how much, is a
+  question of the same brief.
 - **It fights back.** The walker's stats and its intelligence are retuned. The owner settles them in a
   workshop (R9).
 - **It changes.** When players kill a walker improperly more than twice in a row, its return skips the
@@ -108,13 +137,13 @@ its brief.
 - **No wards.** The chalk watching mark is decoration only (R12).
 - **No tidying up after it at the server's cost.** A torch it puts out stays out until a player relights
   it (R12, R14).
-- **No structures in the world.** No world generation: the lore stays texts and paintings, and the mod
-  needs no new world (R13).
-- **Nothing from real peoples.** The name "Skinwalker" stays (R10). The mod makes no statement about any
-  real people, place, belief or ceremony, and uses no internet "skinwalker rules" (R10, R13,
-  `docs/moddb.md`).
-- **No patching of the game's code.** No Harmony. Everything lives in the mod's own `walkers` domain,
-  and its patches to the game's files only add (`CLAUDE.md`, `README.md`).
+- **No structures in the world, for now.** No world generation for now: the lore sites stay texts and
+  paintings, and the mod needs no new world (R13).
+- **Nothing from real peoples.** The name "Skinwalker" stays, and the mod makes no statement about any
+  real people, their beliefs or their history (R10, R13). Its fiction takes nothing from real peoples,
+  places, beliefs or ceremonies, and uses no internet "skinwalker rules" (1.1.1).
+- **No patching of the game's code.** No Harmony. Every code the mod registers with the game begins
+  with `walkers`, and its patches to the game's files only add (1.1.1).
 
 ## Part 2. The prototype's terms
 
@@ -126,15 +155,26 @@ the owner the one early zip (rule 3). It is not a feature and has no brief (rule
 1. It loads on game version 1.22.7. With nothing of the prototype switched on, a world plays and saves
    exactly as it does under version 1.1.1. Everything the prototype adds is off until the server's admin
    switches it on.
-2. Switched on, both of these can be reached by admin commands in a single-player world, in ten minutes
-   all told and without waiting for in-game days to pass:
-   - the faster return: an improperly killed walker that comes back sooner;
+2. Switched on, both of these can be reached by admin commands in a single-player world, by a player in
+   Survival mode and with the world's creatures set to aggressive, in ten minutes all told and without
+   waiting for in-game days to pass:
+   - the faster return: an improperly killed walker that comes back sooner. What "sooner" is measured
+     against is asked in R31 (part 1), and the prototype goes by the owner's answer. If the owner
+     leaves the measure open, the one the prototype takes is a first guess (point 4);
    - a retuned fight: a walker whose stats and wits have had a first retune, met by a player who hunts
-     it.
+     it. Whether the retune may touch the four cases of point 5 of the concept is asked in R33. Until
+     the owner's answer is recorded, the prototype leaves those four cases as shipped.
+
+   Both conditions matter. For a player in Creative or Spectator mode the haunt pauses, the gaze does
+   not count and the lunge never strikes. Where the world's creatures are not aggressive, a walker
+   does not hunt outside STAGE 5, and its lunge strikes only a player who has hurt it, or nobody where
+   creatures are switched off (1.1.1).
 3. It shows no Super Predator (R24).
-4. Its numbers are the proto thread's first guesses, and its PR lists every one. It is not asked to show
-   balance, lore, or anything that must survive a restart.
-5. Its PR lists what to try, in the order of point 2, and what is known to be rough.
+4. Its numbers are the proto thread's first guesses, and its PR lists every one, with any measure it
+   took as a first guess. It is not asked to show balance, lore, or anything that must survive a
+   restart.
+5. Its PR lists what to try, in the order of point 2, and what is known to be rough. The list opens
+   with the two conditions of point 2: Survival mode, and a world whose creatures are aggressive.
 
 **The checks.** As part of the prototype the proto thread brings the checks in line with SETUP: the
 workflow still runs on every PR and in full on `main`, and a PR that changes only `record/` passes
@@ -149,7 +189,7 @@ reported done.
 what it changes about the fight in the folders of features 2 and 3. Once the prototype is merged, each of
 these belongs to that feature's owner (THE CAST), who builds feature 8 or feature 9 on it or replaces it,
 as that feature's brief says. The proto thread keeps its changes to shipped code small and lists every
-one in its PR.
+one in its PR. The prototype does not wait for the briefs of features 1, 2 and 3 as they stand (part 3).
 
 ## Part 3. The steps and features
 
@@ -173,9 +213,20 @@ The proto thread (`proto`) and the janitor (`janitor`) own no features (THE CAST
 
 These six features are complete. The PRs that completed them were merged before these rules, and version
 1.1.1 (commit `dedf7e3` on `main`) holds them. They are listed under no step, so no step's gate counts
-them. Before a thread first changes anything in one of them, it writes that feature's brief as the
-feature stands (R6). When a later feature changes what one of these briefs says, the later feature's
-brief PR changes the earlier brief too, so that every settled brief stays true as written.
+them.
+
+A shipped feature gets its brief when its owning thread is about to change it. Before that thread's own
+first change in the feature's folders, it writes the feature's brief as the feature stands (R6; THE
+RECORD has each brief written by its owning thread). The brief describes the feature as version 1.1.1
+ships it, at commit `dedf7e3`. No other thread writes one of these briefs, and none waits for one. The
+prototype does not wait: it needs no brief (rule 2), and its PR lists every change it makes to shipped
+code (part 2). What the prototype has put into a shipped feature's folders is left out of that feature's
+brief as it stands, and falls to the brief of feature 8 or of feature 9.
+
+When a later feature changes what one of these briefs says, the later feature's brief PR changes the
+earlier brief too, so that every settled brief stays true as written. Features 7 to 10 live in the
+folders of shipped features, so those folders come to hold more than one feature. A patch in such
+folders must leave the brief of each of those features true (rule 7).
 
 In the tables, `assets/` stands for `Walkers/assets/walkers/`.
 
@@ -190,17 +241,24 @@ In the tables, `assets/` stands for `Walkers/assets/walkers/`.
 
 ### Step 1. It comes back sooner
 
-Done, the owner can kill a walker improperly and see it return sooner, on a new world and on a world
-saved under version 1.1.1.
+Done, the owner can kill a walker improperly and see that same walker return sooner. Sooner is measured
+as the owner rules in answer to R31 or, if the owner leaves the measure open, as the brief of feature 8
+settles it. The owner tells the walker that returned from any other by its number and its count of
+returns, which the admin's `/walkers director status` shows (1.1.1). All of this holds on an
+installation whose settings file an older version of the mod wrote as on a fresh one, and in a world
+saved under version 1.1.1 as in a new one.
 
 | No. | Name | What it is | Owner | Folders |
 | --- | --- | --- | --- | --- |
-| 7 | `settings-update` | A world whose settings file was saved by an older version of the mod gets what a new version changes, and keeps what its admin chose. Version 1.1.1 keeps every saved value, so a changed default never reaches such a world (1.1.1) | `commands` | those of feature 5 |
-| 8 | `faster-return` | An improperly killed walker returns sooner, and the climb up the escalation LEVELS is shortened to match (R9) | `director` | those of feature 1 |
+| 7 | `settings-update` | An installation whose settings file was written by an older version of the mod gets the defaults that a new version changes. The file is the one `ModConfig/walkers.json` of the server's installation, and every world played from that installation reads it (1.1.1). Under version 1.1.1 a setting the file lacks takes its default, and every value the file holds is kept: a new setting arrives, and a changed default of a setting already in the file never does (1.1.1). The file does not mark which of its values an admin chose and which are untouched defaults (1.1.1), so which saved values follow a changed default is the first question of this feature's brief | `commands` | those of feature 5 |
+| 8 | `faster-return` | An improperly killed walker returns sooner (R9). What "sooner" is measured against is asked in R31 (part 1). Its brief asks the owner whether the climb up the escalation LEVELS is shortened with it: the owner's words are that it "will likely need to be shorter" (R9). Its brief also says what becomes of a walker that already waits to return in a world saved under version 1.1.1: such a walker carries the return day it was given when it died (1.1.1). It needs feature 7 only if it changes the default of a setting that settings files already hold | `director` | those of feature 1 |
 
 ### Step 2. It fights back
 
 Done, the owner can hunt a walker and find its stats and its wits as the workshop settled them.
+
+The brief of feature 9 may be begun as soon as the owner has played the prototype. Rule 7 holds back
+only this step's code, until step 1 has passed its gate.
 
 | No. | Name | What it is | Owner | Folders |
 | --- | --- | --- | --- | --- |
@@ -240,4 +298,6 @@ under none is added to this list before anyone creates it.
 
 **A release.** When the owner calls for one, the proto thread opens one release PR: the version number,
 the changelog, the mod page's text and the README. It waits for the owner's merge. The owner tags and
-publishes; threads never publish (rule 4).
+publishes; threads never publish (rule 4). The mod's page keeps the return secret (point 10 of the
+concept), and step 1 is the return. Before it opens the release PR that carries step 1, the proto thread
+asks the owner, through the coordinator, whether the page and the changelog may speak of the return.

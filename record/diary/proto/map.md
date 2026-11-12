@@ -18,6 +18,9 @@ tools, `CLAUDE.md`, `README.md`, `CHANGELOG.md`, `docs/` and `Walkers/modinfo.js
 - The owner: the one early zip (rule 3), and the prototype's PR with every number and every change to
   shipped code listed (part 2, points 4 and 5).
 - `director` and `creature`: the prototype merged, to build features 8 and 9 on or replace.
+- `director` (feature 8) and `commands` (features 5 and 7): `Walkers/Proto/` gone before they build.
+  It names eleven settings of features 1, 2 and 3 and calls into feature 5's loader and commands, so
+  while it is on `main` their PRs could break code that only I may repair (G40).
 - Every thread: the checks as SETUP wants them (part 2); `CLAUDE.md` and `README.md` in line with the
   rules before step 1 (part 4, R8); `Walkers/Proto/` removed before step 1 is reported done (part 2).
 
@@ -32,5 +35,14 @@ tools, `CLAUDE.md`, `README.md`, `CHANGELOG.md`, `docs/` and `Walkers/modinfo.js
    stands as built and nothing more is built on either reading.
 5. One PR with both, its numbers and its changes to shipped code listed, the "what to try" list opening
    with Survival mode and aggressive creatures; then the early zip to the owner.
-6. Before step 1 (part 4): `CLAUDE.md` and `README.md` brought in line with the rules (R8). Before step 1 is
-   reported done (part 2): `Walkers/Proto/` removed.
+6. Before step 1 (part 4): `CLAUDE.md` and `README.md` brought in line with the rules (R8), by a PR
+   that waits for the owner's merge. Due now (G38).
+7. The removal: a PR that removes `Walkers/Proto/`, `Walkers/Config/WalkersConfig.Proto.cs`, the `proto`
+   lang folder and `tests/smoke/proto.*`, opened as soon as the owner has merged the prototype and before
+   any builder's first code of step 1. The book's "before step 1 is reported done" (part 2) is the last
+   day for it, not the plan.
+8. The `proto` section the prototype leaves in a settings file: once the folder is gone, the loader
+   counts it as an unknown key, and a file with an unknown key gets no new settings added. Only the owner
+   has loaded the prototype (the early zip goes to the owner alone), so the removal PR and the word of
+   what is known to be broken that goes with step 1's zip tell the owner to delete that section from
+   `ModConfig/walkers.json` by hand. The loader is feature 5's, and I change nothing in it.

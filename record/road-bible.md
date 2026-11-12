@@ -187,15 +187,20 @@ workflow still runs on every PR and in full on `main`, and a PR that changes onl
 without the build and the server test.
 
 **The proto thread's own folder** is `Walkers/Proto/`, with the files that go with it (part 4). The
-switch and the admin commands of the prototype live there. Nothing outside it may depend on anything
-inside it, so that the folder can be removed on its own. The proto thread removes it before step 1 is
-reported done.
+switch and the admin commands of the prototype live there. So do the numbers it tries for the return
+and the fight, and the code that puts them in the place of the features' settings while the switch is
+on (R45). Nothing outside it may depend on anything inside it, so that the folder can be removed on its
+own. The proto thread removes it before step 1 is reported done. The numbers are removed with it, so
+the numbers that features 8 and 9 start from are those of version 1.1.1 (R45). What the prototype
+tried stays in the record: the entry that its PR carries in the proto thread's diary holds every
+number that the PR lists (point 4).
 
-**Where the rest goes.** What the prototype changes about the return goes in feature 1's folders, and
-what it changes about the fight in the folders of features 2 and 3. Once the prototype is merged, each of
-these belongs to that feature's owner (THE CAST), who builds feature 8 or feature 9 on it or replaces it,
-as that feature's brief says. The proto thread keeps its changes to shipped code small and lists every
-one in its PR. The prototype does not wait for the briefs of features 1, 2 and 3 as they stand (part 3).
+**Where the rest goes.** A change to shipped code that the prototype needs for the return goes in
+feature 1's folders, and one that it needs for the fight in the folders of features 2 and 3. Once the
+prototype is merged, each of these belongs to that feature's owner (THE CAST), who builds feature 8 or
+feature 9 on it or replaces it, as that feature's brief says. The proto thread keeps its changes to
+shipped code small and lists every one in its PR. The prototype does not wait for the briefs of
+features 1, 2 and 3 as they stand (part 3).
 
 ## Part 3. The steps and features
 

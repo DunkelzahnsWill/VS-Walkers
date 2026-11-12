@@ -691,3 +691,45 @@ Quotes are exact. In a quoted question, "you" is the owner and "I" is the thread
 - R30 was an outcome two threads agreed between themselves (rule 1) and asked nothing of the owner. This
   entry adds the owner's word to it.
 - Recorded 2026-11-12 by the record thread (R17; THE CAST).
+
+## R36. Question: may the proto thread open more branches?
+
+- Raised 2026-11-12 by the proto thread, to the coordinator at 07:05:23Z, as the coordinator gives the
+  time; the record thread has not opened the proto thread's message.
+- Not a stop: in the coordinator's words to the record thread, 2026-11-12 07:05:32Z, "only the proto
+  thread's later diary PRs depend on it, and it goes on meanwhile". The same question as R21, which the
+  owner answered for planning in R25.
+- Put to the owner by the coordinator in the project chat, 2026-11-12 07:05:27Z, in the proto thread's
+  words. The post, whole, copied from the project chat:
+
+  ```text
+  The prototype thread [Build the 1.2 prototype](#cmsg_01WBUg5vqaM2Lj1HCBoqYTboSEcNy2VbLkqjS3RJomJnXd) is up, its build passes, and it is working on everything that does not turn on R31. It has one question for you, the same one you answered with "A" for planning (R25). In its words: "I was given one branch (claude/project-thread-l30fsu). Once the prototype's PR is open on it, a diary entry that rule 5 sends to main at once has no branch to go from. May I open more branches, each named claude/proto-...? I recommend yes." A yes or no does it.
+  ```
+
+- Not yet answered.
+- Recorded 2026-11-12 by the record thread (R17; THE CAST), at the coordinator's request.
+
+## R37. The owner's ruling on R31: "Faster" is left open as the first question of the feature's brief (option c)
+
+- The owner, in the project chat, 2026-11-12 07:06:09Z. The message, whole, copied from the project
+  chat:
+
+  ```text
+  R31.) C, we need to totally retune how fast a walker comes back normally. 54 in-game days turns out to be Waaaay too long for players to notice a difference and under default rules is something like 36+ hours of play which is quite alot after both some play-testing and player feedback
+  R32.) Accepted, would be too impractical to gate. Audit and correct any found issues, sure. but gate the whole project while mid-workthrough? no.
+  ```
+
+- The line that answers R31 is the first: "R31.) C, ..." "C" is option (c) as quoted in R31: "left open
+  as the first question of that feature's brief". The rest of the line is the owner's reason, in the
+  owner's words.
+- Closes the question of R31.
+- Recorded 2026-11-12 by the record thread (R17; THE CAST).
+
+## R38. The owner's ruling on R32: the 48 PRs merged before these rules are accepted
+
+- The owner, in the same message as R37 (quoted whole there). The line that answers R32 is the second:
+  "R32.) Accepted, would be too impractical to gate. Audit and correct any found issues, sure. but gate
+  the whole project while mid-workthrough? no."
+- PRs #1 to #48 are accepted by the owner in rulings.md, for rule 7's third test at the gate of step 1.
+- Closes the question of R32.
+- Recorded 2026-11-12 by the record thread (R17; THE CAST).

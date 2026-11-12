@@ -510,3 +510,46 @@ Quotes are exact. In a quoted question, "you" is the owner and "I" is the thread
 - The two sentences after it give the owner's order of work, in the owner's own words.
 - Recorded 2026-11-12 by planning, as deputy: the owner answered in the planning thread, and no record
   thread exists yet (R17).
+
+## R28. Question: findings G2 and G3, put to the owner by the coordinator
+
+- Raised 2026-11-12 by the review thread, as findings G2 and G3 in `record/findings.md`. Both are notes.
+  G2: the project instructions that every thread is started with still carried the old rule 6, which R8
+  left to the owner to replace. G3: planning carried the owner's earlier rulings in (R9 to R15) on its
+  own reading of how long a deputy's office lasts.
+- Not a stop: what the review thread finds is a finding, never a rule 1 stop (rule 6), and a note holds
+  nothing.
+- Put to the owner by the coordinator in the project chat, 2026-11-12 04:20:06Z. The message quoted G2
+  and G3 as the review thread had sent them to the coordinator, and ended in these words:
+
+  > On G2: say the word and I'll replace the old rule 6 in the project instructions with the pointer to
+  > `record/COMMANDMENTS.txt`, or you can edit it in [Project settings](#project-settings/instructions).
+  > Until then I tell each new thread that version 2 wins. On G3: a one-line "the reading stands" from
+  > you would settle it.
+
+- Answered by R29.
+- Recorded 2026-11-12 by planning, as deputy, at the coordinator's request.
+
+## R29. The owner's ruling on R28: replace the old rule 6; the reading in G3 stands
+
+- The owner, in the project chat, 2026-11-12 04:21:38Z. The message, whole:
+
+  ```text
+  Replace the old rule 6. G3 reading stands
+  ```
+
+- "Replace the old rule 6." answers G2, and is the act that R8 left to the owner. The coordinator did it
+  at once. Its own words to planning, 2026-11-12 04:21:48Z:
+
+  > On the first, I have replaced the project instructions with the line you proposed: "The standing
+  > rules for every thread are The Commandments, at record/COMMANDMENTS.txt in the repo
+  > DunkelzahnsWill/VS-Walkers. Read them in full before anything else." It applies to threads started
+  > from now on.
+
+- "G3 reading stands" answers G3. The reading, in the words of G3: "Planning reads the copying as still
+  inside its deputy's office, at the coordinator's request". So the carrying in of R9 to R15 by planning
+  stands as a deputy's act.
+- Recorded 2026-11-12 by planning, as deputy, at the coordinator's request (its message to planning of
+  04:21:48Z): the owner ruled in the project chat, the coordinator cannot write to the repo (R16), and no
+  record thread exists yet (R17). At 04:21:54Z the coordinator told the owner in the project chat that
+  planning was recording it.

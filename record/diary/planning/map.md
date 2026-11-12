@@ -4,8 +4,8 @@ The map of the planning thread (rule 5). It points to the Road Bible, `record/ro
 planning's own plan beneath. The Road Bible and the settled briefs outrank it: where this map says
 anything different, the map is wrong.
 
-Last written 2026-11-12 17:43Z, against the Road Bible as it stands on `main` at commit `cd2a49c`, the
-owner's merge of PR #79.
+Last written 2026-11-12 18:28Z, against the Road Bible as it stands on `main` at commit `fa9cdcf`, the
+owner's merge of PR #105.
 
 ## Features
 
@@ -48,14 +48,14 @@ part 4. What planning writes is in `record/`: the Road Bible and every change to
 
 Planning may rewrite this part whenever it likes (rule 5). In the order planning expects the work:
 
-1. **Write the owner's answer on the prototype's numbers into the book.** The owner answered R40 with
+1. **Done: the owner's answer on the prototype's numbers is in the book.** The owner answered R40 with
    (a): the numbers live in the prototype's own folder, as built (R45). Part 2 said otherwise, so two
-   of its paragraphs change, in PR #105. The change touches the prototype's terms, so it goes by the
-   review thread's read and the owner's merge (rule 4). It merges before the prototype, PR #75
-   (rule 1).
-2. **As soon as PR #105 is merged: three small things in part 3, in a change of their own.** Each
+   of its paragraphs changed, in PR #105, which the owner merged on 2026-11-12 at 18:24Z. The
+   prototype, PR #75, may merge after it (rule 1). This item keeps its place so that the others keep
+   their numbers: R46 names the next one as item 2.
+2. **Now that PR #105 is merged: three small things in part 3, in a change of their own.** Each
    sharpens one place of the steps and features, and none changes a feature's number, name, owner or
-   folders. None is begun:
+   folders. Planning began the change on that merge:
    - At the "Done" line of step 1, a sentence saying that a settings file which still holds the
      section `proto` is not among the files that line speaks of. The prototype's build writes that
      section into the settings file of an installation it runs on, and such a file gets no new
@@ -67,11 +67,12 @@ Planning may rewrite this part whenever it likes (rule 5). In the order planning
      numbers, and once the prototype's folder is removed they are no longer in the code (R45). The
      review thread asked it of feature 9 when it read PR #105.
 
-   Why not before that merge: the third rests on what PR #105 writes into part 2. Why not later: as
+   Why not before that merge: the third rests on what PR #105 wrote into part 2. Why not later: as
    this is written, the builder threads `director`, `creature` and `commands` are not started, so no
    builder has to update a map for the change (rule 5). Planning means to have it on `main` before
-   they are started, and tells the coordinator so. The last day is before the briefs of features 7,
-   8 and 9 are begun. A change to part 3 alone goes by the review thread's certificate and may then
+   they are started. The coordinator has agreed to start them only then, and waits for planning's
+   word that the change has merged (R46). The last day is before the briefs of features 7, 8 and 9
+   are begun. A change to part 3 alone goes by the review thread's certificate and may then
    merge on its own, so it costs the owner no merge (rule 4). Whether the change touches part 3
    alone is the review thread's to say, and in any doubt it waits for the owner's merge (rule 6).
    The day is the review thread's suggestion, made when it read this map. The wording of the change
@@ -101,4 +102,5 @@ Planning may rewrite this part whenever it likes (rule 5). In the order planning
    for now.
 
 Done since this map was first written: the owner's answers R34, R37 and R38 and the small things of
-G29 are in the book (PR #79, merged by the owner on 2026-11-12 at 16:55Z).
+G29 are in the book (PR #79, merged by the owner on 2026-11-12 at 16:55Z). The owner's answer R45 is
+in part 2 of the book (PR #105, merged by the owner on 2026-11-12 at 18:24Z; item 1 above).

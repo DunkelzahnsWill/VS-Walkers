@@ -604,3 +604,61 @@ Quotes are exact. In a quoted question, "you" is the owner and "I" is the thread
 - The coordinator agreed, in its message to the record thread, 2026-11-12 04:30:25Z: "Received, and the
   agreement with planning (R28/R29 its last deputy entries, you the one writer from R30) suits me."
 - Recorded 2026-11-12 by the record thread (R17).
+
+## R31. Question: what "Faster" is measured against (finding G14)
+
+- Raised 2026-11-12 by the review thread, as blocker G14 in `record/findings.md` ("\"sooner\" has no
+  yardstick in the book, and the one R9 records is left out"), against PR #53, the first Road Bible.
+- Not a stop called by the coordinator: in the coordinator's words to the record thread, 2026-11-12
+  05:27:18Z, "planning is the only thread whose work depends on them, and it goes on by stating each as
+  open in the book until the owner rules."
+- Put to the owner by the coordinator in the project chat, 2026-11-12 05:16:52Z, as the first of two
+  questions in its post on the review's report. The question, whole, copied from that post:
+
+  ```text
+  1. **What "Faster" is measured against (G14).** The review's words: "The book has the walker return 'faster than the two seasons of version 1.1.1'. R9 records another yardstick, 'sooner than a new walker comes', and in version 1.1.1 a new walker comes after about a week." Today an improperly killed walker returns after 54 days. Is it (a) sooner than a new walker would come, so within about a week, or (b) simply sooner than the 54 days, or (c) left open as the first question of that feature's brief?
+  ```
+
+- Not yet answered.
+- Recorded 2026-11-12 by the record thread (R17), at the coordinator's request.
+
+## R32. Question: the 48 PRs merged before these rules (finding G12)
+
+- Raised 2026-11-12 by the review thread, in its report G12 in `record/findings.md`: rule 7's third test
+  at the gate of step 1 covers "every PR merged so far", and PRs #1 to #48 were merged before these rules.
+- Not a stop, as in R31.
+- Put to the owner by the coordinator in the project chat, 2026-11-12 05:16:52Z, as the second of two
+  questions in the same post as R31. The question, whole, copied from that post:
+
+  ```text
+  2. **The 48 PRs merged before these rules (G12).** "One line from the owner in rulings.md accepting them settles it. Without it the inquisitor lists all 48 for the owner at that gate." A plain "accepted" from you does it.
+  ```
+
+- Not yet answered.
+- Recorded 2026-11-12 by the record thread (R17), at the coordinator's request.
+
+## R33. Question: may the retuned fight change the four cases in which the walker moves under a gaze? (finding G13)
+
+- Raised 2026-11-12 by planning, out of the review thread's blocker G13 ("point 5 of the concept, \"It
+  cannot walk while watched\", is not true of the mod as it ships"), against PR #53. Planning sent it to
+  the coordinator at 05:27:01Z, as the coordinator gives the time; the record thread has not opened
+  planning's message.
+- Not a stop, as in R31.
+- Put to the owner by the coordinator in the project chat, 2026-11-12 05:27:08Z, in planning's words.
+  The post, whole, copied from the project chat:
+
+  ```text
+  One more question for you on the Road Bible, from the planning thread (it comes out of the review's blocker G13). In planning's words:
+
+  > A watching player's gaze holds the walker still. As version 1.1.1 ships, it moves under a gaze in four cases: (1) the doe, looked at from within 20 blocks, holds eye contact for 3 seconds and then bolts; (2) from LEVEL 2, its victim's unbroken stare of 2 seconds provokes it, and it hunts the starer for 20 seconds; (3) in the hunt it lunges at a watcher within 5 blocks; (4) a blow frees it for 3 seconds, and a true form that was hit strikes back in reach and otherwise walks off. May the retuned fight change these four cases and their numbers?
+  > (a) Yes. The rule itself stays. The prototype may try changes to the four cases behind its switch, and the workshop of step 2 settles with you what stays.
+  > (b) No. They are fixed as shipped. The retune changes stats and other behaviour only.
+  > (c) Not now. The prototype leaves them as shipped, and the workshop's brief asks you first.
+  > Planning recommends (a): R9 says "additional tweaks to monster stats and intelligence will need a work-shop", and what the walker does when watched and hit is the centre of the fight.
+
+  With the two from my earlier post, that makes three you can answer in one line, for example "gaze a, faster a, 48 PRs accepted". Whatever is still open when planning pushes its fix, the book will state as open rather than guess.
+  ```
+
+- "The two from my earlier post" are the questions of R31 and R32.
+- Not yet answered.
+- Recorded 2026-11-12 by the record thread (R17), at the coordinator's request.

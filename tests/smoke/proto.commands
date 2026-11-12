@@ -1,5 +1,5 @@
 # The 1.2 prototype: off by default; on lays its values over the live config without writing them to the
-# file; off puts the file's values back. The file must still say 50 and 2 while it is on.
+# file; off puts the file's values back.
 /walkers proto
 /walkers config forms.trueHealth
 /walkers proto on

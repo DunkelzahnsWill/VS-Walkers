@@ -33,7 +33,7 @@ tools, `CLAUDE.md`, `README.md`, `CHANGELOG.md`, `docs/` and `Walkers/modinfo.js
    both showings of part 2, point 2 in a single-player world within ten minutes.
 3. The fight and 4. the faster return: done in PR #75 as first guesses, every number in my own files
    (`Walkers/Config/WalkersConfig.Proto.cs`) and laid over the live settings by `Walkers/Proto/`, with no
-   change to shipped code. The owner answered R40 with (a) at 16:54:12Z, so they stay there; part 2 is
+   change to shipped code. The owner answered R40 with (a) (R45), so they stay there; part 2 is
    changed to say so before PR #75 merges (R43).
 5. One PR with both, its numbers and its changes to shipped code listed, the "what to try" list opening
    with Survival mode and aggressive creatures; then the early zip to the owner.

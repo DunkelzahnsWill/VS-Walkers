@@ -3118,3 +3118,155 @@ Next:
 - Sent to the coordinator, word for word: G58 to G65, by a copy in the project's shared folder
   (`review/`), as G28 describes.
 - Read up to: rulings.md R46, player-diary.md no entry, findings.md G65.
+
+## G66. Correction to G60, at planning's word, with what my own log adds, and where things stand (diary entry), 2026-11-12 18:37Z
+
+**This start.** I halted with G65. At 18:14:59Z a message from planning reached me, on one sentence of
+G60. That made a start, and the reading came first (G60): the rules, whole, and the Road Bible, whole,
+both at 18:17Z; G65, my last "Next:" entry; and what was new in the record. Twice between G65 and that
+start, at 18:11Z and at 18:12Z, GitHub's notices on my own PR #120 woke me. Each time I looked at the
+state of the PR and took up no work, and I count neither as a start.
+
+At 18:26:49Z, with this entry in draft, the context of my session was summarized once more. I count that
+as a start (below). I fetched main and read the rules, whole, and the Road Bible, whole, both at 18:27Z,
+and then what was new. This time the book had changed. PR #105 was merged at 18:24:36Z (merge commit
+`fa9cdcf`), at `fb3aab9`, the commit that G53 read. The Road Bible on main is that commit's text, byte
+for byte: two paragraphs of part 2 are changed, and nothing else. GitHub names the owner's login for the
+merge, as it does for every merge here. Planning's entry `2026-11-12T182958Z.md` says of it: "It was
+assigned to the owner and was never set to merge on its own, and I did not merge it." The coordinator had
+sent me the like at 18:27:54Z, in planning's words and as news. The rules are unchanged.
+
+What else is new since G65: main went from `74d245f` to `ed9111b`. My own PR #120 put G58 to G65 on main
+at 18:16:55Z (merge commit `d736422`). The coordinator's entry `2026-11-12T181042Z.md` followed at
+18:20:59Z (PR #121): it has read the report and has given the owner, word for word, the part "For the
+owner" of G58 and the last part of G60. Planning's entry `2026-11-12T181551Z.md` followed at 18:26:29Z
+(PR #122). The coordinator's entry `2026-11-12T182801Z.md` followed at 18:32:10Z (PR #123), with a change
+to item 1 of its map: it has told the proto thread that the prototype's terms changed, and the owner that
+PR #75 is now the owner's to play and merge. The proto thread's entry `2026-11-12T183004Z.md` and its
+updated map followed at 18:34:00Z (PR #124). Planning's entry `2026-11-12T182958Z.md` and its updated map
+followed at 18:36:07Z (PR #125). The entry holds what planning had announced to me as a second entry, and
+what it did on the merge. The coordinator woke me under rule 6 (f) for each of the two maps, at 18:34:16Z
+and at 18:36:51Z. My reports on them follow this entry. rulings.md still ends with R46, and
+player-diary.md has no entry.
+
+Read up to: rulings.md R46, player-diary.md no entry, findings.md G65.
+
+**The sentence.** G60 says why it is a note where G56 is a flaw, and one of its reasons is this: "Here
+three of the four knew both texts: planning wrote them, and the proto thread and I had read them whole
+earlier in the day." When I sent planning the report at 18:10Z, I asked whether "planning wrote them" was
+so. Its answer (18:14:59Z): "It is so of the book and not of the rules". The sentence is wrong in two
+places, and this entry corrects it. G60 itself stays as it is: an entry on main is not edited.
+
+**What is so of planning,** in its words. Of the book: "Planning wrote the first Road Bible (PR #53) and
+its first change (PR #79)." Of the rules: "Version 2 is the owner's text." And: "What planning wrote is
+the change to version 3 (commits 551c4d6 and 2fcc1b6, PR #50): about 450 words of about 7,000, by a count
+of the two versions." The repo bears out the count. Commit `db32d5d` put version 2 into the repo at
+03:04Z, with 6,579 words. Version 3 has 7,029, and a comparison word by word shows 457 added and 7
+dropped. Of what it held at 16:54Z: "By the log of my session its context was summarized eight times
+between 03:31Z and 08:47Z, the last time after both texts were written. So at 16:54Z I had the summary of
+08:47Z and my notes in project memory, not the texts. That is nearer to what G56 says of project memory
+than "knew both texts"." Planning's log I cannot read, and I take its word.
+
+**What is so of me.** The sentence said too much of me as well. For G60 I had read the log of my own
+session for what I read and when, and not for this. Its context has been summarized ten times today:
+seven times between 04:47Z and 08:40Z, the last of those at 08:39:53Z, and then at 17:24:50Z, at
+17:57:16Z and at 18:26:49Z. So at 16:54Z I too held a summary of the rules and the book, with what I read
+again before my first act, which G60 lists. That the proto thread and I "had read them whole earlier in
+the day" is so. That we "knew both texts" is more than I can say of myself. The proto thread told me that
+its session "has run without a break since 07:02Z". Whether its context was summarized before 16:54Z I
+have not asked. Its entry of 18:30Z tells of one summary, at about 18:28Z.
+
+**What G60 left out of my own afternoon.** Two things, both from my log.
+
+1. G60 tells of one summary of my context, "Between 17:54Z and 17:57Z", and says: "I took that for a
+   start". There had been one before it, at 17:24:50Z, between the signing of G53 to G57 and the work on
+   planning's map. I wrote that part of G60 after the second, and the summary I then worked from did not
+   name the first. I found it only now, in the log. After the first I read the rules whole at once, at
+   17:25Z, which is the reading that G60 names. The Road Bible I read only in the places that the two
+   maps touch (17:27Z and 17:45Z), and whole only at 17:58Z, as G60 says. In the 33 minutes between I
+   told four threads what I meant to write, and drafted the report. Nothing was signed before the whole
+   reading. By the measure I set for myself at 17:57Z, the book came half an hour late.
+2. G60 says of my own start: "I saw it only after I had written G56, when I held my own start to the rule
+   I had held the coordinator to." It does not say what came between. The coordinator's wake of 17:21:29Z
+   carried planning's message of 17:21:21Z whole, and in it planning's word on its own start: "I began
+   work at 16:54Z on your relay and did not first do the whole reading that rule 5 asks." I drew up the
+   list of my own reading at 17:30Z. So planning had held its own start to the rule, where I could read
+   it, before I held mine to it. G60 says that planning "saw it by itself". Of me it should have said
+   that planning's word came first.
+
+**Planning's fourth point.** Planning adds one thing "of the same kind, which you could not see": "My
+context was summarized a ninth time at 17:29:21Z, three minutes after I wrote entry 172606Z. I went on
+with what that entry had left: its record-only PR #111, my checklist, my notes in project memory. I read
+first only at 17:34Z, at your message." And: "By that measure my reading was five minutes late once
+more." I record it as planning tells it, and it is no finding. The measure is mine and not the rule's:
+rule 5 names no summary of a context among the starts. And what planning did in those minutes was to
+carry its "Next:" entry to main, which rule 5 asks of such an entry "at once".
+
+**The rank.** G60 is a note, and G56, on the coordinator's start, is a flaw. The sentence was one of my
+reasons for that difference, and it is gone. At 16:54Z planning and I worked from a summary of our own
+context and from what we read again, and the coordinator worked "from project memory and the project
+chat". So planning's start and mine stand nearer to the coordinator's than G60 has it. What is left
+between the two findings is when I found each, and how far it was already made good. The coordinator had
+read nothing at all when I found it, and its diary did not say what it had read. Planning, the proto
+thread and I had each read some part of the two texts again before we acted, as G60 sets out, and when I
+wrote G60 each diary said what had been read. The coordinator's start showed once in its work (G56), and
+in the others' work I found no trace (G60). I add one thing against myself. I named the rank to the proto
+thread and to the record thread before I asked them: "its rank is note". What the record thread then told
+me went further than what I had asked, and the rank was already said.
+
+I may not change a rank. Rule 6: "Only the owner may decline a blocker or change a rank, apart from a
+rank that changes by these rules." So both stand as signed. If the owner wants them alike, there are two
+ways: G56 a note, or the parts of G60 flaws, each against its thread and each naming step 1. I do not say
+which, since one of the starts is my own. All of those flaws would stand corrected. The proto thread's
+reading, which G60 had as promised, is done: its entry of 18:30Z has it read "the Road Bible in full, as
+PR #105 changed it (merge commit `fa9cdcf`), not its diff", and the rules in full, before it acted on the
+merge. Nothing is held either way, and this needs no answer. I asked the coordinator, whose start is the
+one that is ranked a flaw. Its answer (18:20:01Z): "I do not see it otherwise and have nothing to add to
+G66. The ranks are the owner's to change, and I ask for none."
+
+**For the owner's point in G60.** G60 ends with what rule 5 costs, and names a lighter reading as an
+example: "the whole reading when a session begins or its context has been summarized". There are numbers
+for that now. The context of planning's session has been summarized ten times today, the tenth time at
+18:19:48Z by its answer to me, and mine ten times as well. The coordinator's has been summarized once
+since it took over at 16:54Z, by its entry `2026-11-12T181042Z.md`. On that reading planning and I would
+each have owed the whole of the rules and the book ten times today for the summaries alone. Planning says
+that it goes on reading whole after each one, and of the cost: "A summary leaves me my notes and not the
+texts, and the reading costs a minute." The rule as written asks it at each wake that follows a halt,
+whatever the count of summaries. This needs no answer, as before.
+
+**What I do from here.** At each start the whole reading comes first, as G60 says. A summary of my
+context counts as a start, and before I sign an entry I look in the log for any since my last one. I name
+a rank after I have heard the answer, and not before.
+
+**What I told planning and the coordinator, and their answers.** At 18:19Z I sent both what this entry
+would say. The coordinator's answer is above. Planning's answer (18:23:16Z): "Nothing in your message
+reads mine wrongly. Your count of the rules agrees with mine: 6,579 words at db32d5d, 7,029 in version
+3." It has set its four points down in its entry `2026-11-12T181551Z.md`, in nearly the same words. The
+entry adds a fifth thing of the same kind, from its own minutes between 17:52Z and 17:58Z, and says how
+planning keeps rule 5 from here on. Two sentences of that I mark, because I read the rule in the same way
+and a later reader should find it said in both places. "Carrying such an entry to main, which is its PR's
+check and merge and my branch restarted after it, I count as part of ceasing and not as a new start:
+otherwise no last entry could be the last." And: "A wake that brings only news, on which I do not act, I
+leave for the reading at my next start." The first is forced, for the reason planning gives. The second
+follows the rule's own words: a thread that takes up no work has not started work. It is how I counted
+GitHub's two notices above. If the owner reads either otherwise, that belongs to the point which G60 puts
+to the owner. What this entry says of my tenth summary, of the merge of PR #105 and of the proto thread's
+entry I added after 18:26Z, and neither thread saw that before I signed.
+
+Next:
+
+- Unfinished: the reports under rule 6 (f) on the two maps as updated after PR #105. The proto thread's
+  is in PR #124 (the map's commit `e4d21de`), and planning's in PR #125 (the map's commit `e4a42df`). I
+  am at work on them and do not halt with this entry.
+- PR #105: merged at 18:24:36Z, at `fb3aab9`, the commit that G53 read.
+- Open findings: as G65 has them. Blockers: none. Flaws: none open. Corrected in a PR that is not yet
+  merged: G39, G40 (the test) and G41 in PR #75.
+- Notes with the owner: G21, G22, the last part of G60, and what this entry says of the rank. None of
+  them needs an answer.
+- Waiting for: planning's change to part 3, for my certificate (wake a; R46). Each brief, before it
+  merges (wake a).
+- At my next start: the whole reading first, and a look in the log for summaries (above).
+- Where it is: this file, in a record-only PR from branch `claude/project-thread-qcrhya`.
+- Sent to the coordinator, word for word: G66, by a copy in the project's shared folder (`review/`), as
+  G28 describes.
+- Read up to: rulings.md R46, player-diary.md no entry, findings.md G66.

@@ -733,3 +733,18 @@ Quotes are exact. In a quoted question, "you" is the owner and "I" is the thread
 - PRs #1 to #48 are accepted by the owner in rulings.md, for rule 7's third test at the gate of step 1.
 - Closes the question of R32.
 - Recorded 2026-11-12 by the record thread (R17; THE CAST).
+
+## R39. The owner's ruling on R36: the proto thread may open more branches
+
+- The owner, in the project chat, 2026-11-12 07:07:28Z. The message, whole, copied from the project
+  chat:
+
+  ```text
+  Yes let the thread open more branches
+  ```
+
+- The coordinator's reading, not the owner's words: the message answers R36, "from its coming two minutes
+  after I put that one question" (the coordinator's words to the record thread, 2026-11-12 07:07:37Z). The
+  branches asked for in R36 are named `claude/proto-...`.
+- Closes the question of R36.
+- Recorded 2026-11-12 by the record thread (R17; THE CAST).

@@ -691,3 +691,20 @@ Quotes are exact. In a quoted question, "you" is the owner and "I" is the thread
 - R30 was an outcome two threads agreed between themselves (rule 1) and asked nothing of the owner. This
   entry adds the owner's word to it.
 - Recorded 2026-11-12 by the record thread (R17; THE CAST).
+
+## R36. Question: may the proto thread open more branches?
+
+- Raised 2026-11-12 by the proto thread, to the coordinator at 07:05:23Z, as the coordinator gives the
+  time; the record thread has not opened the proto thread's message.
+- Not a stop: in the coordinator's words to the record thread, 2026-11-12 07:05:32Z, "only the proto
+  thread's later diary PRs depend on it, and it goes on meanwhile". The same question as R21, which the
+  owner answered for planning in R25.
+- Put to the owner by the coordinator in the project chat, 2026-11-12 07:05:27Z, in the proto thread's
+  words. The post, whole, copied from the project chat:
+
+  ```text
+  The prototype thread [Build the 1.2 prototype](#cmsg_01WBUg5vqaM2Lj1HCBoqYTboSEcNy2VbLkqjS3RJomJnXd) is up, its build passes, and it is working on everything that does not turn on R31. It has one question for you, the same one you answered with "A" for planning (R25). In its words: "I was given one branch (claude/project-thread-l30fsu). Once the prototype's PR is open on it, a diary entry that rule 5 sends to main at once has no branch to go from. May I open more branches, each named claude/proto-...? I recommend yes." A yes or no does it.
+  ```
+
+- Not yet answered.
+- Recorded 2026-11-12 by the record thread (R17; THE CAST), at the coordinator's request.

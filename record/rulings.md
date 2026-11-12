@@ -475,3 +475,38 @@ Quotes are exact. In a quoted question, "you" is the owner and "I" is the thread
 - The owner, in the same message as R22 (quoted whole there). The line that answers R21 is "4.) A". "A"
   is option (a) as quoted in R21.
 - Recorded 2026-11-12 by planning, as deputy, as in R22.
+
+## R26. Question: do the Super Predators stay on the road as its last step?
+
+- Raised 2026-11-12 by planning, when it reshaped the first Road Bible after R24. Its first reasoning is
+  in `record/diary/planning/2026-11-12T040029Z.md`.
+- Two readings of the second sentence of R24, "Let us focus on the immediate before we focus on the
+  distant": the Super Predators stay on the road as its last step and that step waits, or they come off
+  the road for now.
+- Planning did not call a stop. It drafted the first Road Bible on the first reading and asked the owner
+  to correct it if it was wrong. What planning thinks of that now is in
+  `record/diary/planning/2026-11-12T041701Z.md`.
+- Put to the owner in the planning thread, 2026-11-12 04:11:02Z, at the end of a longer message, in these
+  words:
+
+  > One reading for you to correct if it is wrong. I took "the immediate before the distant" to mean the
+  > Super Predators stay on the road as its third and last step, and nothing of that step starts, not
+  > even a brief, until the fight step is done. If you would rather they came off the road for now, say
+  > so and I will take them out.
+
+- Answered by R27.
+- Recorded 2026-11-12 by planning, as deputy.
+
+## R27. The owner's ruling on R26: the reading is correct; first adjust what is already there, then add to the concept
+
+- The owner, in the planning thread, 2026-11-12 04:14:21Z. The message, whole:
+
+  ```text
+  Yes, you are correct. First we adjust and tweak what is already there. Then and only then we move on to expanding/adding to the concept
+  ```
+
+- "Yes, you are correct." answers the reading quoted in R26: the Super Predators stay on the road as its
+  last step, and nothing of that step starts, a brief included, until the fight step is done.
+- The two sentences after it give the owner's order of work, in the owner's own words.
+- Recorded 2026-11-12 by planning, as deputy: the owner answered in the planning thread, and no record
+  thread exists yet (R17).
